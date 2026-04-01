@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useParams } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { Layout } from "@/components/Layout";
 import { Search, BarChart3, Link2, FileCode2, Shield, FileText, ArrowRight, Globe, Loader2, Brain, Sparkles, Zap } from "lucide-react";
@@ -6,6 +7,8 @@ import { AISEOAudit } from "@/components/tools/AISEOAudit";
 import { KeywordResearchTool } from "@/components/tools/KeywordResearchTool";
 import { ContentAnalyzer } from "@/components/tools/ContentAnalyzer";
 import { EnvironmentalAnalysis } from "@/components/tools/EnvironmentalAnalysis";
+import { SchemaGenerator } from "@/components/tools/SchemaGenerator";
+import { BacklinkChecker } from "@/components/tools/BacklinkChecker";
 
 const toolsList = [
   { id: "ai-audit", icon: Brain, title: "AI SEO Audit", desc: "AI-powered deep analysis", featured: true },
@@ -17,7 +20,8 @@ const toolsList = [
 ];
 
 const Tools = () => {
-  const [activeTool, setActiveTool] = useState("ai-audit");
+  const { toolId } = useParams();
+  const [activeTool, setActiveTool] = useState(toolId || "ai-audit");
 
   return (
     <Layout>
@@ -32,7 +36,7 @@ const Tools = () => {
               Advanced SEO <span className="gradient-text">Analysis Engine</span>
             </h1>
             <p className="text-muted-foreground max-w-xl mx-auto">
-              Deep analytical tools powered by AI — uncover insights that transform your search performance.
+              Deep analytical tools powered by real algorithms — uncover insights that transform your search performance.
             </p>
           </motion.div>
 
@@ -68,18 +72,8 @@ const Tools = () => {
               {activeTool === "keywords" && <KeywordResearchTool />}
               {activeTool === "environment" && <EnvironmentalAnalysis />}
               {activeTool === "content" && <ContentAnalyzer />}
-              {(activeTool === "backlinks" || activeTool === "schema") && (
-                <div className="glass-card-float p-16 text-center">
-                  <div className="inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-accent/10 mb-4">
-                    {(() => { const t = toolsList.find(t => t.id === activeTool); return t ? <t.icon className="h-8 w-8 text-accent" /> : null; })()}
-                  </div>
-                  <h3 className="font-display text-xl font-semibold text-foreground mb-2">
-                    {toolsList.find(t => t.id === activeTool)?.title}
-                  </h3>
-                  <p className="text-muted-foreground mb-6">Advanced analysis engine coming soon. Get early access.</p>
-                  <a href="/contact" className="btn-primary-gradient text-sm gap-2">Get Early Access <ArrowRight className="h-4 w-4" /></a>
-                </div>
-              )}
+              {activeTool === "backlinks" && <BacklinkChecker />}
+              {activeTool === "schema" && <SchemaGenerator />}
             </motion.div>
           </AnimatePresence>
         </div>
