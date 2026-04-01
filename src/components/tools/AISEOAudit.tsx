@@ -3,9 +3,10 @@ import { motion } from "framer-motion";
 import { Globe, Loader2, ArrowRight, Brain, CheckCircle, Shield, FileText, Link2, Gauge, Code, Eye } from "lucide-react";
 import { ScoreRing } from "@/components/charts/ScoreRing";
 import { SEORadarChart } from "@/components/charts/SEORadarChart";
-import { InsightList, InsightData } from "@/components/charts/InsightCard";
+import { InsightList } from "@/components/charts/InsightCard";
 import { AnimatedBarGroup } from "@/components/charts/AnimatedBar";
 import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, LineChart, Line } from "recharts";
+import { analyzeSEO, type SEOAuditResult } from "@/lib/seo-engine";
 
 const loadingSteps = [
   "Crawling website structure...",
@@ -16,92 +17,6 @@ const loadingSteps = [
   "Assessing backlink profile...",
   "Generating AI insights...",
 ];
-
-interface AuditResults {
-  overall: number;
-  technical: number;
-  content: number;
-  authority: number;
-  ux: number;
-  speed: number;
-  schema: number;
-  radarData: { subject: string; value: number; fullMark: number }[];
-  issuesBySeverity: { name: string; critical: number; warning: number; info: number }[];
-  rankingPotential: { month: string; current: number; potential: number }[];
-  insights: InsightData[];
-  technicalDetails: { label: string; value: number; maxValue: number }[];
-  contentDetails: { label: string; value: number; maxValue: number }[];
-  recommendations: { priority: string; title: string; description: string; completed: boolean }[];
-}
-
-function generateMockResults(): AuditResults {
-  return {
-    overall: 67,
-    technical: 72,
-    content: 58,
-    authority: 45,
-    ux: 81,
-    speed: 74,
-    schema: 35,
-    radarData: [
-      { subject: "Technical", value: 72, fullMark: 100 },
-      { subject: "Content", value: 58, fullMark: 100 },
-      { subject: "Authority", value: 45, fullMark: 100 },
-      { subject: "UX", value: 81, fullMark: 100 },
-      { subject: "Speed", value: 74, fullMark: 100 },
-      { subject: "Schema", value: 35, fullMark: 100 },
-    ],
-    issuesBySeverity: [
-      { name: "Technical", critical: 4, warning: 8, info: 12 },
-      { name: "Content", critical: 2, warning: 14, info: 6 },
-      { name: "Authority", critical: 1, warning: 5, info: 8 },
-      { name: "UX", critical: 0, warning: 3, info: 5 },
-      { name: "Speed", critical: 2, warning: 4, info: 3 },
-      { name: "Schema", critical: 5, warning: 7, info: 2 },
-    ],
-    rankingPotential: [
-      { month: "Now", current: 100, potential: 100 },
-      { month: "Mo 1", current: 100, potential: 125 },
-      { month: "Mo 2", current: 105, potential: 160 },
-      { month: "Mo 3", current: 108, potential: 210 },
-      { month: "Mo 4", current: 112, potential: 275 },
-      { month: "Mo 5", current: 115, potential: 340 },
-      { month: "Mo 6", current: 118, potential: 412 },
-    ],
-    insights: [
-      { type: "critical", title: "Weak internal linking structure detected", description: "Your site has isolated content clusters with minimal cross-linking. This limits PageRank distribution and topical authority signals. We found 34 orphan pages with zero internal links.", impact: "High", action: "View detailed link map" },
-      { type: "critical", title: "No structured data detected on 87% of pages", description: "Missing schema markup means you're losing rich result opportunities. FAQ, Article, and Product schemas could increase CTR by up to 30%.", impact: "High", action: "Generate schema" },
-      { type: "warning", title: "Content depth below competitive threshold", description: "Average word count is 450 words vs competitor average of 1,850. Search engines favor comprehensive content for informational queries.", impact: "Medium", action: "View content gaps" },
-      { type: "warning", title: "Core Web Vitals: LCP exceeds threshold", description: "Largest Contentful Paint is 4.2s (threshold: 2.5s). Main bottleneck: unoptimized hero images and render-blocking CSS.", impact: "Medium", action: "Speed recommendations" },
-      { type: "opportunity", title: "Untapped long-tail keyword clusters", description: "We identified 23 low-competition keyword clusters with combined monthly volume of 45,000+ that your competitors haven't targeted.", impact: "High", action: "View keywords" },
-      { type: "info", title: "Adding FAQ schema could improve CTR by up to 15%", description: "Your service pages have FAQ-style content that isn't marked up. Implementing FAQPage schema could trigger rich snippets.", impact: "Medium" },
-    ],
-    technicalDetails: [
-      { label: "Crawlability", value: 82, maxValue: 100 },
-      { label: "Indexation Health", value: 68, maxValue: 100 },
-      { label: "URL Structure", value: 75, maxValue: 100 },
-      { label: "Canonical Tags", value: 60, maxValue: 100 },
-      { label: "XML Sitemap", value: 90, maxValue: 100 },
-      { label: "Robots.txt", value: 85, maxValue: 100 },
-    ],
-    contentDetails: [
-      { label: "Keyword Relevance", value: 55, maxValue: 100 },
-      { label: "Semantic Coverage", value: 48, maxValue: 100 },
-      { label: "Heading Hierarchy", value: 72, maxValue: 100 },
-      { label: "Readability", value: 78, maxValue: 100 },
-      { label: "Content Depth", value: 42, maxValue: 100 },
-      { label: "NLP Alignment", value: 51, maxValue: 100 },
-    ],
-    recommendations: [
-      { priority: "High", title: "Implement comprehensive internal linking", description: "Add contextual links between related content to improve PageRank flow", completed: false },
-      { priority: "High", title: "Add structured data to all pages", description: "Implement Article, FAQ, and Organization schema across the site", completed: false },
-      { priority: "High", title: "Optimize Core Web Vitals", description: "Compress images, defer non-critical CSS, implement lazy loading", completed: false },
-      { priority: "Medium", title: "Expand content depth on key pages", description: "Increase average word count to 1,500+ with semantic keyword coverage", completed: false },
-      { priority: "Medium", title: "Fix canonical tag issues", description: "Resolve 12 pages with missing or incorrect canonical tags", completed: false },
-      { priority: "Low", title: "Optimize image alt attributes", description: "Add descriptive alt text to 47 images missing attributes", completed: true },
-    ],
-  };
-}
 
 const chartTooltipStyle = {
   contentStyle: {
