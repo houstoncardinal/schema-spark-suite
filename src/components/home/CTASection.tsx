@@ -36,7 +36,7 @@ export function CTASection() {
               Book Free Consultation <ArrowRight className="h-4 w-4" />
             </Link>
             <Link
-              to="/tools/analyzer"
+              to="/tools/ai-audit"
               className="inline-flex items-center gap-2 rounded-xl border border-primary-foreground/20 px-8 py-4 text-sm font-medium text-primary-foreground transition-all hover:bg-primary-foreground/10"
             >
               Try Free SEO Audit

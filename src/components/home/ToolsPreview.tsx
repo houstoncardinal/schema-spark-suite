@@ -31,7 +31,7 @@ const tools = [
     icon: FileCode2,
     title: "Schema Generator",
     description: "Generate valid JSON-LD structured data for rich search results.",
-    href: "/tools/schema-generator",
+    href: "/tools/schema",
     color: "from-orange-500/10 to-amber-500/10",
     iconColor: "text-orange-500",
   },
