@@ -293,8 +293,16 @@
   }
 
   /* Editorial Article Components */
+  .article-body > * + * {
+    margin-top: 1.5em;
+  }
+  .article-body > h2 + *,
+  .article-body > h3 + * {
+    margin-top: 0.75em;
+  }
+
   .article-callout {
-    @apply relative my-8 p-6 rounded-2xl border border-border bg-secondary/40;
+    @apply relative my-10 p-6 sm:p-8 rounded-2xl border border-border bg-secondary/40;
   }
   .article-callout::before {
     content: '';
@@ -302,46 +310,53 @@
     background: hsl(var(--accent));
   }
   .article-callout-title {
-    @apply text-xs font-bold uppercase tracking-[0.15em] text-accent mb-2;
+    @apply text-xs font-bold uppercase tracking-[0.15em] text-accent mb-3;
   }
   .article-callout p {
-    @apply text-sm text-muted-foreground leading-relaxed;
+    @apply text-[0.95rem] text-muted-foreground leading-relaxed mb-3 last:mb-0;
+  }
+  .article-callout ol,
+  .article-callout ul {
+    @apply space-y-3 mt-3;
+  }
+  .article-callout li {
+    @apply text-[0.95rem] text-muted-foreground leading-relaxed;
   }
 
   .article-pull-quote {
-    @apply relative my-10 py-8 px-8 border-y border-border;
+    @apply relative my-12 py-10 px-8 border-y border-border;
   }
   .article-pull-quote p {
     @apply text-xl sm:text-2xl font-semibold text-foreground leading-snug tracking-tight text-center italic;
   }
   .article-pull-quote cite {
-    @apply block text-center text-sm text-muted-foreground mt-3 not-italic;
+    @apply block text-center text-sm text-muted-foreground mt-4 not-italic;
   }
 
   .article-stat-grid {
-    @apply grid grid-cols-2 sm:grid-cols-3 gap-4 my-8;
+    @apply grid grid-cols-2 sm:grid-cols-3 gap-4 my-10;
   }
   .article-stat-card {
-    @apply flex flex-col items-center justify-center p-5 rounded-xl bg-card border border-border text-center;
+    @apply flex flex-col items-center justify-center p-6 rounded-xl bg-card border border-border text-center;
   }
   .article-stat-value {
     @apply text-2xl sm:text-3xl font-bold text-foreground tracking-tight;
   }
   .article-stat-label {
-    @apply text-xs text-muted-foreground mt-1 leading-tight;
+    @apply text-xs text-muted-foreground mt-1.5 leading-snug;
   }
 
   .article-key-takeaway {
-    @apply my-10 p-6 sm:p-8 rounded-2xl border-2 border-accent/20 bg-accent/[0.03];
+    @apply my-12 p-6 sm:p-8 rounded-2xl border-2 border-accent/20 bg-accent/[0.03];
   }
   .article-key-takeaway-title {
-    @apply flex items-center gap-2 text-sm font-bold text-accent mb-4;
+    @apply flex items-center gap-2 text-sm font-bold text-accent mb-5;
   }
   .article-key-takeaway ul {
-    @apply space-y-2;
+    @apply space-y-3;
   }
   .article-key-takeaway li {
-    @apply text-sm text-muted-foreground leading-relaxed pl-4 relative;
+    @apply text-[0.95rem] text-muted-foreground leading-relaxed pl-5 relative;
   }
   .article-key-takeaway li::before {
     content: '→';
@@ -349,11 +364,11 @@
   }
 
   .article-chapter-intro {
-    @apply text-lg sm:text-xl text-foreground font-medium leading-relaxed mb-6;
+    @apply text-lg sm:text-xl text-foreground font-medium leading-relaxed mb-8;
   }
 
   .article-inline-figure {
-    @apply my-8 rounded-xl overflow-hidden border border-border;
+    @apply my-10 rounded-xl overflow-hidden border border-border;
   }
   .article-inline-figure figcaption {
     @apply text-xs text-muted-foreground text-center py-3 px-4 bg-secondary/50;
