@@ -1,7 +1,8 @@
 import { motion } from "framer-motion";
 import {
   LayoutDashboard, Search, TrendingUp, Link2, Shield, FileText,
-  Users, CheckSquare, Globe, ChevronLeft, ChevronRight, Settings, HelpCircle, Zap
+  Users, CheckSquare, Globe, ChevronLeft, ChevronRight, Settings, HelpCircle, Zap,
+  Brain, Bot, Network, Eye
 } from "lucide-react";
 
 interface SidebarProps {
@@ -13,11 +14,15 @@ interface SidebarProps {
 
 const navItems = [
   { id: "overview", icon: LayoutDashboard, label: "Overview" },
+  { id: "truerank", icon: Brain, label: "TrueRank™", badge: "AI" },
+  { id: "agents", icon: Bot, label: "AI Agents", badge: "NEW" },
   { id: "keywords", icon: Search, label: "Keywords" },
   { id: "traffic", icon: TrendingUp, label: "Traffic" },
   { id: "backlinks", icon: Link2, label: "Backlinks" },
   { id: "audit", icon: Shield, label: "Site Audit" },
   { id: "competitors", icon: Users, label: "Competitors" },
+  { id: "topical", icon: Network, label: "Topical Auth." },
+  { id: "serp", icon: Eye, label: "SERP Simulator" },
   { id: "content", icon: FileText, label: "Content" },
   { id: "tasks", icon: CheckSquare, label: "Tasks" },
 ];
