@@ -264,22 +264,36 @@ export function AISEOAudit() {
               </div>
               <div className="glass-card-float p-6">
                 <h3 className="font-display text-sm font-semibold text-foreground mb-4">Content vs Competitors</h3>
-                <ResponsiveContainer width="100%" height={280}>
-                  <BarChart data={[
-                    { metric: "Word Count", yours: 450, competitor: 1850 },
-                    { metric: "Headings", yours: 4, competitor: 12 },
-                    { metric: "Images", yours: 2, competitor: 8 },
-                    { metric: "Internal Links", yours: 3, competitor: 15 },
-                    { metric: "External Links", yours: 1, competitor: 6 },
-                  ]}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" strokeOpacity={0.5} />
-                    <XAxis dataKey="metric" tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 10 }} />
-                    <YAxis tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 11 }} />
-                    <Tooltip {...chartTooltipStyle} />
-                    <Bar dataKey="yours" fill="hsl(var(--accent))" radius={[4, 4, 0, 0]} name="Your Site" />
-                    <Bar dataKey="competitor" fill="hsl(var(--muted-foreground))" radius={[4, 4, 0, 0]} name="Avg Competitor" opacity={0.5} />
-                  </BarChart>
-                </ResponsiveContainer>
+                <div className="space-y-4 mb-4">
+                  <div className="flex items-center justify-between text-xs">
+                    <span className="text-muted-foreground">Pages Indexed</span>
+                    <span className="font-semibold text-foreground">{results.indexedPages} / {results.pageCount}</span>
+                  </div>
+                  <div className="flex items-center justify-between text-xs">
+                    <span className="text-muted-foreground">Internal Links</span>
+                    <span className="font-semibold text-foreground">{results.internalLinks.count} ({results.internalLinks.avgLinksPerPage} avg/page)</span>
+                  </div>
+                  <div className="flex items-center justify-between text-xs">
+                    <span className="text-muted-foreground">Orphan Pages</span>
+                    <span className={`font-semibold ${results.internalLinks.orphanPages > 10 ? "text-destructive" : "text-foreground"}`}>{results.internalLinks.orphanPages}</span>
+                  </div>
+                  <div className="flex items-center justify-between text-xs">
+                    <span className="text-muted-foreground">Title Tag</span>
+                    <span className={`font-semibold ${results.metaTags.titleLength < 30 || results.metaTags.titleLength > 60 ? "text-warning" : "text-success"}`}>{results.metaTags.titleLength} chars</span>
+                  </div>
+                  <div className="flex items-center justify-between text-xs">
+                    <span className="text-muted-foreground">Meta Description</span>
+                    <span className={`font-semibold ${results.metaTags.descriptionLength < 120 || results.metaTags.descriptionLength > 160 ? "text-warning" : "text-success"}`}>{results.metaTags.descriptionLength} chars</span>
+                  </div>
+                  <div className="flex items-center justify-between text-xs">
+                    <span className="text-muted-foreground">Open Graph Tags</span>
+                    <span className={`font-semibold ${results.metaTags.hasOG ? "text-success" : "text-destructive"}`}>{results.metaTags.hasOG ? "Present" : "Missing"}</span>
+                  </div>
+                  <div className="flex items-center justify-between text-xs">
+                    <span className="text-muted-foreground">Canonical Tag</span>
+                    <span className={`font-semibold ${results.metaTags.hasCanonical ? "text-success" : "text-destructive"}`}>{results.metaTags.hasCanonical ? "Present" : "Missing"}</span>
+                  </div>
+                </div>
               </div>
             </div>
           )}
