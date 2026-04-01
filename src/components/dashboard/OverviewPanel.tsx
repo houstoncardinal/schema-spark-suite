@@ -1,5 +1,6 @@
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { Activity, TrendingUp, Search, AlertTriangle, Eye, Globe, Brain, Bell, CheckCircle, Zap, ArrowRight } from "lucide-react";
+import { Activity, TrendingUp, Search, AlertTriangle, Eye, Globe, Brain, Bell, CheckCircle, Zap, ArrowRight, Sparkles, Loader2 } from "lucide-react";
 import { MetricCard } from "@/components/charts/MetricCard";
 import { ScoreRing } from "@/components/charts/ScoreRing";
 import { SEORadarChart } from "@/components/charts/SEORadarChart";
@@ -7,6 +8,7 @@ import { InsightList } from "@/components/charts/InsightCard";
 import type { DashboardData } from "@/lib/dashboard-engine";
 import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, BarChart, Bar } from "recharts";
 import { Link } from "react-router-dom";
+import { aiSEOApi, type AIDashboardResponse } from "@/lib/ai-seo-api";
 
 const chartTooltipStyle = {
   contentStyle: { background: "hsl(var(--card))", border: "1px solid hsl(var(--border))", borderRadius: "12px", fontSize: 12, fontFamily: "Inter", boxShadow: "var(--shadow-lg)" },
@@ -15,6 +17,28 @@ const chartTooltipStyle = {
 
 export function OverviewPanel({ data }: { data: DashboardData }) {
   const { project, trafficData, keywords, backlinks, tasks } = data;
+  const [aiInsights, setAiInsights] = useState<AIDashboardResponse | null>(null);
+  const [aiLoading, setAiLoading] = useState(false);
+
+  useEffect(() => {
+    let cancelled = false;
+    setAiLoading(true);
+    setAiInsights(null);
+
+    aiSEOApi.getDashboardInsights(project.domain || "unknown", {
+      healthScore: project.healthScore,
+      domainAuthority: project.domainAuthority,
+      organicTraffic: project.organicTraffic,
+      keywordsRanked: project.keywordsRanked,
+      activeIssues: project.activeIssues,
+      totalBacklinks: backlinks.total,
+      referringDomains: backlinks.referringDomains,
+    }).then(res => { if (!cancelled) setAiInsights(res); })
+      .catch(err => console.error("Dashboard AI insights failed:", err))
+      .finally(() => { if (!cancelled) setAiLoading(false); });
+
+    return () => { cancelled = true; };
+  }, [project.domain]);
 
   const radarData = [
     { subject: "Technical", value: Math.round(project.healthScore * 0.95), fullMark: 100 },
@@ -25,11 +49,18 @@ export function OverviewPanel({ data }: { data: DashboardData }) {
     { subject: "Schema", value: Math.round(project.healthScore * 0.6), fullMark: 100 },
   ];
 
-  const insights = [
+  const fallbackInsights = [
     { type: "opportunity" as const, title: `${keywords.filter(k => k.change > 0).length} keywords gaining momentum`, description: `Keywords like "${keywords[0]?.keyword}" are trending upward. Increasing content depth could push them into top 3 positions.`, impact: "High", action: "View keywords" },
     { type: "warning" as const, title: `${project.activeIssues} active SEO issues need attention`, description: `Including ${data.auditIssues.filter(i => i.severity === "critical").length} critical issues affecting crawlability and indexation.`, impact: "Medium", action: "View audit" },
     { type: "info" as const, title: `Domain authority at ${project.domainAuthority} — growth potential`, description: `Building high-quality backlinks from ${backlinks.referringDomains} referring domains. Target 10+ new domains monthly for authority growth.`, impact: "Medium" },
   ];
+
+  const aiFormattedInsights = aiInsights?.strategicInsights?.map(si => ({
+    type: (si.urgency === "immediate" ? "critical" : si.urgency === "short-term" ? "warning" : "opportunity") as "critical" | "warning" | "opportunity" | "info",
+    title: si.title,
+    description: si.description,
+    impact: si.estimatedImpact,
+  })) || null;
 
   const alerts = [
     { type: "success", text: `'${keywords[0]?.keyword}' at position #${keywords[0]?.position}`, time: "2h ago" },
