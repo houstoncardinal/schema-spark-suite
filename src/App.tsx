@@ -1,5 +1,6 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { HelmetProvider } from "react-helmet-async";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -12,35 +13,39 @@ import SchemaLibrary from "./pages/SchemaLibrary.tsx";
 import SchemaValidator from "./pages/SchemaValidator.tsx";
 import Dashboard from "./pages/Dashboard.tsx";
 import Blog from "./pages/Blog.tsx";
+import BlogPost from "./pages/BlogPost.tsx";
 import Auth from "./pages/Auth.tsx";
 import NotFound from "./pages/NotFound.tsx";
 
 const queryClient = new QueryClient();
 
 const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <AuthProvider>
-      <TooltipProvider>
-        <Toaster />
-        <Sonner />
-        <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/tools" element={<Tools />} />
-            <Route path="/tools/:toolId" element={<Tools />} />
-            <Route path="/services" element={<Services />} />
-            <Route path="/contact" element={<Contact />} />
-            <Route path="/schema-library" element={<SchemaLibrary />} />
-            <Route path="/schema-validator" element={<SchemaValidator />} />
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/blog" element={<Blog />} />
-            <Route path="/auth" element={<Auth />} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </BrowserRouter>
-      </TooltipProvider>
-    </AuthProvider>
-  </QueryClientProvider>
+  <HelmetProvider>
+    <QueryClientProvider client={queryClient}>
+      <AuthProvider>
+        <TooltipProvider>
+          <Toaster />
+          <Sonner />
+          <BrowserRouter>
+            <Routes>
+              <Route path="/" element={<Index />} />
+              <Route path="/tools" element={<Tools />} />
+              <Route path="/tools/:toolId" element={<Tools />} />
+              <Route path="/services" element={<Services />} />
+              <Route path="/contact" element={<Contact />} />
+              <Route path="/schema-library" element={<SchemaLibrary />} />
+              <Route path="/schema-validator" element={<SchemaValidator />} />
+              <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/blog" element={<Blog />} />
+              <Route path="/blog/:slug" element={<BlogPost />} />
+              <Route path="/auth" element={<Auth />} />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </BrowserRouter>
+        </TooltipProvider>
+      </AuthProvider>
+    </QueryClientProvider>
+  </HelmetProvider>
 );
 
 export default App;
