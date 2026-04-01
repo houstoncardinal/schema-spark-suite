@@ -169,11 +169,6 @@ export function AIAgentsPanel({ data }: { data: PredictiveData }) {
                             ))}
                           </div>
                         </div>
-                                )}
-                              </div>
-                            ))}
-                          </div>
-                        </div>
 
                         {/* Activity log */}
                         <div>
