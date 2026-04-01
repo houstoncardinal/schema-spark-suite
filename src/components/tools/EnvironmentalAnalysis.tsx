@@ -1,9 +1,10 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Globe, Loader2, ArrowRight, Sparkles, Target, Users, TrendingUp } from "lucide-react";
+import { Globe, Loader2, ArrowRight, Sparkles, Target, Users, TrendingUp, ExternalLink } from "lucide-react";
 import { ScoreRing } from "@/components/charts/ScoreRing";
-import { InsightList, InsightData } from "@/components/charts/InsightCard";
-import { ResponsiveContainer, ScatterChart, Scatter, XAxis, YAxis, CartesianGrid, Tooltip, PieChart, Pie, Cell, LineChart, Line } from "recharts";
+import { InsightList } from "@/components/charts/InsightCard";
+import { ResponsiveContainer, ScatterChart, Scatter, XAxis, YAxis, CartesianGrid, Tooltip, PieChart, Pie, Cell, LineChart, Line, AreaChart, Area } from "recharts";
+import { analyzeMarket } from "@/lib/market-engine";
 
 const COLORS = ["hsl(var(--accent))", "hsl(var(--success))", "hsl(var(--warning))", "hsl(var(--chart-4))", "hsl(var(--info))"];
 
@@ -15,7 +16,7 @@ const chartTooltipStyle = {
 export function EnvironmentalAnalysis() {
   const [niche, setNiche] = useState("");
   const [loading, setLoading] = useState(false);
-  const [results, setResults] = useState<any>(null);
+  const [results, setResults] = useState<ReturnType<typeof analyzeMarket> | null>(null);
 
   const analyze = () => {
     if (!niche.trim()) return;
@@ -23,39 +24,7 @@ export function EnvironmentalAnalysis() {
     setResults(null);
     setTimeout(() => {
       setLoading(false);
-      setResults({
-        marketDifficulty: 72,
-        opportunityScore: 64,
-        serpVolatility: 45,
-        competitorDensity: 78,
-        scatter: [
-          { keyword: "seo tools", difficulty: 82, opportunity: 45, volume: 14800 },
-          { keyword: "seo audit", difficulty: 68, opportunity: 62, volume: 9200 },
-          { keyword: "seo strategy", difficulty: 74, opportunity: 38, volume: 6400 },
-          { keyword: `${niche} seo`, difficulty: 35, opportunity: 85, volume: 4100 },
-          { keyword: `best ${niche}`, difficulty: 55, opportunity: 72, volume: 3200 },
-          { keyword: `${niche} tips`, difficulty: 28, opportunity: 88, volume: 2800 },
-          { keyword: `${niche} services`, difficulty: 62, opportunity: 58, volume: 5600 },
-          { keyword: `${niche} agency`, difficulty: 48, opportunity: 76, volume: 2100 },
-        ],
-        marketShare: [
-          { name: "Top 3 Players", value: 42 },
-          { name: "Mid-tier (4-10)", value: 28 },
-          { name: "Long-tail Sites", value: 18 },
-          { name: "Available", value: 12 },
-        ],
-        volatility: [
-          { week: "W1", score: 38 }, { week: "W2", score: 42 }, { week: "W3", score: 55 },
-          { week: "W4", score: 48 }, { week: "W5", score: 62 }, { week: "W6", score: 45 },
-          { week: "W7", score: 51 }, { week: "W8", score: 43 },
-        ],
-        insights: [
-          { type: "opportunity" as const, title: "Strong long-tail opportunities detected", description: `Your niche "${niche}" has 23 low-competition keyword clusters with combined monthly volume of 45,000+. Competitors haven't targeted these yet.`, impact: "High", action: "View keyword clusters" },
-          { type: "warning" as const, title: "High competitor density in head terms", description: "Top 3 competitors control 42% of organic traffic for primary keywords. Direct competition requires significant content investment.", impact: "Medium" },
-          { type: "info" as const, title: "SERP volatility creates ranking windows", description: "SERP positions are fluctuating 15-20% more than average, indicating algorithm updates. Well-optimized content can capitalize on these shifts.", impact: "Medium" },
-          { type: "opportunity" as const, title: "Local SEO gap in Houston market", description: "Only 2 of 10 competitors have optimized Google Business profiles. Strong local SEO opportunity with lower competition than national terms.", impact: "High", action: "Local SEO strategy" },
-        ],
-      });
+      setResults(analyzeMarket(niche));
     }, 3000);
   };
 
@@ -114,7 +83,7 @@ export function EnvironmentalAnalysis() {
                   <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" strokeOpacity={0.5} />
                   <XAxis type="number" dataKey="difficulty" name="Difficulty" domain={[0, 100]} tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 11 }} label={{ value: "Difficulty →", position: "bottom", offset: -5, style: { fill: "hsl(var(--muted-foreground))", fontSize: 10 } }} />
                   <YAxis type="number" dataKey="opportunity" name="Opportunity" domain={[0, 100]} tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 11 }} label={{ value: "Opportunity →", angle: -90, position: "insideLeft", offset: 15, style: { fill: "hsl(var(--muted-foreground))", fontSize: 10 } }} />
-                  <Tooltip cursor={{ strokeDasharray: '3 3' }} {...chartTooltipStyle} formatter={(value: any, name: string) => [value, name]} />
+                  <Tooltip cursor={{ strokeDasharray: '3 3' }} {...chartTooltipStyle} formatter={(value: number, name: string) => [value, name]} />
                   <Scatter data={results.scatter} fill="hsl(var(--accent))" fillOpacity={0.7} />
                 </ScatterChart>
               </ResponsiveContainer>
@@ -126,15 +95,13 @@ export function EnvironmentalAnalysis() {
               <ResponsiveContainer width="100%" height={280}>
                 <PieChart>
                   <Pie data={results.marketShare} cx="50%" cy="50%" outerRadius={100} innerRadius={60} dataKey="value" paddingAngle={3} strokeWidth={0}>
-                    {results.marketShare.map((_: any, i: number) => (
-                      <Cell key={i} fill={COLORS[i % COLORS.length]} />
-                    ))}
+                    {results.marketShare.map((_, i) => <Cell key={i} fill={COLORS[i % COLORS.length]} />)}
                   </Pie>
                   <Tooltip {...chartTooltipStyle} />
                 </PieChart>
               </ResponsiveContainer>
               <div className="flex flex-wrap justify-center gap-4 mt-2">
-                {results.marketShare.map((entry: any, i: number) => (
+                {results.marketShare.map((entry, i) => (
                   <div key={entry.name} className="flex items-center gap-1.5 text-xs text-muted-foreground">
                     <span className="h-2.5 w-2.5 rounded-full shrink-0" style={{ background: COLORS[i % COLORS.length] }} />
                     {entry.name} ({entry.value}%)
@@ -144,18 +111,74 @@ export function EnvironmentalAnalysis() {
             </div>
           </div>
 
+          {/* Top competitors table */}
           <div className="glass-card-float p-6">
-            <h3 className="font-display text-sm font-semibold text-foreground mb-1">SERP Volatility Index</h3>
-            <p className="text-xs text-muted-foreground mb-4">Weekly ranking fluctuation score (higher = more volatile)</p>
-            <ResponsiveContainer width="100%" height={200}>
-              <LineChart data={results.volatility}>
-                <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" strokeOpacity={0.5} />
-                <XAxis dataKey="week" tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 11 }} />
-                <YAxis domain={[0, 100]} tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 11 }} />
-                <Tooltip {...chartTooltipStyle} />
-                <Line type="monotone" dataKey="score" stroke="hsl(var(--warning))" strokeWidth={2.5} dot={{ fill: "hsl(var(--warning))", r: 4 }} />
-              </LineChart>
-            </ResponsiveContainer>
+            <h3 className="font-display text-sm font-semibold text-foreground mb-4">Top Competitors</h3>
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="border-b border-border">
+                    <th className="text-left py-2.5 text-muted-foreground font-medium text-xs">Domain</th>
+                    <th className="text-center py-2.5 text-muted-foreground font-medium text-xs">Authority</th>
+                    <th className="text-right py-2.5 text-muted-foreground font-medium text-xs">Est. Traffic</th>
+                    <th className="text-right py-2.5 text-muted-foreground font-medium text-xs">Keywords</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {results.topCompetitors.map((comp) => (
+                    <tr key={comp.name} className="border-b border-border/30 hover:bg-secondary/30 transition-colors">
+                      <td className="py-2.5 flex items-center gap-2">
+                        <ExternalLink className="h-3 w-3 text-muted-foreground" />
+                        <span className="font-medium text-foreground">{comp.name}</span>
+                      </td>
+                      <td className="py-2.5 text-center">
+                        <span className={`inline-flex rounded-full px-2 py-0.5 text-xs font-semibold ${comp.authority >= 60 ? "text-success bg-success/10" : comp.authority >= 35 ? "text-warning bg-warning/10" : "text-muted-foreground bg-secondary"}`}>{comp.authority}</span>
+                      </td>
+                      <td className="py-2.5 text-right data-cell text-foreground">{comp.traffic}</td>
+                      <td className="py-2.5 text-right data-cell text-muted-foreground">{comp.keywords}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div className="grid lg:grid-cols-2 gap-6">
+            {/* SERP Volatility */}
+            <div className="glass-card-float p-6">
+              <h3 className="font-display text-sm font-semibold text-foreground mb-1">SERP Volatility Index</h3>
+              <p className="text-xs text-muted-foreground mb-4">Weekly ranking fluctuation score</p>
+              <ResponsiveContainer width="100%" height={200}>
+                <LineChart data={results.volatility}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" strokeOpacity={0.5} />
+                  <XAxis dataKey="week" tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 11 }} />
+                  <YAxis domain={[0, 100]} tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 11 }} />
+                  <Tooltip {...chartTooltipStyle} />
+                  <Line type="monotone" dataKey="score" stroke="hsl(var(--warning))" strokeWidth={2.5} dot={{ fill: "hsl(var(--warning))", r: 3 }} />
+                </LineChart>
+              </ResponsiveContainer>
+            </div>
+
+            {/* Keyword growth */}
+            <div className="glass-card-float p-6">
+              <h3 className="font-display text-sm font-semibold text-foreground mb-1">Search Interest Trend</h3>
+              <p className="text-xs text-muted-foreground mb-4">Monthly search volume growth</p>
+              <ResponsiveContainer width="100%" height={200}>
+                <AreaChart data={results.keywordGrowth}>
+                  <defs>
+                    <linearGradient id="growthGrad" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stopColor="hsl(var(--success))" stopOpacity={0.3} />
+                      <stop offset="100%" stopColor="hsl(var(--success))" stopOpacity={0} />
+                    </linearGradient>
+                  </defs>
+                  <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" strokeOpacity={0.5} />
+                  <XAxis dataKey="month" tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 11 }} />
+                  <YAxis tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 11 }} />
+                  <Tooltip {...chartTooltipStyle} />
+                  <Area type="monotone" dataKey="volume" stroke="hsl(var(--success))" strokeWidth={2} fill="url(#growthGrad)" />
+                </AreaChart>
+              </ResponsiveContainer>
+            </div>
           </div>
 
           {/* AI Insights */}
@@ -170,6 +193,7 @@ export function EnvironmentalAnalysis() {
           <div className="glass-card-float p-8 text-center relative overflow-hidden">
             <div className="absolute inset-0 bg-gradient-to-r from-accent/5 to-success/5" />
             <div className="relative">
+              <p className="text-sm text-muted-foreground mb-2">Market difficulty: <span className="font-bold text-foreground">{results.marketDifficulty}/100</span> · Opportunity: <span className="font-bold text-foreground">{results.opportunityScore}/100</span></p>
               <h3 className="font-display text-xl font-bold text-foreground mb-2">Ready to capture this market?</h3>
               <p className="text-sm text-muted-foreground mb-6">Our team will build a custom strategy based on these market insights.</p>
               <a href="/contact" className="btn-primary-gradient gap-2">Get Market Strategy <ArrowRight className="h-4 w-4" /></a>
