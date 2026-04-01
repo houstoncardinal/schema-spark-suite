@@ -1,8 +1,10 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Search, Loader2, ArrowRight, TrendingUp, TrendingDown, Minus } from "lucide-react";
+import { Search, Loader2, ArrowRight, TrendingUp, TrendingDown, Minus, Sparkles, Brain } from "lucide-react";
 import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip } from "recharts";
 import { researchKeyword } from "@/lib/keyword-engine";
+import { aiSEOApi, type AIKeywordResponse } from "@/lib/ai-seo-api";
+import { toast } from "sonner";
 
 const chartTooltipStyle = {
   contentStyle: { background: "hsl(var(--card))", border: "1px solid hsl(var(--border))", borderRadius: "12px", fontSize: 12, fontFamily: "Inter", boxShadow: "var(--shadow-lg)" },
@@ -13,15 +15,37 @@ export function KeywordResearchTool() {
   const [keyword, setKeyword] = useState("");
   const [loading, setLoading] = useState(false);
   const [results, setResults] = useState<ReturnType<typeof researchKeyword> | null>(null);
+  const [aiData, setAiData] = useState<AIKeywordResponse | null>(null);
+  const [aiLoading, setAiLoading] = useState(false);
 
-  const search = () => {
+  const search = async () => {
     if (!keyword.trim()) return;
     setLoading(true);
     setResults(null);
-    setTimeout(() => {
-      setLoading(false);
-      setResults(researchKeyword(keyword));
-    }, 2000);
+    setAiData(null);
+
+    const baseResults = researchKeyword(keyword);
+    await new Promise(resolve => setTimeout(resolve, 1500));
+    setLoading(false);
+    setResults(baseResults);
+
+    // Fetch AI keyword analysis
+    setAiLoading(true);
+    try {
+      const aiResponse = await aiSEOApi.analyzeKeyword(keyword, {
+        volume: baseResults.main.volume,
+        difficulty: baseResults.main.difficulty,
+        cpc: baseResults.main.cpc,
+        intent: baseResults.main.intent,
+        suggestions: baseResults.suggestions.length,
+      });
+      setAiData(aiResponse);
+      toast.success("AI keyword intelligence ready");
+    } catch (err) {
+      console.error("AI keyword analysis failed:", err);
+    } finally {
+      setAiLoading(false);
+    }
   };
 
   const diffColor = (d: number) => d >= 70 ? "text-destructive bg-destructive/10" : d >= 40 ? "text-warning bg-warning/10" : "text-success bg-success/10";

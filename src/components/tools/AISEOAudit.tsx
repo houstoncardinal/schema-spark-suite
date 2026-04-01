@@ -1,12 +1,14 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Globe, Loader2, ArrowRight, Brain, CheckCircle, Shield, FileText, Link2, Gauge, Code, Eye } from "lucide-react";
+import { Globe, Loader2, ArrowRight, Brain, CheckCircle, Shield, FileText, Link2, Gauge, Code, Eye, Sparkles } from "lucide-react";
 import { ScoreRing } from "@/components/charts/ScoreRing";
 import { SEORadarChart } from "@/components/charts/SEORadarChart";
 import { InsightList } from "@/components/charts/InsightCard";
 import { AnimatedBarGroup } from "@/components/charts/AnimatedBar";
 import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, LineChart, Line } from "recharts";
 import { analyzeSEO, type SEOAuditResult } from "@/lib/seo-engine";
+import { aiSEOApi, type AISEOAuditResponse } from "@/lib/ai-seo-api";
+import { toast } from "sonner";
 
 const loadingSteps = [
   "Crawling website structure...",
@@ -35,12 +37,15 @@ export function AISEOAudit() {
   const [loading, setLoading] = useState(false);
   const [loadingStep, setLoadingStep] = useState(0);
   const [results, setResults] = useState<SEOAuditResult | null>(null);
+  const [aiData, setAiData] = useState<AISEOAuditResponse | null>(null);
+  const [aiLoading, setAiLoading] = useState(false);
   const [activeTab, setActiveTab] = useState("overview");
 
-  const analyze = () => {
+  const analyze = async () => {
     if (!url.trim()) return;
     setLoading(true);
     setResults(null);
+    setAiData(null);
     setLoadingStep(0);
 
     const interval = setInterval(() => {
@@ -53,11 +58,31 @@ export function AISEOAudit() {
       });
     }, 500);
 
-    setTimeout(() => {
-      clearInterval(interval);
-      setLoading(false);
-      setResults(analyzeSEO(url));
-    }, 4000);
+    // Generate base analysis from deterministic engine
+    const baseResults = analyzeSEO(url);
+
+    // Wait for loading animation
+    await new Promise(resolve => setTimeout(resolve, 3500));
+    clearInterval(interval);
+    setLoading(false);
+    setResults(baseResults);
+
+    // Fetch AI-powered insights in background
+    setAiLoading(true);
+    try {
+      const aiResponse = await aiSEOApi.auditSite(
+        url,
+        { overall: baseResults.overall, technical: baseResults.technical, content: baseResults.content, authority: baseResults.authority, ux: baseResults.ux, speed: baseResults.speed, schema: baseResults.schema },
+        baseResults.issuesBySeverity
+      );
+      setAiData(aiResponse);
+      toast.success("AI analysis complete", { description: "Expert insights generated successfully" });
+    } catch (err) {
+      console.error("AI analysis failed:", err);
+      toast.error("AI enhancement unavailable", { description: "Showing algorithmic analysis results" });
+    } finally {
+      setAiLoading(false);
+    }
   };
 
   const tabs = [
