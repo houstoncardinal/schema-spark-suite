@@ -37,14 +37,31 @@ const sectionTitles: Record<string, string> = {
 };
 
 const Dashboard = () => {
-  const { user, loading: authLoading } = useAuth();
+  const { user, loading: authLoading, signOut } = useAuth();
   const { projects, loading: projLoading, addProject, deleteProject } = useProjects();
   const [activeProject, setActiveProject] = useState<string | null>(null);
   const [activeSection, setActiveSection] = useState("overview");
   const [timeRange, setTimeRange] = useState("3m");
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
-  // Redirect to auth if not logged in
+  const currentProject = projects.find(p => p.id === activeProject) || projects[0] || null;
+
+  // Auto-select first project
+  const effectiveActiveProject = activeProject || currentProject?.id || "";
+
+  const dashboardData = useMemo(
+    () => currentProject ? generateDashboardData(currentProject.domain) : null,
+    [currentProject?.domain]
+  );
+
+  const predictiveData = useMemo(
+    () => currentProject && dashboardData
+      ? generatePredictiveData(currentProject.domain, dashboardData.project.healthScore, dashboardData.project.domainAuthority, dashboardData.project.organicTraffic)
+      : null,
+    [currentProject?.domain, dashboardData]
+  );
+
+  // Redirect to auth if not logged in (after all hooks)
   if (!authLoading && !user) {
     return <Navigate to="/auth" replace />;
   }
@@ -60,27 +77,7 @@ const Dashboard = () => {
     );
   }
 
-  // If user has projects, use the first one; otherwise show onboarding
-  const currentProject = projects.find(p => p.id === activeProject) || projects[0] || null;
-
-  // If no active project set but projects exist, auto-select
-  if (!activeProject && currentProject) {
-    setActiveProject(currentProject.id);
-  }
-
   const headerProjects = projects.map(p => ({ id: p.id, name: p.name, domain: p.domain }));
-
-  const dashboardData = useMemo(
-    () => currentProject ? generateDashboardData(currentProject.domain) : null,
-    [currentProject?.domain]
-  );
-
-  const predictiveData = useMemo(
-    () => currentProject && dashboardData
-      ? generatePredictiveData(currentProject.domain, dashboardData.project.healthScore, dashboardData.project.domainAuthority, dashboardData.project.organicTraffic)
-      : null,
-    [currentProject?.domain, dashboardData]
-  );
 
   return (
     <div className="flex min-h-screen bg-background">
@@ -96,18 +93,15 @@ const Dashboard = () => {
           projectName={currentProject?.name || "No Project"}
           domain={currentProject?.domain || "—"}
           projects={headerProjects}
-          activeProject={activeProject || ""}
-          onProjectChange={setActiveProject}
+          activeProject={effectiveActiveProject}
+          onProjectChange={(id) => setActiveProject(id)}
           timeRange={timeRange}
           onTimeRangeChange={setTimeRange}
           onAddProject={addProject}
           onDeleteProject={deleteProject}
           canAddMore={projects.length < 2}
           userEmail={user?.email || ""}
-          onSignOut={async () => {
-            const { supabase } = await import("@/integrations/supabase/client");
-            await supabase.auth.signOut();
-          }}
+          onSignOut={signOut}
         />
 
         <main className="flex-1 overflow-y-auto">
@@ -160,7 +154,6 @@ const Dashboard = () => {
   );
 };
 
-// Onboarding for users with no projects
 function OnboardingPanel({ onAddProject }: { onAddProject: (name: string, domain: string) => Promise<{ error: Error | null }> }) {
   const [name, setName] = useState("");
   const [domain, setDomain] = useState("");
@@ -181,28 +174,17 @@ function OnboardingPanel({ onAddProject }: { onAddProject: (name: string, domain
         <p className="text-sm text-muted-foreground">Add your first website to start tracking SEO performance.</p>
         <p className="text-xs text-muted-foreground mt-1">Free plan: up to 2 projects</p>
       </div>
-
       <div className="glass-card-elevated p-8">
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className="text-sm font-medium text-foreground mb-1.5 block">Project Name</label>
-            <input
-              value={name}
-              onChange={e => setName(e.target.value)}
-              placeholder="My Website"
-              required
-              className="w-full rounded-xl border border-input bg-background px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground outline-none focus:ring-2 focus:ring-accent"
-            />
+            <input value={name} onChange={e => setName(e.target.value)} placeholder="My Website" required
+              className="w-full rounded-xl border border-input bg-background px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground outline-none focus:ring-2 focus:ring-accent" />
           </div>
           <div>
             <label className="text-sm font-medium text-foreground mb-1.5 block">Domain</label>
-            <input
-              value={domain}
-              onChange={e => setDomain(e.target.value)}
-              placeholder="example.com"
-              required
-              className="w-full rounded-xl border border-input bg-background px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground outline-none focus:ring-2 focus:ring-accent"
-            />
+            <input value={domain} onChange={e => setDomain(e.target.value)} placeholder="example.com" required
+              className="w-full rounded-xl border border-input bg-background px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground outline-none focus:ring-2 focus:ring-accent" />
           </div>
           <button type="submit" disabled={loading} className="btn-primary-gradient w-full gap-2 py-3">
             {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : "Create Project"}
