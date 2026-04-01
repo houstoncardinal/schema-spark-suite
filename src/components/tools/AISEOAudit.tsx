@@ -89,6 +89,9 @@ export function AISEOAudit() {
     { id: "overview", label: "Overview", icon: Eye },
     { id: "technical", label: "Technical", icon: Shield },
     { id: "content", label: "Content", icon: FileText },
+    { id: "serp", label: "SERP Features", icon: Search },
+    { id: "mobile", label: "Mobile & Security", icon: Smartphone },
+    { id: "performance", label: "Performance", icon: Gauge },
     { id: "insights", label: "AI Insights", icon: Brain },
     { id: "actions", label: "Actions", icon: CheckCircle },
   ];
