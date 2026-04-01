@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { ArrowRight, Globe, Loader2, CheckCircle, AlertTriangle, XCircle } from "lucide-react";
+import { ArrowRight, Globe, Loader2, CheckCircle, AlertTriangle, XCircle, Brain, Sparkles } from "lucide-react";
 
 export function HeroSection() {
   const [url, setUrl] = useState("");
@@ -46,28 +46,28 @@ export function HeroSection() {
           transition={{ duration: 0.7 }}
           className="text-center max-w-4xl mx-auto mb-12"
         >
-          <div className="inline-flex items-center gap-2 rounded-full border border-border bg-secondary px-4 py-1.5 text-xs font-medium text-muted-foreground mb-6">
-            <span className="h-1.5 w-1.5 rounded-full bg-green-500 animate-pulse" />
-            Trusted by 10,000+ SEO professionals
+          <div className="inline-flex items-center gap-2 rounded-full border border-accent/20 bg-accent/5 px-4 py-1.5 text-xs font-semibold text-accent mb-6">
+            <Brain className="h-3 w-3" />
+            AI-Powered SEO Intelligence — Trusted by 10,000+ professionals
           </div>
 
           <h1 className="font-display text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight text-foreground leading-[1.1] mb-6">
             The Ultimate{" "}
-            <span className="gradient-text">SEO Intelligence</span>{" "}
+            <span className="gradient-text">AI SEO Intelligence</span>{" "}
             Platform
           </h1>
 
           <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed mb-10">
-            Analyze, optimize, and scale your rankings with advanced tools, data-driven insights, and expert strategy.
+            Deep AI-powered analysis, real-time visualizations, and actionable insights that transform your search performance.
           </p>
 
-          <div className="glass-card-elevated p-2 max-w-2xl mx-auto">
+          <div className="glass-card-float p-2 max-w-2xl mx-auto">
             <div className="flex items-center gap-2">
-              <div className="flex items-center gap-2 flex-1 rounded-xl bg-background px-4 py-3">
+              <div className="flex items-center gap-2 flex-1 rounded-xl bg-background px-4 py-3.5">
                 <Globe className="h-4 w-4 text-muted-foreground shrink-0" />
                 <input
                   type="text"
-                  placeholder="Enter your website URL..."
+                  placeholder="Enter your website URL for AI-powered analysis..."
                   value={url}
                   onChange={(e) => setUrl(e.target.value)}
                   onKeyDown={(e) => e.key === "Enter" && handleAnalyze()}
@@ -77,9 +77,9 @@ export function HeroSection() {
               <button
                 onClick={handleAnalyze}
                 disabled={analyzing}
-                className="btn-primary-gradient shrink-0 gap-2 px-6 py-3"
+                className="btn-primary-gradient shrink-0 gap-2 px-6 py-3.5"
               >
-                {analyzing ? <Loader2 className="h-4 w-4 animate-spin" /> : <>Analyze <ArrowRight className="h-4 w-4" /></>}
+                {analyzing ? <Loader2 className="h-4 w-4 animate-spin" /> : <><Brain className="h-4 w-4" /> AI Audit <ArrowRight className="h-4 w-4" /></>}
               </button>
             </div>
           </div>
