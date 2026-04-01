@@ -19,6 +19,32 @@ const statusColors: Record<string, string> = {
 
 export function AIAgentsPanel({ data }: { data: PredictiveData }) {
   const [expandedAgent, setExpandedAgent] = useState<string | null>(data.aiAgents[0]?.id || null);
+  const [aiEnhancements, setAiEnhancements] = useState<Record<string, AIAgentResponse>>({});
+  const [loadingAgents, setLoadingAgents] = useState<Record<string, boolean>>({});
+
+  const fetchAIForAgent = async (agent: AIAgent) => {
+    if (aiEnhancements[agent.id]) return;
+    setLoadingAgents(prev => ({ ...prev, [agent.id]: true }));
+    try {
+      const res = await aiSEOApi.getAgentRecommendations(
+        agent.type,
+        "current-site",
+        agent.recommendations.map(r => ({ title: r.title, impact: r.impact }))
+      );
+      setAiEnhancements(prev => ({ ...prev, [agent.id]: res }));
+    } catch (err) {
+      console.error(`AI agent ${agent.type} failed:`, err);
+    } finally {
+      setLoadingAgents(prev => ({ ...prev, [agent.id]: false }));
+    }
+  };
+
+  useEffect(() => {
+    if (expandedAgent) {
+      const agent = data.aiAgents.find(a => a.id === expandedAgent);
+      if (agent) fetchAIForAgent(agent);
+    }
+  }, [expandedAgent]);
 
   const totalIssues = data.aiAgents.reduce((s, a) => s + a.issuesFound, 0);
   const totalFixed = data.aiAgents.reduce((s, a) => s + a.issuesFixed, 0);
