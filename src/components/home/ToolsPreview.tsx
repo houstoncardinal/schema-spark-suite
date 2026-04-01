@@ -1,83 +1,94 @@
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
-import { Search, BarChart3, Link2, FileCode2, ArrowRight } from "lucide-react";
+import { Search, BarChart3, Link2, FileCode2, ArrowRight, Brain, Cpu, Network, Eye } from "lucide-react";
 
 const tools = [
   {
-    icon: Search,
-    title: "SEO Analyzer",
-    description: "Complete technical SEO audit with actionable insights for any website.",
+    icon: Brain,
+    title: "AI SEO Audit",
+    description: "200+ ranking factors analyzed by AI with prioritized recommendations and predictive impact scores.",
     href: "/tools/ai-audit",
-    color: "from-blue-500/10 to-cyan-500/10",
-    iconColor: "text-blue-500",
+    accent: "accent",
   },
   {
-    icon: BarChart3,
-    title: "Keyword Research",
-    description: "Discover high-value keywords with volume, difficulty, and trend data.",
+    icon: Search,
+    title: "Keyword Intelligence",
+    description: "Discover high-intent keywords with AI-powered difficulty scoring, SERP analysis, and trend forecasting.",
     href: "/tools/keywords",
-    color: "from-violet-500/10 to-purple-500/10",
-    iconColor: "text-violet-500",
+    accent: "chart-4",
   },
   {
     icon: Link2,
-    title: "Backlink Checker",
-    description: "Analyze backlink profiles, domain authority, and link opportunities.",
+    title: "Backlink Analyzer",
+    description: "Deep backlink profiling with toxicity detection, authority mapping, and competitive gap analysis.",
     href: "/tools/backlinks",
-    color: "from-emerald-500/10 to-green-500/10",
-    iconColor: "text-emerald-500",
+    accent: "success",
   },
   {
     icon: FileCode2,
     title: "Schema Generator",
-    description: "Generate valid JSON-LD structured data for rich search results.",
+    description: "Generate and validate JSON-LD structured data for rich results with one-click deployment.",
     href: "/tools/schema",
-    color: "from-orange-500/10 to-amber-500/10",
-    iconColor: "text-orange-500",
+    accent: "warning",
+  },
+  {
+    icon: Network,
+    title: "Topical Authority",
+    description: "Map your content clusters, identify topic gaps, and build comprehensive authority in your niche.",
+    href: "/dashboard",
+    accent: "info",
+  },
+  {
+    icon: Eye,
+    title: "SERP Simulator",
+    description: "Preview and optimize your search appearance across devices with real-time SERP rendering.",
+    href: "/dashboard",
+    accent: "chart-4",
   },
 ];
 
 export function ToolsPreview() {
   return (
-    <section className="section-padding bg-secondary/50">
-      <div className="container-wide">
+    <section className="section-padding relative overflow-hidden">
+      <div className="absolute inset-0 mesh-bg" />
+      <div className="container-wide relative">
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="text-center mb-16"
+          transition={{ duration: 0.7 }}
+          className="text-center mb-20"
         >
-          <p className="text-sm font-semibold text-accent mb-3">Powerful Tools</p>
-          <h2 className="font-display text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mb-4">
-            Everything You Need to{" "}
+          <span className="label-overline mb-4 block">Platform Capabilities</span>
+          <h2 className="headline-section text-foreground mb-5">
+            Everything to{" "}
             <span className="gradient-text">Dominate Search</span>
           </h2>
-          <p className="text-muted-foreground max-w-xl mx-auto">
-            Professional-grade SEO tools that deliver actionable insights in seconds.
+          <p className="body-large max-w-xl mx-auto">
+            Enterprise-grade tools powered by AI that deliver actionable intelligence in seconds, not hours.
           </p>
         </motion.div>
 
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
           {tools.map((tool, i) => (
             <motion.div
               key={tool.title}
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 25 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ delay: i * 0.1, duration: 0.5 }}
+              transition={{ delay: i * 0.08, duration: 0.5 }}
             >
               <Link
                 to={tool.href}
-                className="glass-card hover-lift block p-6 h-full group"
+                className="glass-card-premium block p-7 h-full group"
               >
-                <div className={`inline-flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br ${tool.color} mb-4`}>
-                  <tool.icon className={`h-6 w-6 ${tool.iconColor}`} />
+                <div className={`inline-flex h-11 w-11 items-center justify-center rounded-xl bg-${tool.accent}/10 mb-5 group-hover:bg-${tool.accent}/15 transition-colors`}>
+                  <tool.icon className={`h-5 w-5 text-${tool.accent}`} />
                 </div>
-                <h3 className="font-display text-lg font-semibold text-foreground mb-2">{tool.title}</h3>
-                <p className="text-sm text-muted-foreground leading-relaxed mb-4">{tool.description}</p>
-                <span className="inline-flex items-center gap-1 text-sm font-medium text-accent group-hover:gap-2 transition-all">
-                  Try it free <ArrowRight className="h-3.5 w-3.5" />
+                <h3 className="font-display text-base font-semibold text-foreground mb-2 group-hover:text-accent transition-colors">{tool.title}</h3>
+                <p className="text-sm text-muted-foreground leading-relaxed mb-5">{tool.description}</p>
+                <span className="inline-flex items-center gap-1.5 text-sm font-medium text-accent opacity-0 group-hover:opacity-100 translate-y-1 group-hover:translate-y-0 transition-all duration-300">
+                  Explore <ArrowRight className="h-3.5 w-3.5" />
                 </span>
               </Link>
             </motion.div>

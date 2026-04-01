@@ -1,45 +1,47 @@
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
-import { ArrowRight, Zap } from "lucide-react";
+import { ArrowRight, Zap, Shield, Brain } from "lucide-react";
 
 export function CTASection() {
   return (
-    <section className="section-padding relative overflow-hidden">
-      <div className="absolute inset-0 bg-primary" />
-      <div className="absolute inset-0 dot-pattern opacity-10" />
-      <div className="absolute top-0 right-0 w-96 h-96 bg-accent/20 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
+    <section className="relative overflow-hidden py-32 md:py-40">
+      <div className="absolute inset-0" style={{ background: "var(--gradient-hero)" }} />
+      <div className="absolute inset-0 grid-pattern opacity-[0.03]" />
+      <div className="absolute top-0 right-0 w-[500px] h-[500px] rounded-full blur-[150px] -translate-y-1/3 translate-x-1/4" style={{ background: "hsl(var(--accent) / 0.15)" }} />
+      <div className="absolute bottom-0 left-0 w-[400px] h-[400px] rounded-full blur-[120px] translate-y-1/3 -translate-x-1/4" style={{ background: "hsl(var(--info) / 0.1)" }} />
 
       <div className="container-tight relative text-center">
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
+          transition={{ duration: 0.7 }}
         >
-          <div className="inline-flex items-center gap-2 rounded-full border border-primary-foreground/20 bg-primary-foreground/10 px-4 py-1.5 text-xs font-medium text-primary-foreground/80 mb-6">
+          <div className="inline-flex items-center gap-2.5 rounded-full border border-white/10 bg-white/5 backdrop-blur-xl px-5 py-2 text-xs font-medium text-white/70 mb-8">
             <Zap className="h-3 w-3" />
-            Limited availability
+            Start for free — no credit card required
           </div>
 
-          <h2 className="font-display text-3xl md:text-4xl lg:text-5xl font-bold text-primary-foreground mb-6 leading-tight">
+          <h2 className="font-display text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-8 leading-[1.08] tracking-tight">
             Ready to Dominate<br />Your Search Rankings?
           </h2>
 
-          <p className="text-primary-foreground/70 max-w-lg mx-auto mb-10 leading-relaxed">
-            Get a comprehensive SEO strategy tailored to your business. Our experts will identify opportunities and create a roadmap to page one.
+          <p className="text-white/50 max-w-lg mx-auto mb-12 leading-relaxed text-lg">
+            Get AI-powered SEO intelligence that gives you an unfair advantage. Join 10,000+ professionals already winning.
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <Link
-              to="/contact"
-              className="inline-flex items-center gap-2 rounded-xl bg-primary-foreground px-8 py-4 text-sm font-semibold text-primary transition-all hover:opacity-90 hover:-translate-y-0.5"
+              to="/auth"
+              className="inline-flex items-center gap-2.5 rounded-xl bg-white px-8 py-4 text-sm font-semibold text-primary transition-all hover:bg-white/90 hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0"
             >
-              Book Free Consultation <ArrowRight className="h-4 w-4" />
+              <Brain className="h-4 w-4" /> Start Free Trial <ArrowRight className="h-4 w-4" />
             </Link>
             <Link
               to="/tools/ai-audit"
-              className="inline-flex items-center gap-2 rounded-xl border border-primary-foreground/20 px-8 py-4 text-sm font-medium text-primary-foreground transition-all hover:bg-primary-foreground/10"
+              className="inline-flex items-center gap-2 rounded-xl border border-white/15 bg-white/5 backdrop-blur-sm px-8 py-4 text-sm font-medium text-white/80 transition-all hover:bg-white/10 hover:text-white"
             >
-              Try Free SEO Audit
+              <Shield className="h-4 w-4" /> Try Free SEO Audit
             </Link>
           </div>
         </motion.div>

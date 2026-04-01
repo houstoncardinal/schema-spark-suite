@@ -19,21 +19,21 @@ import { TopicalAuthorityPanel } from "@/components/dashboard/TopicalAuthorityPa
 import { SERPSimulatorPanel } from "@/components/dashboard/SERPSimulatorPanel";
 import { generateDashboardData } from "@/lib/dashboard-engine";
 import { generatePredictiveData } from "@/lib/predictive-engine";
-import { Loader2 } from "lucide-react";
+import { Loader2, Zap, Globe, ArrowRight, Sparkles, Brain, Shield } from "lucide-react";
 
-const sectionTitles: Record<string, string> = {
-  overview: "Dashboard Overview",
-  truerank: "TrueRank™ Predictive Intelligence",
-  agents: "AI SEO Agents",
-  keywords: "Keyword Tracking",
-  traffic: "Traffic Analytics",
-  backlinks: "Backlink Analytics",
-  audit: "Site Audit",
-  competitors: "Competitor Analysis",
-  topical: "Topical Authority Map",
-  serp: "SERP Simulator & Dominance",
-  content: "Content Performance",
-  tasks: "Tasks & Recommendations",
+const sectionTitles: Record<string, { title: string; subtitle: string }> = {
+  overview: { title: "Dashboard Overview", subtitle: "Your SEO performance at a glance" },
+  truerank: { title: "TrueRank™ Predictive Intelligence", subtitle: "AI-powered ranking forecasts and predictions" },
+  agents: { title: "AI SEO Agents", subtitle: "Autonomous agents working for your rankings" },
+  keywords: { title: "Keyword Tracking", subtitle: "Monitor and analyze keyword positions" },
+  traffic: { title: "Traffic Analytics", subtitle: "Deep traffic source and trend analysis" },
+  backlinks: { title: "Backlink Analytics", subtitle: "Authority building and link intelligence" },
+  audit: { title: "Site Audit", subtitle: "Technical SEO health and issue tracking" },
+  competitors: { title: "Competitor Analysis", subtitle: "Competitive intelligence and gap analysis" },
+  topical: { title: "Topical Authority Map", subtitle: "Content cluster and authority mapping" },
+  serp: { title: "SERP Simulator & Dominance", subtitle: "Search appearance optimization" },
+  content: { title: "Content Performance", subtitle: "Content optimization and analytics" },
+  tasks: { title: "Tasks & Recommendations", subtitle: "Prioritized SEO action items" },
 };
 
 const Dashboard = () => {
@@ -45,8 +45,6 @@ const Dashboard = () => {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
   const currentProject = projects.find(p => p.id === activeProject) || projects[0] || null;
-
-  // Auto-select first project
   const effectiveActiveProject = activeProject || currentProject?.id || "";
 
   const dashboardData = useMemo(
@@ -61,7 +59,6 @@ const Dashboard = () => {
     [currentProject?.domain, dashboardData]
   );
 
-  // Redirect to auth if not logged in (after all hooks)
   if (!authLoading && !user) {
     return <Navigate to="/auth" replace />;
   }
@@ -69,15 +66,21 @@ const Dashboard = () => {
   if (authLoading || projLoading) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-background">
-        <div className="text-center">
-          <Loader2 className="h-8 w-8 animate-spin text-accent mx-auto mb-4" />
-          <p className="text-sm text-muted-foreground">Loading dashboard...</p>
-        </div>
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-center">
+          <div className="relative mx-auto w-14 h-14 mb-5">
+            <div className="absolute inset-0 rounded-full border-2 border-border" />
+            <div className="absolute inset-0 rounded-full border-2 border-t-accent animate-spin" />
+            <Zap className="absolute inset-0 m-auto h-5 w-5 text-accent" />
+          </div>
+          <p className="text-sm font-medium text-foreground">Loading your workspace...</p>
+          <p className="text-xs text-muted-foreground mt-1">Preparing SEO intelligence</p>
+        </motion.div>
       </div>
     );
   }
 
   const headerProjects = projects.map(p => ({ id: p.id, name: p.name, domain: p.domain }));
+  const sectionInfo = sectionTitles[activeSection] || { title: "Dashboard", subtitle: "" };
 
   return (
     <div className="flex min-h-screen bg-background">
@@ -105,23 +108,29 @@ const Dashboard = () => {
         />
 
         <main className="flex-1 overflow-y-auto">
-          <div className="p-6 max-w-[1400px] mx-auto">
+          <div className="p-6 lg:p-8 max-w-[1440px] mx-auto">
             {!currentProject ? (
               <OnboardingPanel onAddProject={addProject} />
             ) : (
               <>
-                <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} key={activeSection} className="mb-6">
-                  <h2 className="font-display text-xl font-bold text-foreground">{sectionTitles[activeSection] || "Dashboard"}</h2>
-                  <p className="text-sm text-muted-foreground mt-1">{currentProject.domain} • {timeRange} view</p>
+                {/* Section header */}
+                <motion.div
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  key={activeSection}
+                  className="mb-8"
+                >
+                  <h2 className="font-display text-2xl font-bold text-foreground tracking-tight">{sectionInfo.title}</h2>
+                  <p className="text-sm text-muted-foreground mt-1">{sectionInfo.subtitle}</p>
                 </motion.div>
 
                 <AnimatePresence mode="wait">
                   <motion.div
                     key={activeSection}
-                    initial={{ opacity: 0, y: 10 }}
+                    initial={{ opacity: 0, y: 12 }}
                     animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -10 }}
-                    transition={{ duration: 0.25 }}
+                    exit={{ opacity: 0, y: -8 }}
+                    transition={{ duration: 0.25, ease: [0.25, 0.46, 0.45, 0.94] }}
                   >
                     {dashboardData && (
                       <>
@@ -168,30 +177,49 @@ function OnboardingPanel({ onAddProject }: { onAddProject: (name: string, domain
   };
 
   return (
-    <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="max-w-lg mx-auto mt-20">
-      <div className="text-center mb-8">
-        <h2 className="font-display text-2xl font-bold text-foreground mb-2">Welcome to SEOPulse! 🚀</h2>
-        <p className="text-sm text-muted-foreground">Add your first website to start tracking SEO performance.</p>
-        <p className="text-xs text-muted-foreground mt-1">Free plan: up to 2 projects</p>
-      </div>
-      <div className="glass-card-elevated p-8">
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label className="text-sm font-medium text-foreground mb-1.5 block">Project Name</label>
-            <input value={name} onChange={e => setName(e.target.value)} placeholder="My Website" required
-              className="w-full rounded-xl border border-input bg-background px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground outline-none focus:ring-2 focus:ring-accent" />
+    <div className="flex items-center justify-center min-h-[70vh]">
+      <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} className="max-w-md w-full">
+        <div className="text-center mb-10">
+          <div className="inline-flex h-16 w-16 items-center justify-center rounded-2xl mb-6" style={{ background: "var(--gradient-accent)" }}>
+            <Sparkles className="h-8 w-8 text-white" />
           </div>
-          <div>
-            <label className="text-sm font-medium text-foreground mb-1.5 block">Domain</label>
-            <input value={domain} onChange={e => setDomain(e.target.value)} placeholder="example.com" required
-              className="w-full rounded-xl border border-input bg-background px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground outline-none focus:ring-2 focus:ring-accent" />
+          <h2 className="font-display text-3xl font-bold text-foreground mb-3 tracking-tight">Welcome to SEOPulse</h2>
+          <p className="text-muted-foreground leading-relaxed">
+            Add your first website to unlock AI-powered SEO intelligence and start climbing the rankings.
+          </p>
+        </div>
+
+        <div className="glass-card-premium p-8">
+          <form onSubmit={handleSubmit} className="space-y-5">
+            <div>
+              <label className="text-[13px] font-medium text-foreground mb-2 block">Project Name</label>
+              <input value={name} onChange={e => setName(e.target.value)} placeholder="My Website" required
+                className="input-premium" />
+            </div>
+            <div>
+              <label className="text-[13px] font-medium text-foreground mb-2 block">Domain</label>
+              <div className="relative">
+                <Globe className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground/50" />
+                <input value={domain} onChange={e => setDomain(e.target.value)} placeholder="example.com" required
+                  className="input-premium pl-10" />
+              </div>
+            </div>
+            <button type="submit" disabled={loading} className="btn-primary-gradient w-full gap-2 py-3.5">
+              {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : (
+                <>Create Project <ArrowRight className="h-4 w-4" /></>
+              )}
+            </button>
+          </form>
+
+          <div className="separator-gradient my-6" />
+
+          <div className="flex items-center justify-center gap-5 text-muted-foreground">
+            <div className="flex items-center gap-1.5 text-[11px]"><Shield className="h-3.5 w-3.5" /> 2 Free Projects</div>
+            <div className="flex items-center gap-1.5 text-[11px]"><Brain className="h-3.5 w-3.5" /> AI Analysis</div>
           </div>
-          <button type="submit" disabled={loading} className="btn-primary-gradient w-full gap-2 py-3">
-            {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : "Create Project"}
-          </button>
-        </form>
-      </div>
-    </motion.div>
+        </div>
+      </motion.div>
+    </div>
   );
 }
 
