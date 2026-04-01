@@ -80,6 +80,9 @@ export function DashboardSidebar({ activeSection, onSectionChange, collapsed, on
               )}
               <item.icon className={`h-4 w-4 shrink-0 ${active ? "text-accent" : ""}`} />
               {!collapsed && <span>{item.label}</span>}
+              {!collapsed && (item as any).badge && (
+                <span className="ml-auto text-[9px] font-bold uppercase tracking-wider text-accent bg-accent/10 rounded-full px-1.5 py-0.5">{(item as any).badge}</span>
+              )}
             </button>
           );
         })}
