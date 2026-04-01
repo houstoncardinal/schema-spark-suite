@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Globe, Loader2, ArrowRight, Brain, CheckCircle, Shield, FileText, Link2, Gauge, Code, Eye, Sparkles } from "lucide-react";
+import { Globe, Loader2, ArrowRight, Brain, CheckCircle, Shield, FileText, Link2, Gauge, Code, Eye, Sparkles, Smartphone, Image, Lock, Search, BarChart3 } from "lucide-react";
 import { ScoreRing } from "@/components/charts/ScoreRing";
 import { SEORadarChart } from "@/components/charts/SEORadarChart";
 import { InsightList } from "@/components/charts/InsightCard";
@@ -89,6 +89,9 @@ export function AISEOAudit() {
     { id: "overview", label: "Overview", icon: Eye },
     { id: "technical", label: "Technical", icon: Shield },
     { id: "content", label: "Content", icon: FileText },
+    { id: "serp", label: "SERP Features", icon: Search },
+    { id: "mobile", label: "Mobile & Security", icon: Smartphone },
+    { id: "performance", label: "Performance", icon: Gauge },
     { id: "insights", label: "AI Insights", icon: Brain },
     { id: "actions", label: "Actions", icon: CheckCircle },
   ];
@@ -320,10 +323,220 @@ export function AISEOAudit() {
                   </div>
                 </div>
               </div>
+             </div>
+           )}
+
+          {/* SERP FEATURES TAB */}
+          {activeTab === "serp" && (
+            <div className="space-y-6">
+              <div className="glass-card-float p-6">
+                <div className="flex items-center gap-2 mb-6">
+                  <Search className="h-4 w-4 text-accent" />
+                  <h3 className="font-display text-sm font-semibold text-foreground">SERP Feature Eligibility</h3>
+                </div>
+                <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                  {results.serpFeatures.map(feature => (
+                    <div key={feature.name} className={`rounded-xl border p-4 ${feature.currentlyShowing ? "border-success/30 bg-success/5" : feature.eligible ? "border-accent/20 bg-accent/5" : "border-border bg-secondary/30"}`}>
+                      <div className="flex items-center justify-between mb-2">
+                        <span className="text-sm font-medium text-foreground">{feature.name}</span>
+                        <span className={`h-2.5 w-2.5 rounded-full ${feature.currentlyShowing ? "bg-success" : feature.eligible ? "bg-accent" : "bg-muted-foreground/30"}`} />
+                      </div>
+                      <p className="text-[10px] text-muted-foreground mb-1">
+                        {feature.currentlyShowing ? "Currently showing" : feature.eligible ? "Eligible — not yet showing" : "Not eligible"}
+                      </p>
+                      <p className="text-[10px] font-medium text-muted-foreground">Potential: <span className={feature.potential === "High" ? "text-success" : feature.potential === "Medium" ? "text-warning" : "text-muted-foreground"}>{feature.potential}</span></p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="glass-card-float p-6">
+                <h3 className="font-display text-sm font-semibold text-foreground mb-4">HTTP Status Distribution</h3>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                  {results.httpStatusDistribution.map(item => (
+                    <div key={item.status} className={`rounded-xl p-4 text-center border ${item.status.startsWith("200") ? "border-success/20 bg-success/5" : item.status.startsWith("301") ? "border-warning/20 bg-warning/5" : item.status.startsWith("404") ? "border-destructive/20 bg-destructive/5" : "border-destructive/30 bg-destructive/10"}`}>
+                      <p className="text-xl font-bold text-foreground tabular-nums">{item.count}</p>
+                      <p className="text-[10px] text-muted-foreground mt-1">{item.status}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="glass-card-float p-6">
+                <h3 className="font-display text-sm font-semibold text-foreground mb-4">Meta Tag Coverage</h3>
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                  {[
+                    { label: "Open Graph", has: results.metaTags.hasOG },
+                    { label: "Twitter Card", has: results.metaTags.hasTwitterCard },
+                    { label: "Canonical", has: results.metaTags.hasCanonical },
+                    { label: "Viewport", has: results.metaTags.hasViewport },
+                    { label: "Charset", has: results.metaTags.hasCharset },
+                    { label: "Hreflang", has: results.metaTags.hasHreflang },
+                  ].map(tag => (
+                    <div key={tag.label} className="flex items-center gap-2 rounded-lg bg-secondary/40 p-3">
+                      <span className={`h-2 w-2 rounded-full shrink-0 ${tag.has ? "bg-success" : "bg-destructive"}`} />
+                      <span className="text-xs font-medium text-foreground">{tag.label}</span>
+                      <span className={`text-[10px] ml-auto ${tag.has ? "text-success" : "text-destructive"}`}>{tag.has ? "Present" : "Missing"}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
             </div>
           )}
 
-          {/* INSIGHTS TAB */}
+          {/* MOBILE & SECURITY TAB */}
+          {activeTab === "mobile" && (
+            <div className="grid lg:grid-cols-2 gap-6">
+              <div className="glass-card-float p-6">
+                <div className="flex items-center gap-2 mb-6">
+                  <Smartphone className="h-4 w-4 text-accent" />
+                  <h3 className="font-display text-sm font-semibold text-foreground">Mobile Usability</h3>
+                </div>
+                <div className="flex items-center justify-center mb-6">
+                  <ScoreRing score={results.mobileAnalysis.mobileScore} size={100} strokeWidth={6} label="Mobile Score" />
+                </div>
+                <div className="space-y-2">
+                  {[
+                    { label: "Viewport configured", pass: results.mobileAnalysis.viewportConfigured },
+                    { label: "Tap targets properly sized", pass: results.mobileAnalysis.tapTargetsSized },
+                    { label: "Font sizes readable", pass: results.mobileAnalysis.fontSizeReadable },
+                    { label: "Content fits viewport", pass: results.mobileAnalysis.contentFitsViewport },
+                  ].map(check => (
+                    <div key={check.label} className="flex items-center gap-3 rounded-lg bg-secondary/40 p-3">
+                      <CheckCircle className={`h-4 w-4 shrink-0 ${check.pass ? "text-success" : "text-destructive"}`} />
+                      <span className="text-xs text-foreground">{check.label}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="glass-card-float p-6">
+                <div className="flex items-center gap-2 mb-6">
+                  <Lock className="h-4 w-4 text-accent" />
+                  <h3 className="font-display text-sm font-semibold text-foreground">Security Audit</h3>
+                </div>
+                <div className="space-y-3">
+                  {results.securityChecks.map(check => (
+                    <div key={check.label} className={`flex items-start gap-3 rounded-xl border p-4 ${check.status === "pass" ? "border-success/20 bg-success/5" : check.status === "warning" ? "border-warning/20 bg-warning/5" : "border-destructive/20 bg-destructive/5"}`}>
+                      <span className={`h-2.5 w-2.5 rounded-full mt-1 shrink-0 ${check.status === "pass" ? "bg-success" : check.status === "warning" ? "bg-warning" : "bg-destructive"}`} />
+                      <div>
+                        <p className="text-sm font-medium text-foreground">{check.label}</p>
+                        <p className="text-xs text-muted-foreground mt-0.5">{check.detail}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="lg:col-span-2 glass-card-float p-6">
+                <div className="flex items-center gap-2 mb-6">
+                  <Link2 className="h-4 w-4 text-accent" />
+                  <h3 className="font-display text-sm font-semibold text-foreground">Internal Link Health</h3>
+                </div>
+                <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+                  {[
+                    { label: "Total Links", value: results.internalLinks.count, color: "" },
+                    { label: "Avg per Page", value: results.internalLinks.avgLinksPerPage, color: "" },
+                    { label: "Orphan Pages", value: results.internalLinks.orphanPages, color: results.internalLinks.orphanPages > 10 ? "text-destructive" : "" },
+                    { label: "Broken Links", value: results.internalLinks.brokenLinks, color: results.internalLinks.brokenLinks > 5 ? "text-destructive" : "" },
+                    { label: "Redirect Chains", value: results.internalLinks.redirectChains, color: results.internalLinks.redirectChains > 5 ? "text-warning" : "" },
+                  ].map(stat => (
+                    <div key={stat.label} className="text-center rounded-xl bg-secondary/40 p-4">
+                      <p className={`text-xl font-bold tabular-nums ${stat.color || "text-foreground"}`}>{stat.value}</p>
+                      <p className="text-[10px] text-muted-foreground mt-1">{stat.label}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* PERFORMANCE TAB */}
+          {activeTab === "performance" && (
+            <div className="space-y-6">
+              <div className="glass-card-float p-6">
+                <h3 className="font-display text-sm font-semibold text-foreground mb-4">Core Web Vitals</h3>
+                <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
+                  {results.coreWebVitals.map(vital => (
+                    <div key={vital.label} className={`rounded-xl border p-4 text-center ${vital.status === "pass" ? "border-success/20 bg-success/5" : vital.status === "warning" ? "border-warning/20 bg-warning/5" : "border-destructive/20 bg-destructive/5"}`}>
+                      <span className={`h-2.5 w-2.5 rounded-full inline-block mb-2 ${vital.status === "pass" ? "bg-success" : vital.status === "warning" ? "bg-warning" : "bg-destructive"}`} />
+                      <p className="text-lg font-bold text-foreground tabular-nums">{vital.value}</p>
+                      <p className="text-[10px] text-muted-foreground mt-1">{vital.label}</p>
+                      <p className="text-[10px] text-muted-foreground/70">Target: {vital.target}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="grid lg:grid-cols-2 gap-6">
+                <div className="glass-card-float p-6">
+                  <div className="flex items-center gap-2 mb-4">
+                    <Image className="h-4 w-4 text-accent" />
+                    <h3 className="font-display text-sm font-semibold text-foreground">Image Optimization</h3>
+                  </div>
+                  <div className="grid grid-cols-2 gap-3">
+                    <div className="rounded-lg bg-secondary/40 p-3 text-center">
+                      <p className="text-lg font-bold text-foreground">{results.imageOptimization.total}</p>
+                      <p className="text-[10px] text-muted-foreground">Total Images</p>
+                    </div>
+                    <div className="rounded-lg bg-secondary/40 p-3 text-center">
+                      <p className="text-lg font-bold text-foreground">{results.imageOptimization.withAlt}</p>
+                      <p className="text-[10px] text-muted-foreground">With Alt Text</p>
+                    </div>
+                    <div className="rounded-lg bg-secondary/40 p-3 text-center">
+                      <p className={`text-lg font-bold ${results.imageOptimization.oversized > 10 ? "text-destructive" : "text-foreground"}`}>{results.imageOptimization.oversized}</p>
+                      <p className="text-[10px] text-muted-foreground">Oversized</p>
+                    </div>
+                    <div className="rounded-lg bg-secondary/40 p-3 text-center">
+                      <p className="text-lg font-bold text-foreground">{results.imageOptimization.modernFormat}%</p>
+                      <p className="text-[10px] text-muted-foreground">Modern Format</p>
+                    </div>
+                  </div>
+                  <div className="mt-3 flex items-center justify-between rounded-lg bg-secondary/40 p-3">
+                    <span className="text-xs text-muted-foreground">Lazy Loading</span>
+                    <span className="text-xs font-bold text-foreground">{results.imageOptimization.lazyLoaded}%</span>
+                  </div>
+                </div>
+
+                <div className="glass-card-float p-6">
+                  <div className="flex items-center gap-2 mb-4">
+                    <Code className="h-4 w-4 text-accent" />
+                    <h3 className="font-display text-sm font-semibold text-foreground">JS & CSS Analysis</h3>
+                  </div>
+                  <div className="space-y-2.5">
+                    {[
+                      { label: "Total JS Size", value: results.jsAndCss.totalJsSize },
+                      { label: "Total CSS Size", value: results.jsAndCss.totalCssSize },
+                      { label: "Render-Blocking Resources", value: results.jsAndCss.renderBlocking, warn: results.jsAndCss.renderBlocking > 4 },
+                      { label: "Unused CSS", value: `${results.jsAndCss.unusedCss}%`, warn: results.jsAndCss.unusedCss > 30 },
+                      { label: "Third-Party Scripts", value: results.jsAndCss.thirdPartyScripts, warn: results.jsAndCss.thirdPartyScripts > 8 },
+                    ].map(item => (
+                      <div key={item.label} className="flex items-center justify-between rounded-lg bg-secondary/40 p-3">
+                        <span className="text-xs text-muted-foreground">{item.label}</span>
+                        <span className={`text-xs font-bold tabular-nums ${'warn' in item && item.warn ? "text-warning" : "text-foreground"}`}>{item.value}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              <div className="glass-card-float p-6">
+                <h3 className="font-display text-sm font-semibold text-foreground mb-1">Ranking Growth Potential</h3>
+                <p className="text-xs text-muted-foreground mb-4">Projected organic traffic index with optimization</p>
+                <ResponsiveContainer width="100%" height={250}>
+                  <LineChart data={results.rankingPotential}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" strokeOpacity={0.5} />
+                    <XAxis dataKey="month" tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 11 }} />
+                    <YAxis tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 11 }} />
+                    <Tooltip {...chartTooltipStyle} />
+                    <Line type="monotone" dataKey="current" stroke="hsl(var(--muted-foreground))" strokeWidth={2} strokeDasharray="5 5" dot={false} name="Without optimization" />
+                    <Line type="monotone" dataKey="potential" stroke="hsl(var(--accent))" strokeWidth={3} dot={false} name="With optimization" />
+                  </LineChart>
+                </ResponsiveContainer>
+              </div>
+            </div>
+          )}
+
           {activeTab === "insights" && (
             <div className="space-y-6">
               {/* AI-powered insights */}

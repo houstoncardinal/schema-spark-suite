@@ -43,6 +43,27 @@ function clamp(val: number, min: number, max: number): number {
   return Math.max(min, Math.min(max, Math.round(val)));
 }
 
+export interface SERPFeature {
+  name: string;
+  eligible: boolean;
+  currentlyShowing: boolean;
+  potential: string;
+}
+
+export interface SecurityCheck {
+  label: string;
+  status: "pass" | "fail" | "warning";
+  detail: string;
+}
+
+export interface MobileAnalysis {
+  mobileScore: number;
+  viewportConfigured: boolean;
+  tapTargetsSized: boolean;
+  fontSizeReadable: boolean;
+  contentFitsViewport: boolean;
+}
+
 export interface SEOAuditResult {
   url: string;
   domain: string;
@@ -61,11 +82,17 @@ export interface SEOAuditResult {
   contentDetails: { label: string; value: number; maxValue: number }[];
   coreWebVitals: { label: string; value: string; target: string; status: "pass" | "fail" | "warning" }[];
   recommendations: { priority: "High" | "Medium" | "Low"; title: string; description: string; completed: boolean }[];
-  metaTags: { title: string; titleLength: number; description: string; descriptionLength: number; hasOG: boolean; hasCanonical: boolean };
+  metaTags: { title: string; titleLength: number; description: string; descriptionLength: number; hasOG: boolean; hasCanonical: boolean; hasTwitterCard: boolean; hasViewport: boolean; hasCharset: boolean; hasHreflang: boolean };
   headingStructure: { tag: string; text: string; issues: string[] }[];
-  internalLinks: { count: number; orphanPages: number; avgLinksPerPage: number };
+  internalLinks: { count: number; orphanPages: number; avgLinksPerPage: number; brokenLinks: number; redirectChains: number };
   pageCount: number;
   indexedPages: number;
+  serpFeatures: SERPFeature[];
+  securityChecks: SecurityCheck[];
+  mobileAnalysis: MobileAnalysis;
+  httpStatusDistribution: { status: string; count: number }[];
+  imageOptimization: { total: number; withAlt: number; oversized: number; modernFormat: number; lazyLoaded: number };
+  jsAndCss: { totalJsSize: string; totalCssSize: string; renderBlocking: number; unusedCss: number; thirdPartyScripts: number };
 }
 
 export interface SEOInsight {
@@ -333,10 +360,55 @@ export function analyzeSEO(input: string): SEOAuditResult {
       descriptionLength: descLength,
       hasOG: rand() > 0.4,
       hasCanonical: canonicalTags > 50,
+      hasTwitterCard: rand() > 0.5,
+      hasViewport: rand() > 0.15,
+      hasCharset: rand() > 0.1,
+      hasHreflang: rand() > 0.7,
     },
     headingStructure,
-    internalLinks: { count: internalLinkCount, orphanPages, avgLinksPerPage },
+    internalLinks: { count: internalLinkCount, orphanPages, avgLinksPerPage, brokenLinks: clamp(Math.round(rand() * pageCount * 0.08), 0, 30), redirectChains: clamp(Math.round(rand() * 8), 0, 15) },
     pageCount,
     indexedPages,
+    serpFeatures: [
+      { name: "Featured Snippet", eligible: content > 50, currentlyShowing: rand() > 0.7, potential: content > 70 ? "High" : "Medium" },
+      { name: "People Also Ask", eligible: true, currentlyShowing: rand() > 0.5, potential: "High" },
+      { name: "Sitelinks", eligible: authority > 40, currentlyShowing: authority > 60 && rand() > 0.4, potential: authority > 50 ? "High" : "Low" },
+      { name: "FAQ Rich Result", eligible: schemaPresence, currentlyShowing: schemaPresence && rand() > 0.6, potential: schemaPresence ? "High" : "Medium" },
+      { name: "Image Pack", eligible: rand() > 0.3, currentlyShowing: rand() > 0.6, potential: "Medium" },
+      { name: "Video Carousel", eligible: rand() > 0.6, currentlyShowing: rand() > 0.8, potential: "Low" },
+    ],
+    securityChecks: [
+      { label: "HTTPS/SSL", status: isHttps ? "pass" : "fail", detail: isHttps ? "Valid SSL certificate detected" : "No HTTPS — critical for rankings and trust" },
+      { label: "Mixed Content", status: rand() > 0.7 ? "pass" : "warning", detail: rand() > 0.7 ? "No mixed content issues" : "HTTP resources loaded on HTTPS pages" },
+      { label: "Security Headers", status: rand() > 0.5 ? "pass" : "warning", detail: rand() > 0.5 ? "X-Content-Type, X-Frame-Options present" : "Missing CSP or HSTS headers" },
+      { label: "Malware Scan", status: "pass", detail: "No malware or suspicious scripts detected" },
+    ],
+    mobileAnalysis: {
+      mobileScore: clamp(ux - Math.round(rand() * 10), 30, 98),
+      viewportConfigured: rand() > 0.15,
+      tapTargetsSized: rand() > 0.3,
+      fontSizeReadable: rand() > 0.2,
+      contentFitsViewport: rand() > 0.25,
+    },
+    httpStatusDistribution: [
+      { status: "200 OK", count: clamp(Math.round(pageCount * (0.8 + rand() * 0.15)), 1, pageCount) },
+      { status: "301 Redirect", count: clamp(Math.round(rand() * pageCount * 0.1), 0, 30) },
+      { status: "404 Not Found", count: clamp(Math.round(rand() * pageCount * 0.05), 0, 15) },
+      { status: "500 Server Error", count: clamp(Math.round(rand() * 3), 0, 5) },
+    ],
+    imageOptimization: {
+      total: clamp(Math.round(pageCount * (3 + rand() * 5)), 10, 500),
+      withAlt: clamp(Math.round(pageCount * (2 + rand() * 3)), 5, 400),
+      oversized: clamp(Math.round(rand() * 20), 0, 40),
+      modernFormat: clamp(Math.round(rand() * 60 + 20), 10, 90),
+      lazyLoaded: clamp(Math.round(rand() * 70 + 10), 5, 95),
+    },
+    jsAndCss: {
+      totalJsSize: `${(0.3 + rand() * 2.5).toFixed(1)} MB`,
+      totalCssSize: `${(0.05 + rand() * 0.4).toFixed(1)} MB`,
+      renderBlocking: clamp(Math.round(rand() * 8), 0, 12),
+      unusedCss: clamp(Math.round(rand() * 40 + 10), 5, 60),
+      thirdPartyScripts: clamp(Math.round(rand() * 12 + 2), 1, 20),
+    },
   };
 }
