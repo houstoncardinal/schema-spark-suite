@@ -161,18 +161,18 @@ const BlogPost = () => {
           <div>
             {/* Article Body */}
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }}
-              className="prose prose-neutral dark:prose-invert max-w-none
+              className="article-body prose prose-lg prose-neutral dark:prose-invert max-w-none
                 prose-headings:font-bold prose-headings:tracking-tight prose-headings:text-foreground
-                prose-h2:text-[1.65rem] prose-h2:mt-14 prose-h2:mb-4 prose-h2:pb-3 prose-h2:border-b prose-h2:border-border
-                prose-h3:text-xl prose-h3:mt-8 prose-h3:mb-3
-                prose-p:text-[1.05rem] prose-p:leading-[1.8] prose-p:text-muted-foreground
-                prose-li:text-muted-foreground prose-li:text-[1.05rem] prose-li:leading-[1.8]
+                prose-h2:text-[1.65rem] prose-h2:mt-16 prose-h2:mb-6 prose-h2:pb-3 prose-h2:border-b prose-h2:border-border
+                prose-h3:text-xl prose-h3:mt-10 prose-h3:mb-4
+                prose-p:text-[1.05rem] prose-p:leading-[1.85] prose-p:text-muted-foreground prose-p:mb-6
+                prose-li:text-muted-foreground prose-li:text-[1.05rem] prose-li:leading-[1.85]
                 prose-strong:text-foreground prose-strong:font-semibold
                 prose-a:text-accent prose-a:no-underline hover:prose-a:underline
                 prose-code:text-accent prose-code:bg-secondary prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-code:text-sm prose-code:font-normal
-                prose-pre:bg-secondary prose-pre:border prose-pre:border-border prose-pre:rounded-xl
-                prose-ol:space-y-2 prose-ul:space-y-2
-                prose-blockquote:border-l-accent prose-blockquote:bg-secondary/50 prose-blockquote:rounded-r-xl prose-blockquote:py-2 prose-blockquote:px-6 prose-blockquote:not-italic"
+                prose-pre:bg-secondary prose-pre:border prose-pre:border-border prose-pre:rounded-xl prose-pre:my-8
+                prose-ol:space-y-3 prose-ol:my-6 prose-ul:space-y-3 prose-ul:my-6
+                prose-blockquote:border-l-accent prose-blockquote:bg-secondary/50 prose-blockquote:rounded-r-xl prose-blockquote:py-2 prose-blockquote:px-6 prose-blockquote:not-italic prose-blockquote:my-8"
               dangerouslySetInnerHTML={{ __html: post.content }}
             />
 
