@@ -90,9 +90,15 @@ export function Header() {
             {darkMode ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
           </button>
 
-          <Link to="/contact" className="btn-primary-gradient hidden sm:inline-flex text-sm px-5 py-2">
-            Get SEO Strategy
-          </Link>
+          {user ? (
+            <Link to="/dashboard" className="btn-primary-gradient hidden sm:inline-flex text-sm px-5 py-2">
+              Dashboard
+            </Link>
+          ) : (
+            <Link to="/auth" className="hidden sm:inline-flex items-center gap-1.5 rounded-xl border border-accent bg-accent/10 px-5 py-2 text-sm font-medium text-accent hover:bg-accent/20 transition-colors">
+              <LogIn className="h-3.5 w-3.5" /> Sign In
+            </Link>
+          )}
 
           <button
             onClick={() => setMobileOpen(!mobileOpen)}
