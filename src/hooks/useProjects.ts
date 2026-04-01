@@ -4,7 +4,7 @@ import { useAuth } from "@/hooks/useAuth";
 import type { Tables } from "@/integrations/supabase/types";
 import { toast } from "sonner";
 
-type Project = Tables<"projects">["Row"];
+type Project = Tables<"projects">;
 
 export function useProjects() {
   const { user } = useAuth();
