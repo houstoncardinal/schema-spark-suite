@@ -6,10 +6,10 @@ import { useAuth } from "@/hooks/useAuth";
 
 const navItems = [
   { label: "Tools", href: "/tools", children: [
-    { label: "SEO Analyzer", href: "/tools/analyzer" },
+    { label: "AI SEO Audit", href: "/tools/ai-audit" },
     { label: "Keyword Research", href: "/tools/keywords" },
     { label: "Backlink Checker", href: "/tools/backlinks" },
-    { label: "Schema Generator", href: "/tools/schema-generator" },
+    { label: "Schema Generator", href: "/tools/schema" },
   ]},
   { label: "Schema Library", href: "/schema-library" },
   { label: "Learning Hub", href: "/blog" },
