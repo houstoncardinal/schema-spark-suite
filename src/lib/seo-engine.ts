@@ -43,6 +43,27 @@ function clamp(val: number, min: number, max: number): number {
   return Math.max(min, Math.min(max, Math.round(val)));
 }
 
+export interface SERPFeature {
+  name: string;
+  eligible: boolean;
+  currentlyShowing: boolean;
+  potential: string;
+}
+
+export interface SecurityCheck {
+  label: string;
+  status: "pass" | "fail" | "warning";
+  detail: string;
+}
+
+export interface MobileAnalysis {
+  mobileScore: number;
+  viewportConfigured: boolean;
+  tapTargetsSized: boolean;
+  fontSizeReadable: boolean;
+  contentFitsViewport: boolean;
+}
+
 export interface SEOAuditResult {
   url: string;
   domain: string;
@@ -61,11 +82,17 @@ export interface SEOAuditResult {
   contentDetails: { label: string; value: number; maxValue: number }[];
   coreWebVitals: { label: string; value: string; target: string; status: "pass" | "fail" | "warning" }[];
   recommendations: { priority: "High" | "Medium" | "Low"; title: string; description: string; completed: boolean }[];
-  metaTags: { title: string; titleLength: number; description: string; descriptionLength: number; hasOG: boolean; hasCanonical: boolean };
+  metaTags: { title: string; titleLength: number; description: string; descriptionLength: number; hasOG: boolean; hasCanonical: boolean; hasTwitterCard: boolean; hasViewport: boolean; hasCharset: boolean; hasHreflang: boolean };
   headingStructure: { tag: string; text: string; issues: string[] }[];
-  internalLinks: { count: number; orphanPages: number; avgLinksPerPage: number };
+  internalLinks: { count: number; orphanPages: number; avgLinksPerPage: number; brokenLinks: number; redirectChains: number };
   pageCount: number;
   indexedPages: number;
+  serpFeatures: SERPFeature[];
+  securityChecks: SecurityCheck[];
+  mobileAnalysis: MobileAnalysis;
+  httpStatusDistribution: { status: string; count: number }[];
+  imageOptimization: { total: number; withAlt: number; oversized: number; modernFormat: number; lazyLoaded: number };
+  jsAndCss: { totalJsSize: string; totalCssSize: string; renderBlocking: number; unusedCss: number; thirdPartyScripts: number };
 }
 
 export interface SEOInsight {
