@@ -157,6 +157,53 @@ export function KeywordResearchTool() {
               </table>
             </div>
           </div>
+
+          {/* AI Keyword Intelligence */}
+          {aiLoading && (
+            <div className="glass-card-float p-6 text-center">
+              <Sparkles className="h-5 w-5 text-accent animate-pulse mx-auto mb-2" />
+              <p className="text-sm font-medium text-foreground">AI analyzing keyword strategy...</p>
+            </div>
+          )}
+
+          {aiData && (
+            <div className="glass-card-float p-6">
+              <div className="flex items-center gap-2 mb-4">
+                <Brain className="h-4 w-4 text-accent" />
+                <h3 className="font-display text-sm font-semibold text-foreground">AI Keyword Intelligence</h3>
+                <span className="text-[10px] bg-accent/10 text-accent px-2 py-0.5 rounded-full font-semibold">Powered by AI</span>
+              </div>
+              <p className="text-sm text-foreground mb-4 leading-relaxed">{aiData.analysis}</p>
+              <div className="grid md:grid-cols-2 gap-4">
+                <div className="rounded-xl bg-secondary/50 p-4">
+                  <h4 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">Recommended Strategy</h4>
+                  <p className="text-sm text-foreground">{aiData.strategy}</p>
+                </div>
+                <div className="rounded-xl bg-secondary/50 p-4">
+                  <h4 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">Content Angle</h4>
+                  <p className="text-sm text-foreground">{aiData.contentAngle}</p>
+                </div>
+              </div>
+              <div className="mt-4 rounded-xl bg-secondary/50 p-4">
+                <h4 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">Competitive Insight</h4>
+                <p className="text-sm text-foreground">{aiData.competitiveInsight}</p>
+              </div>
+              <div className="mt-4 rounded-xl bg-secondary/50 p-4">
+                <h4 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">Time to Rank</h4>
+                <p className="text-sm text-foreground">{aiData.estimatedTimeToRank}</p>
+              </div>
+              {aiData.relatedOpportunities?.length > 0 && (
+                <div className="mt-4">
+                  <h4 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">Related Opportunities</h4>
+                  <div className="flex flex-wrap gap-2">
+                    {aiData.relatedOpportunities.map((opp, i) => (
+                      <span key={i} className="text-xs bg-accent/10 text-accent px-2.5 py-1 rounded-lg font-medium">{opp}</span>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
         </motion.div>
       )}
     </div>
