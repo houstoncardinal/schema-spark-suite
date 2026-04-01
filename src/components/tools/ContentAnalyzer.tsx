@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { FileText, Loader2, ArrowRight, Brain, BookOpen, Sparkles } from "lucide-react";
+import { FileText, Loader2, ArrowRight, Brain, BookOpen, Sparkles, CheckCircle, AlertTriangle } from "lucide-react";
 import { ScoreRing } from "@/components/charts/ScoreRing";
 import { AnimatedBarGroup } from "@/components/charts/AnimatedBar";
 import { InsightList } from "@/components/charts/InsightCard";
