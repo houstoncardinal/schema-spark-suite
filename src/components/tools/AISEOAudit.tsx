@@ -34,7 +34,7 @@ export function AISEOAudit() {
   const [url, setUrl] = useState("");
   const [loading, setLoading] = useState(false);
   const [loadingStep, setLoadingStep] = useState(0);
-  const [results, setResults] = useState<AuditResults | null>(null);
+  const [results, setResults] = useState<SEOAuditResult | null>(null);
   const [activeTab, setActiveTab] = useState("overview");
 
   const analyze = () => {
@@ -56,7 +56,7 @@ export function AISEOAudit() {
     setTimeout(() => {
       clearInterval(interval);
       setLoading(false);
-      setResults(generateMockResults());
+      setResults(analyzeSEO(url));
     }, 4000);
   };
 
