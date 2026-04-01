@@ -31,7 +31,7 @@ export function OverviewPanel({ data }: { data: DashboardData }) {
       organicTraffic: project.organicTraffic,
       keywordsRanked: project.keywordsRanked,
       activeIssues: project.activeIssues,
-      totalBacklinks: backlinks.total,
+      totalBacklinks: backlinks.totalBacklinks,
       referringDomains: backlinks.referringDomains,
     }).then(res => { if (!cancelled) setAiInsights(res); })
       .catch(err => console.error("Dashboard AI insights failed:", err))
