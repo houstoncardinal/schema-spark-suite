@@ -120,12 +120,30 @@ export function AIAgentsPanel({ data }: { data: PredictiveData }) {
                   <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }}
                     transition={{ duration: 0.25 }} className="overflow-hidden">
                     <div className="px-5 pb-5 border-t border-border/30 pt-4">
+                      {loadingAgents[agent.id] && (
+                        <div className="flex items-center gap-2 mb-4 p-3 rounded-lg bg-accent/5">
+                          <Sparkles className="h-4 w-4 text-accent animate-pulse" />
+                          <span className="text-xs text-foreground">AI generating enhanced recommendations...</span>
+                        </div>
+                      )}
+                      {aiEnhancements[agent.id]?.prioritySummary && (
+                        <div className="mb-4 p-3 rounded-lg bg-accent/5 border border-accent/20">
+                          <div className="flex items-center gap-1.5 mb-1">
+                            <Sparkles className="h-3 w-3 text-accent" />
+                            <span className="text-[10px] font-bold text-accent uppercase tracking-wider">AI Priority</span>
+                          </div>
+                          <p className="text-xs text-foreground">{aiEnhancements[agent.id].prioritySummary}</p>
+                        </div>
+                      )}
                       <div className="grid lg:grid-cols-2 gap-6">
                         {/* Recommendations */}
                         <div>
-                          <h4 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-3">Recommendations</h4>
+                          <h4 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-3">
+                            Recommendations
+                            {aiEnhancements[agent.id] && <span className="ml-1 text-accent">(AI)</span>}
+                          </h4>
                           <div className="space-y-3">
-                            {agent.recommendations.map((rec, j) => (
+                            {(aiEnhancements[agent.id]?.recommendations || agent.recommendations).map((rec, j) => (
                               <div key={j} className="rounded-lg border border-border/50 p-3 bg-background/50">
                                 <div className="flex items-center justify-between mb-1">
                                   <span className={`text-[10px] font-bold uppercase ${
@@ -143,6 +161,14 @@ export function AIAgentsPanel({ data }: { data: PredictiveData }) {
                                   <pre className="mt-2 rounded-lg bg-secondary/80 p-2 text-[10px] font-mono text-muted-foreground overflow-x-auto">
                                     {rec.code}
                                   </pre>
+                                )}
+                                {"estimatedEffect" in rec && (rec as any).estimatedEffect && (
+                                  <p className="text-[10px] text-accent mt-1 font-medium">↑ {(rec as any).estimatedEffect}</p>
+                                )}
+                              </div>
+                            ))}
+                          </div>
+                        </div>
                                 )}
                               </div>
                             ))}
