@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { Layout } from "@/components/Layout";
-import { Search, BarChart3, Link2, FileCode2, Shield, FileText, ArrowRight, Globe, Loader2, Brain, Sparkles, Zap } from "lucide-react";
+import { BarChart3, Link2, FileCode2, FileText, Brain, Sparkles } from "lucide-react";
 import { AISEOAudit } from "@/components/tools/AISEOAudit";
 import { KeywordResearchTool } from "@/components/tools/KeywordResearchTool";
 import { ContentAnalyzer } from "@/components/tools/ContentAnalyzer";
@@ -11,7 +11,7 @@ import { SchemaGenerator } from "@/components/tools/SchemaGenerator";
 import { BacklinkChecker } from "@/components/tools/BacklinkChecker";
 
 const toolsList = [
-  { id: "ai-audit", icon: Brain, title: "AI SEO Audit", desc: "AI-powered deep analysis", featured: true },
+  { id: "ai-audit", icon: Brain, title: "AI SEO Audit", desc: "AI-powered deep analysis" },
   { id: "keywords", icon: BarChart3, title: "Keyword Research", desc: "Volume, difficulty & trends" },
   { id: "environment", icon: Sparkles, title: "Market Analysis", desc: "Competitive landscape" },
   { id: "content", icon: FileText, title: "Content Analyzer", desc: "NLP & readability" },
@@ -25,49 +25,32 @@ const Tools = () => {
 
   return (
     <Layout>
-      <section className="section-padding relative">
-        <div className="absolute inset-0 mesh-bg" />
-        <div className="container-wide relative">
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center mb-12">
-            <div className="inline-flex items-center gap-2 rounded-full border border-accent/20 bg-accent/5 px-4 py-1.5 text-xs font-semibold text-accent mb-4">
-              <Zap className="h-3 w-3" /> AI-Powered Intelligence Suite
-            </div>
-            <h1 className="font-display text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mb-4">
-              Advanced SEO <span className="gradient-text">Analysis Engine</span>
+      <section className="section-padding">
+        <div className="container-wide">
+          <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} className="text-center mb-10">
+            <p className="label-overline mb-3">Tools</p>
+            <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-3 tracking-tight">
+              SEO Analysis Engine
             </h1>
-            <p className="text-muted-foreground max-w-xl mx-auto">
-              Deep analytical tools powered by real algorithms — uncover insights that transform your search performance.
+            <p className="text-muted-foreground max-w-lg mx-auto">
+              Professional tools powered by real algorithms for actionable intelligence.
             </p>
           </motion.div>
 
-          <div className="flex flex-wrap justify-center gap-2 mb-10">
-            {toolsList.map((tool) => (
-              <button
-                key={tool.id}
-                onClick={() => setActiveTool(tool.id)}
-                className={`flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-medium transition-all relative ${
-                  activeTool === tool.id
-                    ? "bg-primary text-primary-foreground shadow-lg"
-                    : "bg-secondary text-muted-foreground hover:text-foreground hover:bg-secondary/80"
-                }`}
-              >
-                <tool.icon className="h-4 w-4" />
+          <div className="flex flex-wrap justify-center gap-1.5 mb-8">
+            {toolsList.map(tool => (
+              <button key={tool.id} onClick={() => setActiveTool(tool.id)}
+                className={`flex items-center gap-1.5 rounded-full px-4 py-2 text-sm font-medium transition-colors ${
+                  activeTool === tool.id ? "bg-foreground text-background" : "text-muted-foreground hover:text-foreground"
+                }`}>
+                <tool.icon className="h-3.5 w-3.5" />
                 <span className="hidden sm:inline">{tool.title}</span>
-                {tool.featured && activeTool !== tool.id && (
-                  <span className="absolute -top-1 -right-1 h-2 w-2 rounded-full bg-accent animate-pulse" />
-                )}
               </button>
             ))}
           </div>
 
           <AnimatePresence mode="wait">
-            <motion.div
-              key={activeTool}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              transition={{ duration: 0.3 }}
-            >
+            <motion.div key={activeTool} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -4 }} transition={{ duration: 0.2 }}>
               {activeTool === "ai-audit" && <AISEOAudit />}
               {activeTool === "keywords" && <KeywordResearchTool />}
               {activeTool === "environment" && <EnvironmentalAnalysis />}
