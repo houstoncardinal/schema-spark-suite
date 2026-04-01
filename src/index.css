@@ -291,6 +291,77 @@
   .floating-label {
     @apply absolute -top-2.5 left-3 px-1.5 text-[10px] font-semibold uppercase tracking-wider bg-background text-muted-foreground;
   }
+
+  /* Editorial Article Components */
+  .article-callout {
+    @apply relative my-8 p-6 rounded-2xl border border-border bg-secondary/40;
+  }
+  .article-callout::before {
+    content: '';
+    @apply absolute left-0 top-4 bottom-4 w-[3px] rounded-full;
+    background: hsl(var(--accent));
+  }
+  .article-callout-title {
+    @apply text-xs font-bold uppercase tracking-[0.15em] text-accent mb-2;
+  }
+  .article-callout p {
+    @apply text-sm text-muted-foreground leading-relaxed;
+  }
+
+  .article-pull-quote {
+    @apply relative my-10 py-8 px-8 border-y border-border;
+  }
+  .article-pull-quote p {
+    @apply text-xl sm:text-2xl font-semibold text-foreground leading-snug tracking-tight text-center italic;
+  }
+  .article-pull-quote cite {
+    @apply block text-center text-sm text-muted-foreground mt-3 not-italic;
+  }
+
+  .article-stat-grid {
+    @apply grid grid-cols-2 sm:grid-cols-3 gap-4 my-8;
+  }
+  .article-stat-card {
+    @apply flex flex-col items-center justify-center p-5 rounded-xl bg-card border border-border text-center;
+  }
+  .article-stat-value {
+    @apply text-2xl sm:text-3xl font-bold text-foreground tracking-tight;
+  }
+  .article-stat-label {
+    @apply text-xs text-muted-foreground mt-1 leading-tight;
+  }
+
+  .article-key-takeaway {
+    @apply my-10 p-6 sm:p-8 rounded-2xl border-2 border-accent/20 bg-accent/[0.03];
+  }
+  .article-key-takeaway-title {
+    @apply flex items-center gap-2 text-sm font-bold text-accent mb-4;
+  }
+  .article-key-takeaway ul {
+    @apply space-y-2;
+  }
+  .article-key-takeaway li {
+    @apply text-sm text-muted-foreground leading-relaxed pl-4 relative;
+  }
+  .article-key-takeaway li::before {
+    content: '→';
+    @apply absolute left-0 text-accent;
+  }
+
+  .article-chapter-intro {
+    @apply text-lg sm:text-xl text-foreground font-medium leading-relaxed mb-6;
+  }
+
+  .article-inline-figure {
+    @apply my-8 rounded-xl overflow-hidden border border-border;
+  }
+  .article-inline-figure figcaption {
+    @apply text-xs text-muted-foreground text-center py-3 px-4 bg-secondary/50;
+  }
+
+  .article-step-number {
+    @apply inline-flex items-center justify-center w-8 h-8 rounded-full bg-accent text-accent-foreground text-sm font-bold mr-3 shrink-0;
+  }
 }
 
 @keyframes pulse-dot {
