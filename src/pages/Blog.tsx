@@ -116,5 +116,4 @@ const Blog = () => {
   );
 };
 
-import { useState } from "react";
 export default Blog;
