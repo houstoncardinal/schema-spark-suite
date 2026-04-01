@@ -235,13 +235,7 @@ export function AISEOAudit() {
               <div className="glass-card-float p-6">
                 <h3 className="font-display text-sm font-semibold text-foreground mb-4">Core Web Vitals</h3>
                 <div className="space-y-5">
-                  {[
-                    { label: "Largest Contentful Paint", value: "4.2s", target: "< 2.5s", status: "fail" },
-                    { label: "First Input Delay", value: "45ms", target: "< 100ms", status: "pass" },
-                    { label: "Cumulative Layout Shift", value: "0.18", target: "< 0.1", status: "fail" },
-                    { label: "Time to First Byte", value: "0.8s", target: "< 0.8s", status: "pass" },
-                    { label: "First Contentful Paint", value: "2.1s", target: "< 1.8s", status: "warning" },
-                  ].map(vital => (
+                  {results.coreWebVitals.map(vital => (
                     <div key={vital.label} className="flex items-center justify-between py-2 border-b border-border/50 last:border-0">
                       <div>
                         <p className="text-sm font-medium text-foreground">{vital.label}</p>
