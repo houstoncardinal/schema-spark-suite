@@ -182,10 +182,20 @@ export function OverviewPanel({ data }: { data: DashboardData }) {
       <div className="grid lg:grid-cols-2 gap-6">
         <div className="glass-card-float p-6">
           <div className="flex items-center gap-2 mb-4">
-            <Brain className="h-4 w-4 text-accent" />
+            {aiLoading ? <Loader2 className="h-4 w-4 text-accent animate-spin" /> : <Brain className="h-4 w-4 text-accent" />}
             <h3 className="font-display text-sm font-semibold text-foreground">AI Intelligence Feed</h3>
+            {aiFormattedInsights && <span className="text-[10px] bg-accent/10 text-accent px-2 py-0.5 rounded-full font-semibold">Live AI</span>}
           </div>
-          <InsightList insights={insights} />
+          {aiInsights?.weeklyFocus && (
+            <div className="mb-4 rounded-lg bg-accent/5 border border-accent/20 p-3">
+              <div className="flex items-center gap-1.5 mb-1">
+                <Sparkles className="h-3 w-3 text-accent" />
+                <span className="text-[10px] font-bold text-accent uppercase tracking-wider">Weekly Focus</span>
+              </div>
+              <p className="text-xs text-foreground">{aiInsights.weeklyFocus}</p>
+            </div>
+          )}
+          <InsightList insights={aiFormattedInsights || fallbackInsights} />
         </div>
 
         <div className="glass-card-float p-6">
