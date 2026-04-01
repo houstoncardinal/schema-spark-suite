@@ -1,14 +1,15 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { Search, Menu, X, ChevronDown, Sun, Moon } from "lucide-react";
+import { Menu, X, ChevronDown, Sun, Moon, LogIn } from "lucide-react";
+import { useAuth } from "@/hooks/useAuth";
 
 const navItems = [
   { label: "Tools", href: "/tools", children: [
-    { label: "SEO Analyzer", href: "/tools/analyzer" },
+    { label: "AI SEO Audit", href: "/tools/ai-audit" },
     { label: "Keyword Research", href: "/tools/keywords" },
     { label: "Backlink Checker", href: "/tools/backlinks" },
-    { label: "Schema Generator", href: "/tools/schema-generator" },
+    { label: "Schema Generator", href: "/tools/schema" },
   ]},
   { label: "Schema Library", href: "/schema-library" },
   { label: "Learning Hub", href: "/blog" },
@@ -21,6 +22,7 @@ export function Header() {
   const [hoveredNav, setHoveredNav] = useState<string | null>(null);
   const [darkMode, setDarkMode] = useState(false);
   const location = useLocation();
+  const { user } = useAuth();
 
   const toggleDark = () => {
     setDarkMode(!darkMode);
@@ -88,9 +90,15 @@ export function Header() {
             {darkMode ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
           </button>
 
-          <Link to="/contact" className="btn-primary-gradient hidden sm:inline-flex text-sm px-5 py-2">
-            Get SEO Strategy
-          </Link>
+          {user ? (
+            <Link to="/dashboard" className="btn-primary-gradient hidden sm:inline-flex text-sm px-5 py-2">
+              Dashboard
+            </Link>
+          ) : (
+            <Link to="/auth" className="hidden sm:inline-flex items-center gap-1.5 rounded-xl border border-accent bg-accent/10 px-5 py-2 text-sm font-medium text-accent hover:bg-accent/20 transition-colors">
+              <LogIn className="h-3.5 w-3.5" /> Sign In
+            </Link>
+          )}
 
           <button
             onClick={() => setMobileOpen(!mobileOpen)}
