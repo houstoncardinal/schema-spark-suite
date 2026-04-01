@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Bot, Cpu, Link2, FileCode2, FileText, Activity, CheckCircle, AlertTriangle, Zap, Play, Pause, ChevronDown, ChevronUp, Code } from "lucide-react";
+import { Bot, Cpu, Link2, FileCode2, FileText, Activity, CheckCircle, AlertTriangle, Zap, Play, Pause, ChevronDown, ChevronUp, Code, Sparkles, Loader2 } from "lucide-react";
 import type { AIAgent, PredictiveData } from "@/lib/predictive-engine";
+import { aiSEOApi, type AIAgentResponse } from "@/lib/ai-seo-api";
 
 const agentIcons: Record<string, typeof Bot> = {
   technical: Cpu,
