@@ -9,6 +9,7 @@ import Tools from "./pages/Tools.tsx";
 import Services from "./pages/Services.tsx";
 import Contact from "./pages/Contact.tsx";
 import SchemaLibrary from "./pages/SchemaLibrary.tsx";
+import SchemaValidator from "./pages/SchemaValidator.tsx";
 import Dashboard from "./pages/Dashboard.tsx";
 import Blog from "./pages/Blog.tsx";
 import Auth from "./pages/Auth.tsx";
@@ -30,6 +31,7 @@ const App = () => (
             <Route path="/services" element={<Services />} />
             <Route path="/contact" element={<Contact />} />
             <Route path="/schema-library" element={<SchemaLibrary />} />
+            <Route path="/schema-validator" element={<SchemaValidator />} />
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/blog" element={<Blog />} />
             <Route path="/auth" element={<Auth />} />
