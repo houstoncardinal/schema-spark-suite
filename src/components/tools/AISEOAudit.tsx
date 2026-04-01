@@ -1,12 +1,14 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Globe, Loader2, ArrowRight, Brain, CheckCircle, Shield, FileText, Link2, Gauge, Code, Eye } from "lucide-react";
+import { Globe, Loader2, ArrowRight, Brain, CheckCircle, Shield, FileText, Link2, Gauge, Code, Eye, Sparkles } from "lucide-react";
 import { ScoreRing } from "@/components/charts/ScoreRing";
 import { SEORadarChart } from "@/components/charts/SEORadarChart";
 import { InsightList } from "@/components/charts/InsightCard";
 import { AnimatedBarGroup } from "@/components/charts/AnimatedBar";
 import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, LineChart, Line } from "recharts";
 import { analyzeSEO, type SEOAuditResult } from "@/lib/seo-engine";
+import { aiSEOApi, type AISEOAuditResponse } from "@/lib/ai-seo-api";
+import { toast } from "sonner";
 
 const loadingSteps = [
   "Crawling website structure...",
@@ -35,12 +37,15 @@ export function AISEOAudit() {
   const [loading, setLoading] = useState(false);
   const [loadingStep, setLoadingStep] = useState(0);
   const [results, setResults] = useState<SEOAuditResult | null>(null);
+  const [aiData, setAiData] = useState<AISEOAuditResponse | null>(null);
+  const [aiLoading, setAiLoading] = useState(false);
   const [activeTab, setActiveTab] = useState("overview");
 
-  const analyze = () => {
+  const analyze = async () => {
     if (!url.trim()) return;
     setLoading(true);
     setResults(null);
+    setAiData(null);
     setLoadingStep(0);
 
     const interval = setInterval(() => {
@@ -53,11 +58,31 @@ export function AISEOAudit() {
       });
     }, 500);
 
-    setTimeout(() => {
-      clearInterval(interval);
-      setLoading(false);
-      setResults(analyzeSEO(url));
-    }, 4000);
+    // Generate base analysis from deterministic engine
+    const baseResults = analyzeSEO(url);
+
+    // Wait for loading animation
+    await new Promise(resolve => setTimeout(resolve, 3500));
+    clearInterval(interval);
+    setLoading(false);
+    setResults(baseResults);
+
+    // Fetch AI-powered insights in background
+    setAiLoading(true);
+    try {
+      const aiResponse = await aiSEOApi.auditSite(
+        url,
+        { overall: baseResults.overall, technical: baseResults.technical, content: baseResults.content, authority: baseResults.authority, ux: baseResults.ux, speed: baseResults.speed, schema: baseResults.schema },
+        baseResults.issuesBySeverity
+      );
+      setAiData(aiResponse);
+      toast.success("AI analysis complete", { description: "Expert insights generated successfully" });
+    } catch (err) {
+      console.error("AI analysis failed:", err);
+      toast.error("AI enhancement unavailable", { description: "Showing algorithmic analysis results" });
+    } finally {
+      setAiLoading(false);
+    }
   };
 
   const tabs = [
@@ -300,21 +325,53 @@ export function AISEOAudit() {
 
           {/* INSIGHTS TAB */}
           {activeTab === "insights" && (
-            <div className="glass-card-float p-6">
-              <div className="flex items-center gap-2 mb-6">
-                <Brain className="h-4 w-4 text-accent" />
-                <h3 className="font-display text-sm font-semibold text-foreground">AI-Generated Expert Insights</h3>
+            <div className="space-y-6">
+              {/* AI-powered insights */}
+              {aiLoading && (
+                <div className="glass-card-float p-8 text-center">
+                  <div className="flex items-center justify-center gap-3 mb-2">
+                    <Sparkles className="h-5 w-5 text-accent animate-pulse" />
+                    <p className="font-medium text-foreground">AI is analyzing your site...</p>
+                  </div>
+                  <p className="text-sm text-muted-foreground">Generating expert-level insights with AI intelligence</p>
+                </div>
+              )}
+
+              {aiData?.summary && (
+                <div className="glass-card-float p-6 relative overflow-hidden">
+                  <div className="absolute inset-0 bg-gradient-to-r from-accent/5 via-transparent to-chart-4/5" />
+                  <div className="relative">
+                    <div className="flex items-center gap-2 mb-3">
+                      <Sparkles className="h-4 w-4 text-accent" />
+                      <span className="text-xs font-bold text-accent uppercase tracking-wider">AI Executive Summary</span>
+                    </div>
+                    <p className="text-sm text-foreground leading-relaxed">{aiData.summary}</p>
+                  </div>
+                </div>
+              )}
+
+              <div className="glass-card-float p-6">
+                <div className="flex items-center gap-2 mb-6">
+                  <Brain className="h-4 w-4 text-accent" />
+                  <h3 className="font-display text-sm font-semibold text-foreground">
+                    {aiData ? "AI-Generated Expert Insights" : "Algorithmic Insights"}
+                  </h3>
+                  {aiData && <span className="text-[10px] bg-accent/10 text-accent px-2 py-0.5 rounded-full font-semibold">Powered by AI</span>}
+                </div>
+                <InsightList insights={aiData?.insights || results.insights} />
               </div>
-              <InsightList insights={results.insights} />
             </div>
           )}
 
           {/* ACTIONS TAB */}
           {activeTab === "actions" && (
             <div className="glass-card-float p-6">
-              <h3 className="font-display text-sm font-semibold text-foreground mb-6">Prioritized Action Plan</h3>
+              <h3 className="font-display text-sm font-semibold text-foreground mb-6">
+                Prioritized Action Plan
+                {aiData && <span className="ml-2 text-[10px] bg-accent/10 text-accent px-2 py-0.5 rounded-full font-semibold">AI-Enhanced</span>}
+              </h3>
               <div className="space-y-3">
-                {results.recommendations.map((rec, i) => (
+                {(aiData?.recommendations || results.recommendations).map((rec, i) => (
                   <motion.div
                     key={rec.title}
                     initial={{ opacity: 0, y: 10 }}

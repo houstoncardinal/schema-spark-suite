@@ -1,11 +1,13 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { FileText, Loader2, ArrowRight, Brain, BookOpen } from "lucide-react";
+import { FileText, Loader2, ArrowRight, Brain, BookOpen, Sparkles, CheckCircle, AlertTriangle } from "lucide-react";
 import { ScoreRing } from "@/components/charts/ScoreRing";
 import { AnimatedBarGroup } from "@/components/charts/AnimatedBar";
 import { InsightList } from "@/components/charts/InsightCard";
 import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip } from "recharts";
 import { analyzeContent } from "@/lib/content-engine";
+import { aiSEOApi, type AIContentResponse } from "@/lib/ai-seo-api";
+import { toast } from "sonner";
 
 const chartTooltipStyle = {
   contentStyle: { background: "hsl(var(--card))", border: "1px solid hsl(var(--border))", borderRadius: "12px", fontSize: 12, fontFamily: "Inter", boxShadow: "var(--shadow-lg)" },
@@ -16,15 +18,38 @@ export function ContentAnalyzer() {
   const [url, setUrl] = useState("");
   const [loading, setLoading] = useState(false);
   const [results, setResults] = useState<ReturnType<typeof analyzeContent> | null>(null);
+  const [aiData, setAiData] = useState<AIContentResponse | null>(null);
+  const [aiLoading, setAiLoading] = useState(false);
 
-  const analyze = () => {
+  const analyze = async () => {
     if (!url.trim()) return;
     setLoading(true);
     setResults(null);
-    setTimeout(() => {
-      setLoading(false);
-      setResults(analyzeContent(url));
-    }, 2500);
+    setAiData(null);
+
+    const baseResults = analyzeContent(url);
+    await new Promise(resolve => setTimeout(resolve, 2000));
+    setLoading(false);
+    setResults(baseResults);
+
+    // Fetch AI content analysis
+    setAiLoading(true);
+    try {
+      const aiResponse = await aiSEOApi.analyzeContent(url, {
+        nlpScore: baseResults.nlpScore,
+        readability: baseResults.readability,
+        keywordRelevance: baseResults.keywordRelevance,
+        semanticCoverage: baseResults.semanticCoverage,
+        contentDepth: baseResults.contentDepth,
+        eeatSignals: baseResults.eeatSignals,
+      });
+      setAiData(aiResponse);
+      toast.success("AI content analysis complete");
+    } catch (err) {
+      console.error("AI content analysis failed:", err);
+    } finally {
+      setAiLoading(false);
+    }
   };
 
   return (
@@ -146,7 +171,58 @@ export function ContentAnalyzer() {
             </ResponsiveContainer>
           </div>
 
-          {/* Insights */}
+          {/* AI Content Intelligence */}
+          {aiLoading && (
+            <div className="glass-card-float p-6 text-center">
+              <Sparkles className="h-5 w-5 text-accent animate-pulse mx-auto mb-2" />
+              <p className="text-sm font-medium text-foreground">AI analyzing content quality...</p>
+            </div>
+          )}
+
+          {aiData && (
+            <div className="glass-card-float p-6">
+              <div className="flex items-center gap-2 mb-4">
+                <Sparkles className="h-4 w-4 text-accent" />
+                <h3 className="font-display text-sm font-semibold text-foreground">AI Content Intelligence</h3>
+                <span className="text-[10px] bg-accent/10 text-accent px-2 py-0.5 rounded-full font-semibold">Powered by AI</span>
+              </div>
+              <p className="text-sm text-foreground mb-4 leading-relaxed">{aiData.analysis}</p>
+              <div className="grid md:grid-cols-2 gap-4 mb-4">
+                <div>
+                  <h4 className="text-xs font-semibold text-success mb-2 uppercase tracking-wider">Strengths</h4>
+                  <ul className="space-y-1.5">
+                    {aiData.strengths.map((s, i) => (
+                      <li key={i} className="text-xs text-foreground flex items-start gap-2">
+                        <CheckCircle className="h-3 w-3 text-success mt-0.5 shrink-0" />{s}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+                <div>
+                  <h4 className="text-xs font-semibold text-destructive mb-2 uppercase tracking-wider">Weaknesses</h4>
+                  <ul className="space-y-1.5">
+                    {aiData.weaknesses.map((w, i) => (
+                      <li key={i} className="text-xs text-foreground flex items-start gap-2">
+                        <AlertTriangle className="h-3 w-3 text-destructive mt-0.5 shrink-0" />{w}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+              {aiData.topicGaps.length > 0 && (
+                <div className="mt-4 pt-4 border-t border-border/50">
+                  <h4 className="text-xs font-semibold text-warning mb-2 uppercase tracking-wider">Missing Topics to Cover</h4>
+                  <div className="flex flex-wrap gap-2">
+                    {aiData.topicGaps.map((g, i) => (
+                      <span key={i} className="text-xs bg-warning/10 text-warning px-2.5 py-1 rounded-lg font-medium">{g}</span>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* Algorithmic Insights */}
           <div className="glass-card-float p-6">
             <div className="flex items-center gap-2 mb-4">
               <Brain className="h-4 w-4 text-accent" />
