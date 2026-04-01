@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Globe, Loader2, ArrowRight, Brain, CheckCircle, Shield, FileText, Link2, Gauge, Code, Eye, Sparkles } from "lucide-react";
+import { Globe, Loader2, ArrowRight, Brain, CheckCircle, Shield, FileText, Link2, Gauge, Code, Eye, Sparkles, Smartphone, Image, Lock, Search, BarChart3 } from "lucide-react";
 import { ScoreRing } from "@/components/charts/ScoreRing";
 import { SEORadarChart } from "@/components/charts/SEORadarChart";
 import { InsightList } from "@/components/charts/InsightCard";
