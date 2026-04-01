@@ -1,46 +1,85 @@
 import { Link } from "react-router-dom";
+import { Sparkles } from "lucide-react";
+
+const footerLinks = [
+  {
+    title: "Product",
+    links: [
+      { label: "AI SEO Audit", href: "/tools/ai-audit" },
+      { label: "Keyword Research", href: "/tools/keywords" },
+      { label: "Backlink Checker", href: "/tools/backlinks" },
+      { label: "Schema Generator", href: "/tools/schema" },
+    ],
+  },
+  {
+    title: "Schema",
+    links: [
+      { label: "Schema Library", href: "/schema-library" },
+      { label: "Schema Validator", href: "/schema-validator" },
+    ],
+  },
+  {
+    title: "Resources",
+    links: [
+      { label: "Learning Hub", href: "/blog" },
+      { label: "Services", href: "/services" },
+      { label: "Contact", href: "/contact" },
+    ],
+  },
+  {
+    title: "Account",
+    links: [
+      { label: "Sign In", href: "/auth" },
+      { label: "Dashboard", href: "/dashboard" },
+    ],
+  },
+];
 
 export function Footer() {
   return (
-    <footer className="border-t border-border py-12">
-      <div className="container-wide">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-10">
-          <div>
-            <p className="text-sm font-semibold text-foreground mb-3">Product</p>
-            <div className="space-y-2">
-              <Link to="/tools/ai-audit" className="block text-sm text-muted-foreground hover:text-foreground transition-colors">AI SEO Audit</Link>
-              <Link to="/tools/keywords" className="block text-sm text-muted-foreground hover:text-foreground transition-colors">Keyword Research</Link>
-              <Link to="/tools/backlinks" className="block text-sm text-muted-foreground hover:text-foreground transition-colors">Backlink Checker</Link>
-              <Link to="/tools/schema" className="block text-sm text-muted-foreground hover:text-foreground transition-colors">Schema Generator</Link>
-            </div>
+    <footer className="relative border-t border-border">
+      <div className="container-wide py-16 md:py-20">
+        <div className="grid grid-cols-2 md:grid-cols-5 gap-10 mb-14">
+          {/* Brand */}
+          <div className="col-span-2 md:col-span-1">
+            <Link to="/" className="flex items-center gap-2 mb-4 group">
+              <div className="h-7 w-7 rounded-lg bg-foreground flex items-center justify-center group-hover:scale-105 transition-transform duration-300">
+                <Sparkles className="h-3.5 w-3.5 text-background" />
+              </div>
+              <span className="text-base font-bold text-foreground tracking-tight">SEOPulse</span>
+            </Link>
+            <p className="text-sm text-muted-foreground leading-relaxed max-w-[200px]">
+              AI-powered SEO intelligence for professionals who demand real data.
+            </p>
           </div>
-          <div>
-            <p className="text-sm font-semibold text-foreground mb-3">Schema</p>
-            <div className="space-y-2">
-              <Link to="/schema-library" className="block text-sm text-muted-foreground hover:text-foreground transition-colors">Schema Library</Link>
-              <Link to="/schema-validator" className="block text-sm text-muted-foreground hover:text-foreground transition-colors">Schema Validator</Link>
+
+          {footerLinks.map((group) => (
+            <div key={group.title}>
+              <p className="text-xs font-semibold text-foreground uppercase tracking-wider mb-4">{group.title}</p>
+              <div className="space-y-2.5">
+                {group.links.map((link) => (
+                  <Link
+                    key={link.href}
+                    to={link.href}
+                    className="block text-sm text-muted-foreground hover:text-foreground transition-colors duration-200"
+                  >
+                    {link.label}
+                  </Link>
+                ))}
+              </div>
             </div>
-          </div>
-          <div>
-            <p className="text-sm font-semibold text-foreground mb-3">Resources</p>
-            <div className="space-y-2">
-              <Link to="/blog" className="block text-sm text-muted-foreground hover:text-foreground transition-colors">Learning Hub</Link>
-              <Link to="/services" className="block text-sm text-muted-foreground hover:text-foreground transition-colors">Services</Link>
-              <Link to="/contact" className="block text-sm text-muted-foreground hover:text-foreground transition-colors">Contact</Link>
-            </div>
-          </div>
-          <div>
-            <p className="text-sm font-semibold text-foreground mb-3">Account</p>
-            <div className="space-y-2">
-              <Link to="/auth" className="block text-sm text-muted-foreground hover:text-foreground transition-colors">Sign In</Link>
-              <Link to="/dashboard" className="block text-sm text-muted-foreground hover:text-foreground transition-colors">Dashboard</Link>
-            </div>
-          </div>
+          ))}
         </div>
-        <div className="h-px bg-border mb-6" />
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
-          <p className="text-xs text-muted-foreground">© {new Date().getFullYear()} SEOPulse. All rights reserved.</p>
-          <p className="text-xs text-muted-foreground">AI-Powered SEO Intelligence Platform</p>
+        
+        <div className="separator-gradient mb-8" />
+        
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+          <p className="text-xs text-muted-foreground">
+            © {new Date().getFullYear()} SEOPulse. All rights reserved.
+          </p>
+          <p className="text-xs text-muted-foreground">
+            AI-Powered SEO Intelligence Platform
+          </p>
         </div>
       </div>
     </footer>
