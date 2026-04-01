@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { Search, Menu, X, ChevronDown, Sun, Moon } from "lucide-react";
+import { Menu, X, ChevronDown, Sun, Moon, LogIn } from "lucide-react";
+import { useAuth } from "@/hooks/useAuth";
 
 const navItems = [
   { label: "Tools", href: "/tools", children: [
