@@ -1,14 +1,14 @@
 import { Link } from "react-router-dom";
+import { Zap } from "lucide-react";
 
 const footerSections = [
   {
     title: "SEO Tools",
     links: [
-      { label: "SEO Analyzer", href: "/tools/analyzer" },
+      { label: "AI SEO Audit", href: "/tools/ai-audit" },
       { label: "Keyword Research", href: "/tools/keywords" },
       { label: "Backlink Checker", href: "/tools/backlinks" },
-      { label: "Schema Generator", href: "/tools/schema-generator" },
-      { label: "On-Page Checker", href: "/tools/on-page" },
+      { label: "Schema Generator", href: "/tools/schema" },
     ],
   },
   {
@@ -18,57 +18,45 @@ const footerSections = [
       { label: "LocalBusiness", href: "/schema-library" },
       { label: "Product Schema", href: "/schema-library" },
       { label: "FAQ Schema", href: "/schema-library" },
-      { label: "Organization", href: "/schema-library" },
     ],
   },
   {
-    title: "Learning Hub",
+    title: "Resources",
     links: [
-      { label: "Technical SEO", href: "/blog" },
-      { label: "Local SEO", href: "/blog" },
-      { label: "Schema & Structured Data", href: "/blog" },
-      { label: "AI + SEO", href: "/blog" },
-      { label: "Case Studies", href: "/blog" },
-    ],
-  },
-  {
-    title: "Services",
-    links: [
+      { label: "Learning Hub", href: "/blog" },
+      { label: "Case Studies", href: "/services" },
       { label: "SEO Consulting", href: "/services" },
-      { label: "Technical Audits", href: "/services" },
-      { label: "Local SEO", href: "/services" },
-      { label: "Enterprise SEO", href: "/services" },
-      { label: "Contact Us", href: "/contact" },
+      { label: "Contact", href: "/contact" },
     ],
   },
 ];
 
 export function Footer() {
   return (
-    <footer className="border-t border-border bg-card">
-      <div className="container-wide section-padding">
-        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8 lg:gap-12">
-          <div className="col-span-2 md:col-span-4 lg:col-span-1 mb-4 lg:mb-0">
-            <Link to="/" className="flex items-center gap-2 mb-4">
-              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary">
-                <span className="text-sm font-bold text-primary-foreground">S</span>
+    <footer className="border-t border-border/30 bg-card/50">
+      <div className="container-wide py-16 lg:py-20">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-10 lg:gap-16">
+          <div className="col-span-2 md:col-span-1 mb-2 md:mb-0">
+            <Link to="/" className="flex items-center gap-2.5 mb-5">
+              <div className="flex h-8 w-8 items-center justify-center rounded-xl" style={{ background: "var(--gradient-primary)" }}>
+                <Zap className="h-4 w-4 text-white" />
               </div>
-              <span className="font-display text-lg font-bold text-foreground">SEOPulse</span>
+              <span className="font-display text-lg font-bold text-foreground tracking-tight">SEOPulse</span>
             </Link>
             <p className="text-sm text-muted-foreground leading-relaxed max-w-xs">
-              The ultimate SEO intelligence platform. Analyze, optimize, and scale your organic rankings.
+              The AI-powered SEO intelligence platform trusted by 10,000+ professionals worldwide.
             </p>
           </div>
 
           {footerSections.map((section) => (
             <div key={section.title}>
-              <h4 className="font-display text-sm font-semibold text-foreground mb-4">{section.title}</h4>
-              <ul className="space-y-2.5">
+              <h4 className="font-display text-[13px] font-semibold text-foreground mb-4 tracking-tight">{section.title}</h4>
+              <ul className="space-y-3">
                 {section.links.map((link) => (
                   <li key={link.label}>
                     <Link
                       to={link.href}
-                      className="text-sm text-muted-foreground transition-colors hover:text-accent"
+                      className="text-sm text-muted-foreground transition-colors duration-200 hover:text-accent"
                     >
                       {link.label}
                     </Link>
@@ -79,13 +67,15 @@ export function Footer() {
           ))}
         </div>
 
-        <div className="mt-16 pt-8 border-t border-border flex flex-col sm:flex-row items-center justify-between gap-4">
-          <p className="text-xs text-muted-foreground">
+        <div className="separator-gradient my-10" />
+
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+          <p className="text-xs text-muted-foreground/60">
             © {new Date().getFullYear()} SEOPulse. All rights reserved.
           </p>
           <div className="flex gap-6">
-            <Link to="/" className="text-xs text-muted-foreground hover:text-accent transition-colors">Privacy</Link>
-            <Link to="/" className="text-xs text-muted-foreground hover:text-accent transition-colors">Terms</Link>
+            <Link to="/" className="text-xs text-muted-foreground/60 hover:text-accent transition-colors duration-200">Privacy</Link>
+            <Link to="/" className="text-xs text-muted-foreground/60 hover:text-accent transition-colors duration-200">Terms</Link>
           </div>
         </div>
       </div>
