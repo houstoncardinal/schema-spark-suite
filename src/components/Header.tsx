@@ -22,6 +22,7 @@ export function Header() {
   const [hoveredNav, setHoveredNav] = useState<string | null>(null);
   const [darkMode, setDarkMode] = useState(false);
   const location = useLocation();
+  const { user } = useAuth();
 
   const toggleDark = () => {
     setDarkMode(!darkMode);
