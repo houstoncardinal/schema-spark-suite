@@ -7,7 +7,7 @@ const tools = [
     icon: Search,
     title: "SEO Analyzer",
     description: "Complete technical SEO audit with actionable insights for any website.",
-    href: "/tools/analyzer",
+    href: "/tools/ai-audit",
     color: "from-blue-500/10 to-cyan-500/10",
     iconColor: "text-blue-500",
   },
