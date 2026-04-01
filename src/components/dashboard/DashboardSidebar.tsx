@@ -1,7 +1,8 @@
 import { motion } from "framer-motion";
 import {
   LayoutDashboard, Search, TrendingUp, Link2, Shield, FileText,
-  Users, CheckSquare, Globe, ChevronLeft, ChevronRight, Settings, HelpCircle, Zap
+  Users, CheckSquare, Globe, ChevronLeft, ChevronRight, Settings, HelpCircle, Zap,
+  Brain, Bot, Network, Eye
 } from "lucide-react";
 
 interface SidebarProps {
@@ -13,11 +14,15 @@ interface SidebarProps {
 
 const navItems = [
   { id: "overview", icon: LayoutDashboard, label: "Overview" },
+  { id: "truerank", icon: Brain, label: "TrueRank™", badge: "AI" },
+  { id: "agents", icon: Bot, label: "AI Agents", badge: "NEW" },
   { id: "keywords", icon: Search, label: "Keywords" },
   { id: "traffic", icon: TrendingUp, label: "Traffic" },
   { id: "backlinks", icon: Link2, label: "Backlinks" },
   { id: "audit", icon: Shield, label: "Site Audit" },
   { id: "competitors", icon: Users, label: "Competitors" },
+  { id: "topical", icon: Network, label: "Topical Auth." },
+  { id: "serp", icon: Eye, label: "SERP Simulator" },
   { id: "content", icon: FileText, label: "Content" },
   { id: "tasks", icon: CheckSquare, label: "Tasks" },
 ];
@@ -75,6 +80,9 @@ export function DashboardSidebar({ activeSection, onSectionChange, collapsed, on
               )}
               <item.icon className={`h-4 w-4 shrink-0 ${active ? "text-accent" : ""}`} />
               {!collapsed && <span>{item.label}</span>}
+              {!collapsed && (item as any).badge && (
+                <span className="ml-auto text-[9px] font-bold uppercase tracking-wider text-accent bg-accent/10 rounded-full px-1.5 py-0.5">{(item as any).badge}</span>
+              )}
             </button>
           );
         })}

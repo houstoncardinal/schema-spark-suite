@@ -10,7 +10,12 @@ import { SiteAuditPanel } from "@/components/dashboard/SiteAuditPanel";
 import { CompetitorAnalysis } from "@/components/dashboard/CompetitorAnalysis";
 import { ContentPerformance } from "@/components/dashboard/ContentPerformance";
 import { TaskCenter } from "@/components/dashboard/TaskCenter";
+import { PredictiveModeling } from "@/components/dashboard/PredictiveModeling";
+import { AIAgentsPanel } from "@/components/dashboard/AIAgentsPanel";
+import { TopicalAuthorityPanel } from "@/components/dashboard/TopicalAuthorityPanel";
+import { SERPSimulatorPanel } from "@/components/dashboard/SERPSimulatorPanel";
 import { generateDashboardData } from "@/lib/dashboard-engine";
+import { generatePredictiveData } from "@/lib/predictive-engine";
 
 const defaultProjects = [
   { id: "seopulse-io", name: "SEOPulse", domain: "seopulse.io" },
@@ -20,11 +25,15 @@ const defaultProjects = [
 
 const sectionTitles: Record<string, string> = {
   overview: "Dashboard Overview",
+  truerank: "TrueRank™ Predictive Intelligence",
+  agents: "AI SEO Agents",
   keywords: "Keyword Tracking",
   traffic: "Traffic Analytics",
   backlinks: "Backlink Analytics",
   audit: "Site Audit",
   competitors: "Competitor Analysis",
+  topical: "Topical Authority Map",
+  serp: "SERP Simulator & Dominance",
   content: "Content Performance",
   tasks: "Tasks & Recommendations",
 };
@@ -37,6 +46,12 @@ const Dashboard = () => {
 
   const currentProject = defaultProjects.find(p => p.id === activeProject) || defaultProjects[0];
   const dashboardData = useMemo(() => generateDashboardData(currentProject.domain), [currentProject.domain]);
+  const predictiveData = useMemo(() => generatePredictiveData(
+    currentProject.domain,
+    dashboardData.project.healthScore,
+    dashboardData.project.domainAuthority,
+    dashboardData.project.organicTraffic
+  ), [currentProject.domain, dashboardData]);
 
   return (
     <div className="flex min-h-screen bg-background">
@@ -60,7 +75,6 @@ const Dashboard = () => {
 
         <main className="flex-1 overflow-y-auto">
           <div className="p-6 max-w-[1400px] mx-auto">
-            {/* Section title */}
             <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} key={activeSection} className="mb-6">
               <h2 className="font-display text-xl font-bold text-foreground">{sectionTitles[activeSection] || "Dashboard"}</h2>
               <p className="text-sm text-muted-foreground mt-1">{currentProject.domain} • {timeRange} view</p>
@@ -75,11 +89,15 @@ const Dashboard = () => {
                 transition={{ duration: 0.25 }}
               >
                 {activeSection === "overview" && <OverviewPanel data={dashboardData} />}
+                {activeSection === "truerank" && <PredictiveModeling data={predictiveData} />}
+                {activeSection === "agents" && <AIAgentsPanel data={predictiveData} />}
                 {activeSection === "keywords" && <KeywordTracker data={dashboardData} />}
                 {activeSection === "traffic" && <TrafficAnalytics data={dashboardData} />}
                 {activeSection === "backlinks" && <BacklinkAnalytics data={dashboardData} />}
                 {activeSection === "audit" && <SiteAuditPanel data={dashboardData} />}
                 {activeSection === "competitors" && <CompetitorAnalysis data={dashboardData} />}
+                {activeSection === "topical" && <TopicalAuthorityPanel data={predictiveData} />}
+                {activeSection === "serp" && <SERPSimulatorPanel data={predictiveData} />}
                 {activeSection === "content" && <ContentPerformance data={dashboardData} />}
                 {activeSection === "tasks" && <TaskCenter data={dashboardData} />}
               </motion.div>
