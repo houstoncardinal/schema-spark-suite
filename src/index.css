@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -8,44 +8,57 @@
   :root {
     --background: 0 0% 100%;
     --foreground: 213 39% 15%;
-
     --card: 210 33% 98%;
     --card-foreground: 213 39% 15%;
-
     --popover: 0 0% 100%;
     --popover-foreground: 213 39% 15%;
-
     --primary: 213 94% 15%;
     --primary-foreground: 210 40% 98%;
-
     --secondary: 214 32% 96%;
     --secondary-foreground: 213 39% 15%;
-
     --muted: 214 32% 96%;
     --muted-foreground: 215 16% 47%;
-
     --accent: 217 91% 60%;
     --accent-foreground: 0 0% 100%;
-
     --destructive: 0 84% 60%;
     --destructive-foreground: 210 40% 98%;
-
     --border: 214 32% 91%;
     --input: 214 32% 91%;
     --ring: 217 91% 60%;
-
     --radius: 0.75rem;
+
+    --success: 152 69% 45%;
+    --success-foreground: 0 0% 100%;
+    --warning: 38 92% 50%;
+    --warning-foreground: 0 0% 100%;
+    --info: 199 89% 48%;
+    --info-foreground: 0 0% 100%;
+
+    --chart-1: 217 91% 60%;
+    --chart-2: 152 69% 45%;
+    --chart-3: 38 92% 50%;
+    --chart-4: 280 65% 60%;
+    --chart-5: 199 89% 48%;
+    --chart-6: 0 84% 60%;
 
     --gradient-primary: linear-gradient(135deg, hsl(213 94% 15%), hsl(217 91% 60%));
     --gradient-accent: linear-gradient(135deg, hsl(217 91% 60%), hsl(199 89% 48%));
+    --gradient-success: linear-gradient(135deg, hsl(152 69% 45%), hsl(168 76% 42%));
+    --gradient-warning: linear-gradient(135deg, hsl(38 92% 50%), hsl(25 95% 53%));
     --gradient-glass: linear-gradient(135deg, rgba(255,255,255,0.9), rgba(255,255,255,0.6));
     --gradient-subtle: linear-gradient(180deg, hsl(214 32% 98%), hsl(214 32% 96%));
+    --gradient-mesh: radial-gradient(at 40% 20%, hsl(217 91% 60% / 0.08) 0px, transparent 50%),
+                     radial-gradient(at 80% 0%, hsl(199 89% 48% / 0.06) 0px, transparent 50%),
+                     radial-gradient(at 0% 50%, hsl(152 69% 45% / 0.04) 0px, transparent 50%);
 
     --shadow-sm: 0 1px 2px 0 rgba(10, 37, 64, 0.04);
     --shadow-md: 0 4px 16px -2px rgba(10, 37, 64, 0.08);
     --shadow-lg: 0 12px 40px -8px rgba(10, 37, 64, 0.12);
     --shadow-xl: 0 24px 60px -12px rgba(10, 37, 64, 0.18);
     --shadow-glow: 0 0 40px -10px rgba(59, 130, 246, 0.3);
+    --shadow-glow-success: 0 0 30px -8px rgba(34, 197, 94, 0.25);
+    --shadow-glow-warning: 0 0 30px -8px rgba(234, 179, 8, 0.25);
+    --shadow-float: 0 20px 50px -15px rgba(10, 37, 64, 0.15), 0 0 0 1px rgba(10, 37, 64, 0.03);
 
     --sidebar-background: 0 0% 98%;
     --sidebar-foreground: 240 5.3% 26.1%;
@@ -58,39 +71,35 @@
   }
 
   .dark {
-    --background: 213 39% 5%;
+    --background: 220 20% 4%;
     --foreground: 210 40% 95%;
-
-    --card: 213 39% 8%;
+    --card: 220 20% 7%;
     --card-foreground: 210 40% 95%;
-
-    --popover: 213 39% 8%;
+    --popover: 220 20% 7%;
     --popover-foreground: 210 40% 95%;
-
     --primary: 217 91% 60%;
     --primary-foreground: 0 0% 100%;
-
-    --secondary: 213 39% 12%;
+    --secondary: 220 20% 11%;
     --secondary-foreground: 210 40% 95%;
-
-    --muted: 213 39% 12%;
-    --muted-foreground: 215 16% 60%;
-
+    --muted: 220 20% 11%;
+    --muted-foreground: 215 16% 55%;
     --accent: 217 91% 60%;
     --accent-foreground: 0 0% 100%;
-
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 210 40% 98%;
-
-    --border: 213 39% 15%;
-    --input: 213 39% 15%;
+    --border: 220 20% 14%;
+    --input: 220 20% 14%;
     --ring: 217 91% 60%;
 
     --gradient-primary: linear-gradient(135deg, hsl(217 91% 50%), hsl(199 89% 48%));
-    --gradient-glass: linear-gradient(135deg, rgba(10,37,64,0.8), rgba(10,37,64,0.5));
-    --gradient-subtle: linear-gradient(180deg, hsl(213 39% 6%), hsl(213 39% 8%));
+    --gradient-glass: linear-gradient(135deg, rgba(10,20,40,0.8), rgba(10,20,40,0.5));
+    --gradient-subtle: linear-gradient(180deg, hsl(220 20% 5%), hsl(220 20% 7%));
+    --gradient-mesh: radial-gradient(at 40% 20%, hsl(217 91% 60% / 0.12) 0px, transparent 50%),
+                     radial-gradient(at 80% 0%, hsl(199 89% 48% / 0.08) 0px, transparent 50%),
+                     radial-gradient(at 0% 50%, hsl(152 69% 45% / 0.06) 0px, transparent 50%);
 
     --shadow-glow: 0 0 40px -10px rgba(59, 130, 246, 0.4);
+    --shadow-float: 0 20px 50px -15px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.03);
 
     --sidebar-background: 240 5.9% 10%;
     --sidebar-foreground: 240 4.8% 95.9%;
@@ -128,6 +137,16 @@
     box-shadow: var(--shadow-lg);
   }
 
+  .glass-card-float {
+    @apply bg-card/95 backdrop-blur-2xl border border-border/30 rounded-2xl;
+    box-shadow: var(--shadow-float);
+  }
+
+  .glass-panel {
+    @apply bg-background/60 backdrop-blur-2xl border border-border/40 rounded-2xl;
+    box-shadow: var(--shadow-lg);
+  }
+
   .gradient-text {
     @apply bg-clip-text text-transparent;
     background-image: var(--gradient-primary);
@@ -136,6 +155,15 @@
   .gradient-accent-text {
     @apply bg-clip-text text-transparent;
     background-image: var(--gradient-accent);
+  }
+
+  .gradient-success-text {
+    @apply bg-clip-text text-transparent;
+    background-image: var(--gradient-success);
+  }
+
+  .mesh-bg {
+    background-image: var(--gradient-mesh);
   }
 
   .section-padding {
@@ -183,6 +211,74 @@
     background-image: radial-gradient(circle, hsl(var(--border)) 1px, transparent 1px);
     background-size: 24px 24px;
   }
+
+  .grid-pattern {
+    background-image: linear-gradient(hsl(var(--border) / 0.3) 1px, transparent 1px),
+                      linear-gradient(90deg, hsl(var(--border) / 0.3) 1px, transparent 1px);
+    background-size: 40px 40px;
+  }
+
+  .metric-badge {
+    @apply inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold;
+  }
+
+  .metric-badge-success {
+    @apply metric-badge;
+    background: hsl(var(--success) / 0.1);
+    color: hsl(var(--success));
+  }
+
+  .metric-badge-warning {
+    @apply metric-badge;
+    background: hsl(var(--warning) / 0.1);
+    color: hsl(var(--warning));
+  }
+
+  .metric-badge-danger {
+    @apply metric-badge;
+    background: hsl(var(--destructive) / 0.1);
+    color: hsl(var(--destructive));
+  }
+
+  .metric-badge-info {
+    @apply metric-badge;
+    background: hsl(var(--info) / 0.1);
+    color: hsl(var(--info));
+  }
+
+  .data-cell {
+    @apply font-mono text-sm tabular-nums;
+  }
+
+  .insight-card {
+    @apply relative overflow-hidden rounded-xl border border-border/50 p-4;
+    background: var(--gradient-glass);
+  }
+
+  .insight-card::before {
+    content: '';
+    @apply absolute left-0 top-0 bottom-0 w-1 rounded-l-xl;
+  }
+
+  .insight-card-high::before {
+    background: hsl(var(--destructive));
+  }
+
+  .insight-card-medium::before {
+    background: hsl(var(--warning));
+  }
+
+  .insight-card-low::before {
+    background: hsl(var(--success));
+  }
+
+  .insight-card-info::before {
+    background: hsl(var(--info));
+  }
+
+  .floating-label {
+    @apply absolute -top-2.5 left-3 px-1.5 text-[10px] font-semibold uppercase tracking-wider bg-background text-muted-foreground;
+  }
 }
 
 @layer utilities {
@@ -190,9 +286,27 @@
     background-size: 200% 200%;
     animation: gradient-shift 6s ease infinite;
   }
+
+  .animate-float {
+    animation: float 6s ease-in-out infinite;
+  }
+
+  .animate-pulse-subtle {
+    animation: pulse-subtle 3s ease-in-out infinite;
+  }
 }
 
 @keyframes gradient-shift {
   0%, 100% { background-position: 0% 50%; }
   50% { background-position: 100% 50%; }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-8px); }
+}
+
+@keyframes pulse-subtle {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
 }
