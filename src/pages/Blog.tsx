@@ -17,7 +17,7 @@ const Blog = () => {
     "@type": "Blog",
     name: "SEO Insights by Hunain Qureshi",
     description: "Expert SEO guides, case studies, and strategies by Hunain Qureshi covering technical SEO, AI-powered optimization, schema markup, and organic growth.",
-    url: "https://example.com/blog",
+    url: "https://seopulse.io/blog",
     author: { "@type": "Person", name: "Hunain Qureshi" },
     blogPost: blogPosts.map((p) => ({
       "@type": "BlogPosting",
