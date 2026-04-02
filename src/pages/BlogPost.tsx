@@ -50,9 +50,9 @@ const BlogPost = () => {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
     itemListElement: [
-      { "@type": "ListItem", position: 1, name: "Home", item: "https://example.com/" },
-      { "@type": "ListItem", position: 2, name: "Blog", item: "https://example.com/blog" },
-      { "@type": "ListItem", position: 3, name: post.title, item: `https://example.com/blog/${post.slug}` },
+      { "@type": "ListItem", position: 1, name: "Home", item: "https://seopulse.io/" },
+      { "@type": "ListItem", position: 2, name: "Blog", item: "https://seopulse.io/blog" },
+      { "@type": "ListItem", position: 3, name: post.title, item: `https://seopulse.io/blog/${post.slug}` },
     ],
   };
 
