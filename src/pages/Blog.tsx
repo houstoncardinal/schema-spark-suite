@@ -26,7 +26,7 @@ const Blog = () => {
       datePublished: p.dateISO,
       author: { "@type": "Person", name: p.author.name },
       image: p.image,
-      url: `https://example.com/blog/${p.slug}`,
+      url: `https://seopulse.io/blog/${p.slug}`,
     })),
   };
 
