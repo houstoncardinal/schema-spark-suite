@@ -39,7 +39,7 @@ const BlogPost = () => {
       name: "Hunain Qureshi SEO",
       logo: { "@type": "ImageObject", url: "/favicon.ico" },
     },
-    mainEntityOfPage: { "@type": "WebPage", "@id": `https://example.com/blog/${post.slug}` },
+    mainEntityOfPage: { "@type": "WebPage", "@id": `https://seopulse.io/blog/${post.slug}` },
     articleSection: post.category,
     keywords: post.tags.join(", "),
     wordCount,
@@ -50,9 +50,9 @@ const BlogPost = () => {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
     itemListElement: [
-      { "@type": "ListItem", position: 1, name: "Home", item: "https://example.com/" },
-      { "@type": "ListItem", position: 2, name: "Blog", item: "https://example.com/blog" },
-      { "@type": "ListItem", position: 3, name: post.title, item: `https://example.com/blog/${post.slug}` },
+      { "@type": "ListItem", position: 1, name: "Home", item: "https://seopulse.io/" },
+      { "@type": "ListItem", position: 2, name: "Blog", item: "https://seopulse.io/blog" },
+      { "@type": "ListItem", position: 3, name: post.title, item: `https://seopulse.io/blog/${post.slug}` },
     ],
   };
 
@@ -85,7 +85,7 @@ const BlogPost = () => {
         <meta name="twitter:title" content={post.title} />
         <meta name="twitter:description" content={post.excerpt} />
         <meta name="twitter:image" content={post.image} />
-        <link rel="canonical" href={`https://example.com/blog/${post.slug}`} />
+        <link rel="canonical" href={`https://seopulse.io/blog/${post.slug}`} />
         <script type="application/ld+json">{JSON.stringify(jsonLd)}</script>
         <script type="application/ld+json">{JSON.stringify(breadcrumbJsonLd)}</script>
       </Helmet>

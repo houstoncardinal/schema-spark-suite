@@ -1,4 +1,5 @@
 import { useState, useCallback } from "react";
+import { Helmet } from "react-helmet-async";
 import { motion } from "framer-motion";
 import { Layout } from "@/components/Layout";
 import { CheckCircle, XCircle, AlertTriangle, Globe, Loader2, Copy, FileCode2, ArrowRight, Info } from "lucide-react";
@@ -168,6 +169,27 @@ const sampleSchema = `{
   "image": "https://example.com/image.jpg"
 }`;
 
+const breadcrumbJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: [
+    { "@type": "ListItem", position: 1, name: "Home", item: "https://seopulse.io/" },
+    { "@type": "ListItem", position: 2, name: "Schema Validator", item: "https://seopulse.io/schema-validator" },
+  ],
+};
+
+const toolJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  name: "Schema Validator",
+  description: "Validate, debug, and optimize your JSON-LD structured data against schema.org specifications. Check for errors, warnings, and rich result eligibility.",
+  url: "https://seopulse.io/schema-validator",
+  applicationCategory: "DeveloperApplication",
+  operatingSystem: "Web",
+  offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
+  provider: { "@type": "Organization", name: "SEOPulse", url: "https://seopulse.io" },
+};
+
 const SchemaValidator = () => {
   const [input, setInput] = useState("");
   const [urlInput, setUrlInput] = useState("");
@@ -190,7 +212,6 @@ const SchemaValidator = () => {
     if (!urlInput.trim()) return;
     setLoading(true);
     setResult(null);
-    // Simulate fetching schema from URL
     setTimeout(() => {
       setInput(sampleSchema);
       setResult(validateSchema(sampleSchema));
@@ -216,6 +237,18 @@ const SchemaValidator = () => {
 
   return (
     <Layout>
+      <Helmet>
+        <title>Schema Validator — Validate JSON-LD Structured Data | SEOPulse</title>
+        <meta name="description" content="Free JSON-LD schema validator. Validate, debug, and optimize your structured data against schema.org specifications. Check rich result eligibility instantly." />
+        <link rel="canonical" href="https://seopulse.io/schema-validator" />
+        <meta property="og:title" content="Schema Validator — Validate JSON-LD Structured Data | SEOPulse" />
+        <meta property="og:description" content="Free JSON-LD schema validator. Check rich result eligibility instantly." />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://seopulse.io/schema-validator" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <script type="application/ld+json">{JSON.stringify(breadcrumbJsonLd)}</script>
+        <script type="application/ld+json">{JSON.stringify(toolJsonLd)}</script>
+      </Helmet>
       <section className="section-padding">
         <div className="container-wide">
           <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} className="text-center mb-12">
@@ -247,6 +280,7 @@ const SchemaValidator = () => {
                       value={input}
                       onChange={(e) => setInput(e.target.value)}
                       placeholder='Paste your JSON-LD schema here...'
+                      aria-label="JSON-LD input"
                       className="w-full h-72 rounded-xl border border-border bg-secondary/50 px-4 py-3 text-sm font-mono text-foreground placeholder:text-muted-foreground outline-none focus:border-foreground/20 resize-none"
                     />
                     <div className="flex items-center gap-2 mt-3">
@@ -266,6 +300,7 @@ const SchemaValidator = () => {
                           value={urlInput}
                           onChange={(e) => setUrlInput(e.target.value)}
                           placeholder="https://example.com"
+                          aria-label="URL to fetch schema from"
                           className="flex-1 bg-transparent text-sm text-foreground placeholder:text-muted-foreground outline-none"
                         />
                       </div>
@@ -278,7 +313,6 @@ const SchemaValidator = () => {
                 )}
               </div>
 
-              {/* Supported Types */}
               <div className="surface-card p-5">
                 <h3 className="text-sm font-semibold text-foreground mb-3">Supported Schema Types</h3>
                 <div className="flex flex-wrap gap-1.5">
@@ -307,7 +341,6 @@ const SchemaValidator = () => {
 
               {result && (
                 <>
-                  {/* Summary */}
                   <div className={`surface-elevated p-5 border-l-4 ${result.valid ? "border-l-success" : "border-l-destructive"}`}>
                     <div className="flex items-center justify-between mb-3">
                       <div className="flex items-center gap-2">
@@ -337,7 +370,6 @@ const SchemaValidator = () => {
                     </div>
                   </div>
 
-                  {/* Rich Results Eligibility */}
                   {result.richResultEligible.length > 0 && (
                     <div className="surface-card p-5">
                       <h3 className="text-sm font-semibold text-foreground mb-2 flex items-center gap-1.5">
@@ -351,7 +383,6 @@ const SchemaValidator = () => {
                     </div>
                   )}
 
-                  {/* Issues */}
                   {result.errors.length > 0 && (
                     <div className="surface-card p-5">
                       <h3 className="text-sm font-semibold text-foreground mb-3">Issues ({result.errors.length})</h3>
@@ -369,37 +400,30 @@ const SchemaValidator = () => {
                     </div>
                   )}
 
-                  {/* Recommendations */}
                   {result.recommendations.length > 0 && (
                     <div className="surface-card p-5">
                       <h3 className="text-sm font-semibold text-foreground mb-3 flex items-center gap-1.5">
                         <Info className="h-4 w-4 text-accent" /> Recommendations
                       </h3>
-                      <div className="space-y-1.5">
-                        {result.recommendations.map((rec, i) => (
-                          <p key={i} className="text-xs text-muted-foreground flex items-start gap-2">
-                            <span className="text-accent mt-0.5">→</span> {rec}
-                          </p>
+                      <ul className="space-y-2">
+                        {result.recommendations.map((r, i) => (
+                          <li key={i} className="flex items-start gap-2 text-xs text-muted-foreground">
+                            <ArrowRight className="h-3 w-3 text-accent mt-0.5 shrink-0" />
+                            <span>{r}</span>
+                          </li>
                         ))}
-                      </div>
+                      </ul>
                     </div>
                   )}
-
-                  {/* CTA */}
-                  <div className="surface-card p-5 text-center">
-                    <p className="text-sm text-foreground mb-3">Need help generating or fixing schema markup?</p>
-                    <div className="flex items-center justify-center gap-2">
-                      <Link to="/tools/schema" className="btn-primary text-sm gap-1.5">
-                        Schema Generator <ArrowRight className="h-3 w-3" />
-                      </Link>
-                      <Link to="/schema-library" className="btn-secondary text-sm">
-                        Browse Library
-                      </Link>
-                    </div>
-                  </div>
                 </>
               )}
             </div>
+          </div>
+
+          <div className="mt-12 text-center">
+            <Link to="/schema-library" className="btn-secondary gap-2">
+              Browse Schema Library <ArrowRight className="h-3.5 w-3.5" />
+            </Link>
           </div>
         </div>
       </section>

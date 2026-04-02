@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Helmet } from "react-helmet-async";
 import { motion } from "framer-motion";
 import { Layout } from "@/components/Layout";
 import { useAuth } from "@/hooks/useAuth";
@@ -35,6 +36,11 @@ const Auth = () => {
 
   return (
     <Layout>
+      <Helmet>
+        <title>{mode === "login" ? "Sign In" : "Create Account"} | SEOPulse</title>
+        <meta name="description" content="Sign in or create your free SEOPulse account to access the SEO dashboard, save projects, and track your rankings." />
+        <meta name="robots" content="noindex, nofollow" />
+      </Helmet>
       <section className="min-h-[80vh] flex items-center justify-center py-20">
         <div className="w-full max-w-sm mx-auto px-6">
           <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }}>
@@ -50,18 +56,18 @@ const Auth = () => {
             <div className="surface-elevated p-6">
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div>
-                  <label className="text-xs font-medium text-foreground mb-1.5 block">Email</label>
+                  <label htmlFor="email" className="text-xs font-medium text-foreground mb-1.5 block">Email</label>
                   <div className="relative">
                     <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                    <input type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="you@company.com" required className="input-premium pl-9" />
+                    <input id="email" type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="you@company.com" required className="input-premium pl-9" autoComplete="email" />
                   </div>
                 </div>
                 <div>
-                  <label className="text-xs font-medium text-foreground mb-1.5 block">Password</label>
+                  <label htmlFor="password" className="text-xs font-medium text-foreground mb-1.5 block">Password</label>
                   <div className="relative">
                     <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                    <input type={showPassword ? "text" : "password"} value={password} onChange={e => setPassword(e.target.value)} placeholder="••••••••" required minLength={6} className="input-premium pl-9 pr-9" />
-                    <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground">
+                    <input id="password" type={showPassword ? "text" : "password"} value={password} onChange={e => setPassword(e.target.value)} placeholder="••••••••" required minLength={6} className="input-premium pl-9 pr-9" autoComplete={mode === "login" ? "current-password" : "new-password"} />
+                    <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground" aria-label={showPassword ? "Hide password" : "Show password"}>
                       {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                     </button>
                   </div>

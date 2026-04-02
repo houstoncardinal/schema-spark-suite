@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import { Helmet } from "react-helmet-async";
 import { Layout } from "@/components/Layout";
 import { Link } from "react-router-dom";
 import { CheckCircle, ArrowRight, BarChart3, Shield, Globe, Zap } from "lucide-react";
@@ -27,8 +28,50 @@ const services = [
   },
 ];
 
+const servicesJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "ItemList",
+  name: "SEO Services",
+  description: "Professional SEO consulting and audit services by SEOPulse",
+  url: "https://seopulse.io/services",
+  numberOfItems: services.length,
+  itemListElement: services.map((s, i) => ({
+    "@type": "ListItem",
+    position: i + 1,
+    item: {
+      "@type": "Service",
+      name: s.title,
+      description: s.description,
+      provider: { "@type": "Organization", name: "SEOPulse" },
+      offers: { "@type": "Offer", description: s.price },
+    },
+  })),
+};
+
+const breadcrumbJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: [
+    { "@type": "ListItem", position: 1, name: "Home", item: "https://seopulse.io/" },
+    { "@type": "ListItem", position: 2, name: "Services", item: "https://seopulse.io/services" },
+  ],
+};
+
 const Services = () => (
   <Layout>
+    <Helmet>
+      <title>Professional SEO Services — Consulting, Audits & Strategy | SEOPulse</title>
+      <meta name="description" content="Expert SEO consulting, technical audits, local SEO, and enterprise strategy services. Get measurable results with data-driven SEO from SEOPulse." />
+      <link rel="canonical" href="https://seopulse.io/services" />
+      <meta property="og:title" content="Professional SEO Services | SEOPulse" />
+      <meta property="og:description" content="Expert SEO consulting, technical audits, and enterprise strategy services with measurable results." />
+      <meta property="og:type" content="website" />
+      <meta property="og:url" content="https://seopulse.io/services" />
+      <meta name="twitter:card" content="summary_large_image" />
+      <meta name="twitter:title" content="Professional SEO Services | SEOPulse" />
+      <script type="application/ld+json">{JSON.stringify(servicesJsonLd)}</script>
+      <script type="application/ld+json">{JSON.stringify(breadcrumbJsonLd)}</script>
+    </Helmet>
     <section className="section-padding">
       <div className="container-wide">
         <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} className="text-center mb-14">
