@@ -85,7 +85,7 @@ const BlogPost = () => {
         <meta name="twitter:title" content={post.title} />
         <meta name="twitter:description" content={post.excerpt} />
         <meta name="twitter:image" content={post.image} />
-        <link rel="canonical" href={`https://example.com/blog/${post.slug}`} />
+        <link rel="canonical" href={`https://seopulse.io/blog/${post.slug}`} />
         <script type="application/ld+json">{JSON.stringify(jsonLd)}</script>
         <script type="application/ld+json">{JSON.stringify(breadcrumbJsonLd)}</script>
       </Helmet>

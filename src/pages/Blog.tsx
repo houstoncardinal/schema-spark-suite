@@ -35,7 +35,7 @@ const Blog = () => {
       <Helmet>
         <title>SEO Blog & Insights | Expert Guides by Hunain Qureshi</title>
         <meta name="description" content="Expert SEO guides, case studies, and strategies by Hunain Qureshi. Learn technical SEO, AI optimization, schema markup, and organic growth strategies." />
-        <link rel="canonical" href="https://example.com/blog" />
+        <link rel="canonical" href="https://seopulse.io/blog" />
         <meta property="og:title" content="SEO Blog & Insights | Hunain Qureshi" />
         <meta property="og:description" content="Expert SEO guides, case studies, and strategies." />
         <meta property="og:type" content="website" />
