@@ -39,7 +39,7 @@ const BlogPost = () => {
       name: "Hunain Qureshi SEO",
       logo: { "@type": "ImageObject", url: "/favicon.ico" },
     },
-    mainEntityOfPage: { "@type": "WebPage", "@id": `https://example.com/blog/${post.slug}` },
+    mainEntityOfPage: { "@type": "WebPage", "@id": `https://seopulse.io/blog/${post.slug}` },
     articleSection: post.category,
     keywords: post.tags.join(", "),
     wordCount,
