@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import { Helmet } from "react-helmet-async";
 import { Layout } from "@/components/Layout";
 import { useState } from "react";
 import { Search, Copy, CheckCircle, Code, ArrowRight } from "lucide-react";
@@ -89,6 +90,33 @@ const schemas = [
 
 const categories = ["All", ...Array.from(new Set(schemas.map(s => s.category)))];
 
+const breadcrumbJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: [
+    { "@type": "ListItem", position: 1, name: "Home", item: "https://seopulse.io/" },
+    { "@type": "ListItem", position: 2, name: "Schema Library", item: "https://seopulse.io/schema-library" },
+  ],
+};
+
+const collectionJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "CollectionPage",
+  name: "Schema Markup Library — JSON-LD Templates",
+  description: "Ready-to-use JSON-LD schema markup templates for Article, Product, LocalBusiness, FAQ, Organization, and BreadcrumbList rich results.",
+  url: "https://seopulse.io/schema-library",
+  mainEntity: {
+    "@type": "ItemList",
+    numberOfItems: schemas.length,
+    itemListElement: schemas.map((s, i) => ({
+      "@type": "ListItem",
+      position: i + 1,
+      name: s.name,
+      description: s.description,
+    })),
+  },
+};
+
 const SchemaLibrary = () => {
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("All");
@@ -107,12 +135,24 @@ const SchemaLibrary = () => {
 
   return (
     <Layout>
+      <Helmet>
+        <title>Schema Markup Library — Free JSON-LD Templates | SEOPulse</title>
+        <meta name="description" content="Free JSON-LD schema markup templates for Article, Product, LocalBusiness, FAQ, Organization, and BreadcrumbList. Copy-paste ready structured data for rich search results." />
+        <link rel="canonical" href="https://seopulse.io/schema-library" />
+        <meta property="og:title" content="Schema Markup Library — Free JSON-LD Templates | SEOPulse" />
+        <meta property="og:description" content="Copy-paste ready JSON-LD schema templates for rich search results." />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://seopulse.io/schema-library" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <script type="application/ld+json">{JSON.stringify(breadcrumbJsonLd)}</script>
+        <script type="application/ld+json">{JSON.stringify(collectionJsonLd)}</script>
+      </Helmet>
       <section className="section-padding">
         <div className="container-wide">
           <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} className="text-center mb-10">
             <p className="label-overline mb-3">Schema.org</p>
             <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-3 tracking-tight">
-              Schema Library
+              Schema Markup Library
             </h1>
             <p className="text-muted-foreground max-w-lg mx-auto">
               Ready-to-use JSON-LD schema markup templates for rich search results.
@@ -123,7 +163,7 @@ const SchemaLibrary = () => {
             <div className="flex-1 flex items-center gap-2 rounded-xl border border-border bg-card px-3 py-2.5 w-full">
               <Search className="h-4 w-4 text-muted-foreground" />
               <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search schemas..."
-                className="flex-1 bg-transparent text-sm text-foreground placeholder:text-muted-foreground outline-none" />
+                className="flex-1 bg-transparent text-sm text-foreground placeholder:text-muted-foreground outline-none" aria-label="Search schema templates" />
             </div>
             <div className="flex gap-1.5">
               {categories.map(c => (
@@ -161,7 +201,7 @@ const SchemaLibrary = () => {
                 <p className="text-xs text-muted-foreground mb-3"><span className="font-medium text-foreground">Benefit:</span> {schema.benefits}</p>
                 <div className="relative rounded-lg bg-secondary p-3 overflow-x-auto">
                   <pre className="text-xs text-foreground font-mono whitespace-pre">{schema.jsonld}</pre>
-                  <button onClick={() => copyCode(schema.jsonld, i)}
+                  <button onClick={() => copyCode(schema.jsonld, i)} aria-label={`Copy ${schema.name} schema`}
                     className="absolute top-2 right-2 rounded-md bg-card p-1.5 text-muted-foreground hover:text-foreground transition-colors border border-border">
                     {copiedIdx === i ? <CheckCircle className="h-3 w-3 text-success" /> : <Copy className="h-3 w-3" />}
                   </button>

@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
+import { Helmet } from "react-helmet-async";
 import { motion, AnimatePresence } from "framer-motion";
 import { 
   BarChart3, Link2, FileCode2, FileText, Brain, Sparkles, 
@@ -14,12 +15,12 @@ import { SchemaGenerator } from "@/components/tools/SchemaGenerator";
 import { BacklinkChecker } from "@/components/tools/BacklinkChecker";
 
 const toolsList = [
-  { id: "ai-audit", icon: Brain, title: "AI SEO Audit", desc: "200+ factor deep analysis", accent: "text-accent" },
-  { id: "keywords", icon: Search, title: "Keyword Research", desc: "Volume, difficulty & trends", accent: "text-chart-5" },
-  { id: "environment", icon: Target, title: "Market Analysis", desc: "Competitive landscape", accent: "text-chart-4" },
-  { id: "content", icon: FileText, title: "Content Analyzer", desc: "NLP & readability scoring", accent: "text-success" },
-  { id: "backlinks", icon: Link2, title: "Backlink Checker", desc: "Link profile & toxicity", accent: "text-warning" },
-  { id: "schema", icon: FileCode2, title: "Schema Generator", desc: "JSON-LD structured data", accent: "text-info" },
+  { id: "ai-audit", icon: Brain, title: "AI SEO Audit", desc: "200+ factor deep analysis", accent: "text-accent", metaTitle: "Free AI SEO Audit Tool — 200+ Factor Analysis | SEOPulse", metaDesc: "Run a comprehensive AI-powered SEO audit with 200+ ranking factors. Get detailed scores for technical SEO, content, authority, UX, speed, and schema markup." },
+  { id: "keywords", icon: Search, title: "Keyword Research", desc: "Volume, difficulty & trends", accent: "text-chart-5", metaTitle: "Keyword Research Tool — Volume, Difficulty & Trends | SEOPulse", metaDesc: "Discover high-impact keywords with search volume, difficulty scores, CPC data, and trend analysis. Find untapped keyword opportunities for organic growth." },
+  { id: "environment", icon: Target, title: "Market Analysis", desc: "Competitive landscape", accent: "text-chart-4", metaTitle: "Competitive Market Analysis — SEO Landscape Tool | SEOPulse", metaDesc: "Analyze your competitive SEO landscape. Understand market positioning, competitor strategies, and identify gaps to outrank your competition." },
+  { id: "content", icon: FileText, title: "Content Analyzer", desc: "NLP & readability scoring", accent: "text-success", metaTitle: "Content Analyzer — NLP & Readability Scoring | SEOPulse", metaDesc: "Analyze your content with NLP scoring, readability metrics, keyword density, and topical coverage analysis. Optimize content for maximum search visibility." },
+  { id: "backlinks", icon: Link2, title: "Backlink Checker", desc: "Link profile & toxicity", accent: "text-warning", metaTitle: "Backlink Checker — Link Profile & Toxicity Analysis | SEOPulse", metaDesc: "Analyze your backlink profile with toxicity scoring, anchor text distribution, referring domain quality, and link velocity tracking." },
+  { id: "schema", icon: FileCode2, title: "Schema Generator", desc: "JSON-LD structured data", accent: "text-info", metaTitle: "Schema Markup Generator — JSON-LD Builder | SEOPulse", metaDesc: "Generate valid JSON-LD schema markup for rich search results. Support for Article, Product, LocalBusiness, FAQ, Organization, and more schema types." },
 ];
 
 const Tools = () => {
@@ -41,13 +42,48 @@ const Tools = () => {
 
   const activeToolData = toolsList.find(t => t.id === activeTool) || toolsList[0];
 
+  const toolsJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    name: activeToolData.title,
+    description: activeToolData.metaDesc,
+    url: `https://seopulse.io/tools/${activeToolData.id}`,
+    applicationCategory: "BusinessApplication",
+    operatingSystem: "Web",
+    offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
+    provider: { "@type": "Organization", name: "SEOPulse", url: "https://seopulse.io" },
+  };
+
+  const breadcrumbJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Home", item: "https://seopulse.io/" },
+      { "@type": "ListItem", position: 2, name: "Tools", item: "https://seopulse.io/tools" },
+      { "@type": "ListItem", position: 3, name: activeToolData.title, item: `https://seopulse.io/tools/${activeToolData.id}` },
+    ],
+  };
+
   return (
     <div className="flex min-h-screen bg-background">
+      <Helmet>
+        <title>{activeToolData.metaTitle}</title>
+        <meta name="description" content={activeToolData.metaDesc} />
+        <link rel="canonical" href={`https://seopulse.io/tools/${activeToolData.id}`} />
+        <meta property="og:title" content={activeToolData.metaTitle} />
+        <meta property="og:description" content={activeToolData.metaDesc} />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content={`https://seopulse.io/tools/${activeToolData.id}`} />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={activeToolData.metaTitle} />
+        <script type="application/ld+json">{JSON.stringify(toolsJsonLd)}</script>
+        <script type="application/ld+json">{JSON.stringify(breadcrumbJsonLd)}</script>
+      </Helmet>
+
       {/* Sidebar */}
       <aside className={`fixed top-0 left-0 h-full z-40 border-r border-border bg-card/80 backdrop-blur-xl transition-all duration-300 ease-[cubic-bezier(0.23,1,0.32,1)] ${
         sidebarCollapsed ? "w-[68px]" : "w-[260px]"
       }`}>
-        {/* Logo */}
         <div className="h-16 flex items-center justify-between px-4 border-b border-border">
           <Link to="/" className="flex items-center gap-2.5 group">
             <div className="h-8 w-8 rounded-lg bg-foreground flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
@@ -57,16 +93,13 @@ const Tools = () => {
               <span className="text-sm font-bold text-foreground tracking-tight">SEOPulse</span>
             )}
           </Link>
-          <button
-            onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
-            className="h-7 w-7 rounded-lg flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-secondary transition-all"
-          >
+          <button onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
+            className="h-7 w-7 rounded-lg flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-secondary transition-all">
             {sidebarCollapsed ? <PanelLeft className="h-4 w-4" /> : <PanelLeftClose className="h-4 w-4" />}
           </button>
         </div>
 
-        {/* Nav */}
-        <div className="p-3 space-y-1">
+        <nav className="p-3 space-y-1" aria-label="Tools navigation">
           {!sidebarCollapsed && (
             <p className="text-[10px] font-semibold uppercase tracking-[0.15em] text-muted-foreground px-3 mb-3">
               Analysis Tools
@@ -75,45 +108,33 @@ const Tools = () => {
           {toolsList.map((tool) => {
             const isActive = activeTool === tool.id;
             return (
-              <button
-                key={tool.id}
-                onClick={() => selectTool(tool.id)}
+              <button key={tool.id} onClick={() => selectTool(tool.id)}
                 className={`w-full flex items-center gap-3 rounded-xl px-3 py-2.5 transition-all duration-200 group relative ${
-                  isActive
-                    ? "bg-accent/8 text-foreground"
-                    : "text-muted-foreground hover:text-foreground hover:bg-secondary/50"
+                  isActive ? "bg-accent/8 text-foreground" : "text-muted-foreground hover:text-foreground hover:bg-secondary/50"
                 }`}
                 title={sidebarCollapsed ? tool.title : undefined}
-              >
+                aria-current={isActive ? "page" : undefined}>
                 {isActive && (
-                  <motion.div
-                    layoutId="activeToolIndicator"
+                  <motion.div layoutId="activeToolIndicator"
                     className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-5 rounded-r-full bg-accent"
-                    transition={{ type: "spring", stiffness: 350, damping: 30 }}
-                  />
+                    transition={{ type: "spring", stiffness: 350, damping: 30 }} />
                 )}
                 <tool.icon className={`h-4 w-4 shrink-0 ${isActive ? tool.accent : ""} transition-colors`} />
                 {!sidebarCollapsed && (
                   <div className="text-left min-w-0">
-                    <p className={`text-[13px] font-medium leading-tight ${isActive ? "text-foreground" : ""}`}>
-                      {tool.title}
-                    </p>
-                    <p className="text-[10px] text-muted-foreground leading-tight mt-0.5 truncate">
-                      {tool.desc}
-                    </p>
+                    <p className={`text-[13px] font-medium leading-tight ${isActive ? "text-foreground" : ""}`}>{tool.title}</p>
+                    <p className="text-[10px] text-muted-foreground leading-tight mt-0.5 truncate">{tool.desc}</p>
                   </div>
                 )}
               </button>
             );
           })}
-        </div>
+        </nav>
 
-        {/* Bottom */}
         {!sidebarCollapsed && (
           <div className="absolute bottom-0 left-0 right-0 p-4 border-t border-border">
             <Link to="/" className="flex items-center gap-2 text-xs text-muted-foreground hover:text-foreground transition-colors">
-              <ChevronLeft className="h-3 w-3" />
-              Back to Homepage
+              <ChevronLeft className="h-3 w-3" /> Back to Homepage
             </Link>
           </div>
         )}
@@ -123,7 +144,6 @@ const Tools = () => {
       <main className={`flex-1 transition-all duration-300 ease-[cubic-bezier(0.23,1,0.32,1)] ${
         sidebarCollapsed ? "ml-[68px]" : "ml-[260px]"
       }`}>
-        {/* Top bar */}
         <div className="sticky top-0 z-30 h-16 flex items-center justify-between px-8 border-b border-border bg-background/80 backdrop-blur-xl">
           <div className="flex items-center gap-3">
             <activeToolData.icon className={`h-5 w-5 ${activeToolData.accent}`} />
@@ -142,16 +162,9 @@ const Tools = () => {
           </div>
         </div>
 
-        {/* Canvas */}
         <div className="p-6 md:p-8 max-w-[1200px]">
           <AnimatePresence mode="wait">
-            <motion.div 
-              key={activeTool} 
-              initial={{ opacity: 0, y: 8 }} 
-              animate={{ opacity: 1, y: 0 }} 
-              exit={{ opacity: 0, y: -4 }} 
-              transition={{ duration: 0.2 }}
-            >
+            <motion.div key={activeTool} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -4 }} transition={{ duration: 0.2 }}>
               {activeTool === "ai-audit" && <AISEOAudit />}
               {activeTool === "keywords" && <KeywordResearchTool />}
               {activeTool === "environment" && <EnvironmentalAnalysis />}
