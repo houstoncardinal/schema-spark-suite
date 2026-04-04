@@ -14,6 +14,7 @@ const navItems = [
   { label: "Schema Library", href: "/schema-library" },
   { label: "Schema Validator", href: "/schema-validator" },
   { label: "Learning Hub", href: "/blog" },
+  { label: "Pricing", href: "/pricing" },
   { label: "Services", href: "/services" },
   { label: "Dashboard", href: "/dashboard" },
 ];
