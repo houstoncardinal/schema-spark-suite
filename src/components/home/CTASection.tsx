@@ -28,7 +28,7 @@ export function CTASection() {
             AI-powered SEO intelligence. Free to start, no credit card required.
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
-            <Link to="/auth" className="btn-primary-gradient gap-2 text-base px-8 py-4">
+            <Link to="/pricing" className="btn-primary-gradient gap-2 text-base px-8 py-4">
               Start Free <ArrowRight className="h-4 w-4" />
             </Link>
             <Link to="/tools/ai-audit" className="btn-secondary gap-2 text-base px-8 py-4">
