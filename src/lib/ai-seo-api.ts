@@ -21,9 +21,11 @@ export interface AIRecommendation {
 }
 
 export interface AISEOAuditResponse {
+  scores?: { overall: number; technical: number; content: number; authority: number; ux: number; speed: number; schema: number };
   insights: AIInsight[];
   recommendations: AIRecommendation[];
   summary: string;
+  metaAnalysis?: Record<string, unknown>;
 }
 
 export interface AIKeywordResponse {
@@ -92,6 +94,10 @@ async function callSEOAnalyze<T>(type: string, payload: Record<string, unknown>)
 export const aiSEOApi = {
   async auditSite(url: string, scores: Record<string, number>, issues: Record<string, unknown>[]): Promise<AISEOAuditResponse> {
     return callSEOAnalyze<AISEOAuditResponse>("seo-audit", { url, scores, issues });
+  },
+
+  async auditSiteReal(url: string, html: string, markdown: string, links: string[]): Promise<AISEOAuditResponse> {
+    return callSEOAnalyze<AISEOAuditResponse>("seo-audit", { url, html, markdown, links });
   },
 
   async analyzeKeyword(keyword: string, data: Record<string, unknown>): Promise<AIKeywordResponse> {
