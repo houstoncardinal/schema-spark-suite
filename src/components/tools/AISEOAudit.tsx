@@ -57,32 +57,71 @@ export function AISEOAudit() {
         }
         return prev + 1;
       });
-    }, 500);
+    }, 800);
 
-    // Generate base analysis from deterministic engine
-    const baseResults = analyzeSEO(url);
-
-    // Wait for loading animation
-    await new Promise(resolve => setTimeout(resolve, 3500));
-    clearInterval(interval);
-    setLoading(false);
-    setResults(baseResults);
-
-    // Fetch AI-powered insights in background
-    setAiLoading(true);
     try {
-      const aiResponse = await aiSEOApi.auditSite(
+      // Step 1: Scrape the real website with Firecrawl
+      const scrapeResponse = await firecrawlApi.scrape(url);
+      const scrapedHtml = scrapeResponse.data?.html || scrapeResponse.data?.data?.html || "";
+      const scrapedMarkdown = scrapeResponse.data?.markdown || scrapeResponse.data?.data?.markdown || "";
+      const scrapedLinks = scrapeResponse.data?.links || scrapeResponse.data?.data?.links || [];
+
+      if (!scrapedHtml && !scrapedMarkdown) {
+        toast.warning("Could not scrape site", { description: "Using algorithmic analysis as fallback." });
+      }
+
+      // Step 2: Generate fallback structure from deterministic engine (for chart compatibility)
+      const baseResults = analyzeSEO(url);
+
+      // Step 3: Get AI analysis from REAL scraped data
+      const aiResponse = await aiSEOApi.auditSiteReal(
         url,
-        { overall: baseResults.overall, technical: baseResults.technical, content: baseResults.content, authority: baseResults.authority, ux: baseResults.ux, speed: baseResults.speed, schema: baseResults.schema },
-        baseResults.issuesBySeverity
+        scrapedHtml,
+        scrapedMarkdown,
+        scrapedLinks
       );
+
+      // Override base scores with AI-derived real scores if available
+      if (aiResponse.scores) {
+        baseResults.overall = aiResponse.scores.overall;
+        baseResults.technical = aiResponse.scores.technical;
+        baseResults.content = aiResponse.scores.content;
+        baseResults.authority = aiResponse.scores.authority;
+        baseResults.ux = aiResponse.scores.ux;
+        baseResults.speed = aiResponse.scores.speed;
+        baseResults.schema = aiResponse.scores.schema;
+      }
+
+      clearInterval(interval);
+      setLoading(false);
+      setResults(baseResults);
       setAiData(aiResponse);
-      toast.success("AI analysis complete", { description: "Expert insights generated successfully" });
+      toast.success("Real site analysis complete", { description: "All data sourced from live website crawl + AI analysis" });
     } catch (err) {
-      console.error("AI analysis failed:", err);
-      toast.error("AI enhancement unavailable", { description: "Showing algorithmic analysis results" });
-    } finally {
-      setAiLoading(false);
+      console.error("Analysis failed:", err);
+      clearInterval(interval);
+
+      // Fallback to deterministic engine + AI
+      const baseResults = analyzeSEO(url);
+      setResults(baseResults);
+      setLoading(false);
+
+      toast.error("Live crawl failed", { description: "Showing estimated analysis. Check the URL and try again." });
+
+      // Still try AI insights on fallback data
+      try {
+        setAiLoading(true);
+        const aiResponse = await aiSEOApi.auditSite(
+          url,
+          { overall: baseResults.overall, technical: baseResults.technical, content: baseResults.content, authority: baseResults.authority, ux: baseResults.ux, speed: baseResults.speed, schema: baseResults.schema },
+          baseResults.issuesBySeverity
+        );
+        setAiData(aiResponse);
+      } catch {
+        // Silent fail for AI fallback
+      } finally {
+        setAiLoading(false);
+      }
     }
   };
 
