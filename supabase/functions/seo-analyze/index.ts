@@ -19,23 +19,36 @@ serve(async (req) => {
 
     switch (type) {
       case "seo-audit": {
-        const { url, scores, issues } = payload;
-        systemPrompt = `You are a world-class SEO consultant with 15+ years of experience. You analyze websites and provide expert-level, actionable SEO insights. Your tone is professional, confident, and data-driven. Never be generic — every insight must be specific to the data provided. Format your response as valid JSON.`;
-        userPrompt = `Analyze this SEO audit data for ${url} and generate expert insights.
+        const { url, html, markdown, links } = payload;
+        systemPrompt = `You are a world-class SEO consultant with 15+ years of experience. You analyze REAL website HTML and content to provide expert-level, actionable SEO insights. Analyze the actual HTML structure, meta tags, headings, content quality, schema markup, links, and technical elements. Your tone is professional, confident, and data-driven. Every insight must be derived from the actual page content provided. Format your response as valid JSON.`;
+        userPrompt = `Analyze this REAL website data for ${url} and generate expert SEO insights.
 
-Audit Scores:
-- Overall: ${scores.overall}/100
-- Technical: ${scores.technical}/100
-- Content: ${scores.content}/100
-- Authority: ${scores.authority}/100
-- UX: ${scores.ux}/100
-- Speed: ${scores.speed}/100
-- Schema: ${scores.schema}/100
+ACTUAL HTML (first 15000 chars):
+${(html || "").substring(0, 15000)}
 
-Issues Found: ${JSON.stringify(issues)}
+ACTUAL PAGE CONTENT (markdown, first 5000 chars):
+${(markdown || "").substring(0, 5000)}
+
+LINKS FOUND ON PAGE: ${JSON.stringify((links || []).slice(0, 50))}
+
+Analyze the REAL HTML for:
+1. Title tag, meta description presence and quality
+2. H1/H2/H3 heading structure
+3. Schema/structured data markup
+4. Image alt text presence
+5. Internal/external link quality
+6. Mobile viewport meta tag
+7. Canonical tags
+8. Open Graph / Twitter card tags
+9. Content quality and keyword usage
+10. Page load indicators (inline CSS/JS bloat, render-blocking resources)
+
+Generate REAL scores based on your analysis (0-100):
+- overall, technical, content, authority, ux, speed, schema
 
 Return a JSON object with this exact structure:
 {
+  "scores": { "overall": number, "technical": number, "content": number, "authority": number, "ux": number, "speed": number, "schema": number },
   "insights": [
     {
       "type": "critical|warning|opportunity|info",
@@ -53,10 +66,21 @@ Return a JSON object with this exact structure:
       "completed": false
     }
   ],
-  "summary": "2-3 sentence executive summary of the site's SEO health"
+  "summary": "2-3 sentence executive summary of the site's SEO health",
+  "metaAnalysis": {
+    "title": "the actual title tag found or null",
+    "description": "the actual meta description found or null",
+    "h1Count": "number of H1 tags",
+    "hasSchema": "boolean",
+    "hasCanonical": "boolean",
+    "hasViewport": "boolean",
+    "imagesMissingAlt": "number",
+    "internalLinks": "number",
+    "externalLinks": "number"
+  }
 }
 
-Generate exactly 6-8 insights and 6-8 recommendations. Be specific — reference the actual scores and issues. Prioritize by impact.`;
+Generate exactly 6-8 insights and 6-8 recommendations based on REAL issues found in the HTML. Be specific — reference actual elements from the page.`;
         break;
       }
 

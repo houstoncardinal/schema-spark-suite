@@ -6,20 +6,26 @@ export const TIERS = {
   starter: {
     name: "Starter",
     price_id: "price_1TINYSD8hDIMEHXbMqHB0ahr",
+    annual_price_id: "price_1TIfYMD8hDIMEHXbOslz3QN3",
     product_id: "prod_UGvPpGOaI9g6i9",
     price: 150,
+    annual_price: 1500,
   },
   pro: {
     name: "Pro",
     price_id: "price_1TINYwD8hDIMEHXbQPselYPW",
+    annual_price_id: "price_1TIfYgD8hDIMEHXbtRED92mU",
     product_id: "prod_UGvPPvcmRVJeLN",
     price: 299,
+    annual_price: 2990,
   },
   enterprise: {
     name: "Enterprise",
     price_id: "price_1TINZMD8hDIMEHXbiIOxSBLe",
+    annual_price_id: "price_1TIfZeD8hDIMEHXbKgg0zkHP",
     product_id: "prod_UGvQKNkGxUDQmc",
     price: 599,
+    annual_price: 5990,
   },
 } as const;
 
