@@ -404,7 +404,7 @@ export function EnvironmentalAnalysis() {
               <p className="text-sm text-muted-foreground mb-2">Market difficulty: <span className="font-bold text-foreground">{results.marketDifficulty}/100</span> · Opportunity: <span className="font-bold text-foreground">{results.opportunityScore}/100</span></p>
               <h3 className="font-display text-xl font-bold text-foreground mb-2">Ready to capture this market?</h3>
               <p className="text-sm text-muted-foreground mb-6">Our team will build a custom strategy based on these market insights.</p>
-              <Link to="/contact" className="btn-primary-gradient gap-2">Get Market Strategy <ArrowRight className="h-4 w-4" /></Link>
+              <Link to="/contact" className="btn-rainbow gap-2">Get Market Strategy <ArrowRight className="h-4 w-4" /></Link>
             </div>
           </div>
         </motion.div>

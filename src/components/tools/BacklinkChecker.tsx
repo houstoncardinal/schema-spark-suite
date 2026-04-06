@@ -359,7 +359,7 @@ export function BacklinkChecker() {
             <div className="relative">
               <h3 className="font-display text-xl font-bold text-foreground mb-2">Need professional link building?</h3>
               <p className="text-sm text-muted-foreground mb-6">Our outreach team builds high-authority backlinks that move rankings.</p>
-              <Link to="/contact" className="btn-primary-gradient gap-2">Get Link Building Strategy <ArrowRight className="h-4 w-4" /></Link>
+              <Link to="/contact" className="btn-rainbow gap-2">Get Link Building Strategy <ArrowRight className="h-4 w-4" /></Link>
             </div>
           </div>
         </motion.div>
