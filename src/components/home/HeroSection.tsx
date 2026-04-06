@@ -8,6 +8,7 @@ import {
 import { analyzeSEO, type SEOAuditResult, type SEOInsight } from "@/lib/seo-engine";
 import { ScoreRing } from "@/components/charts/ScoreRing";
 import { Link } from "react-router-dom";
+import CybercoreBackground from "@/components/ui/cybercore-section-hero";
 
 const fixDatabase: Record<string, { fix: string; steps: string[]; impact: string; difficulty: "Easy" | "Medium" | "Hard" }> = {
   "orphan": { fix: "Create internal linking pathways to isolated pages", steps: ["Identify all orphan pages using a crawl tool or sitemap comparison", "Add contextual internal links from high-authority pages to orphaned ones", "Update your sitemap.xml to include all important pages", "Add breadcrumb navigation for hierarchical content"], impact: "Improves crawl coverage by 15-40% and distributes PageRank to previously invisible pages", difficulty: "Easy" },
