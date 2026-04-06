@@ -71,6 +71,18 @@ const Services = () => (
       <meta name="twitter:title" content="Professional SEO Services | SEO Cloud Lab" />
       <script type="application/ld+json">{JSON.stringify(servicesJsonLd)}</script>
       <script type="application/ld+json">{JSON.stringify(breadcrumbJsonLd)}</script>
+      <script type="application/ld+json">{JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "HowTo",
+        name: "Our SEO Process",
+        description: "How SEO Cloud Lab delivers results through a proven 4-step process.",
+        step: [
+          { "@type": "HowToStep", position: 1, name: "Discovery", text: "Deep-dive into your business and goals." },
+          { "@type": "HowToStep", position: 2, name: "Strategy", text: "Custom SEO roadmap with priorities." },
+          { "@type": "HowToStep", position: 3, name: "Execution", text: "Technical, content, and link strategies." },
+          { "@type": "HowToStep", position: 4, name: "Results", text: "Transparent reporting and optimization." },
+        ],
+      })}</script>
     </Helmet>
     <section className="section-padding">
       <div className="container-wide">

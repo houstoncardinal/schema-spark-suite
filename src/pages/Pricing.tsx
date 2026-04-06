@@ -98,6 +98,28 @@ const pricingJsonLd = {
   },
 };
 
+const faqJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: [
+    { "@type": "Question", name: "Can I cancel anytime?", acceptedAnswer: { "@type": "Answer", text: "Yes. Cancel in one click from your billing portal. No lock-in contracts." } },
+    { "@type": "Question", name: "What's included in Free?", acceptedAnswer: { "@type": "Answer", text: "1 project, 5 audits/month, 50 keyword tracking, basic content analysis, and schema generation." } },
+    { "@type": "Question", name: "What payment methods?", acceptedAnswer: { "@type": "Answer", text: "We accept all major credit cards, Apple Pay, and Google Pay via Stripe." } },
+    { "@type": "Question", name: "Can I switch plans?", acceptedAnswer: { "@type": "Answer", text: "Upgrade or downgrade anytime. Changes take effect on your next billing cycle." } },
+    { "@type": "Question", name: "How does annual billing work?", acceptedAnswer: { "@type": "Answer", text: "Pay for 10 months, get 12. That's 2 months free on every plan when you choose annual." } },
+    { "@type": "Question", name: "Enterprise custom pricing?", acceptedAnswer: { "@type": "Answer", text: "Contact us for custom quotes, volume discounts, and tailored solutions." } },
+  ],
+};
+
+const breadcrumbJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: [
+    { "@type": "ListItem", position: 1, name: "Home", item: "https://seocloudlab.io/" },
+    { "@type": "ListItem", position: 2, name: "Pricing", item: "https://seocloudlab.io/pricing" },
+  ],
+};
+
 const Pricing = () => {
   const { user, subscription, checkSubscription } = useAuth();
   const [loadingTier, setLoadingTier] = useState<TierKey | null>(null);
@@ -170,6 +192,8 @@ const Pricing = () => {
         <meta property="og:url" content="https://seocloudlab.io/pricing" />
         <meta property="og:type" content="website" />
         <script type="application/ld+json">{JSON.stringify(pricingJsonLd)}</script>
+        <script type="application/ld+json">{JSON.stringify(faqJsonLd)}</script>
+        <script type="application/ld+json">{JSON.stringify(breadcrumbJsonLd)}</script>
       </Helmet>
 
       <section className="section-padding">

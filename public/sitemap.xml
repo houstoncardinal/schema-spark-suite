@@ -7,9 +7,18 @@
   <url><loc>https://seocloudlab.io/tools/content</loc><changefreq>weekly</changefreq><priority>0.9</priority></url>
   <url><loc>https://seocloudlab.io/tools/environment</loc><changefreq>weekly</changefreq><priority>0.9</priority></url>
   <url><loc>https://seocloudlab.io/tools/schema</loc><changefreq>weekly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://seocloudlab.io/pricing</loc><changefreq>weekly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://seocloudlab.io/services</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://seocloudlab.io/schema-library</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://seocloudlab.io/schema-validator</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://seocloudlab.io/services</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://seocloudlab.io/blog</loc><changefreq>daily</changefreq><priority>0.8</priority></url>
+  <url><loc>https://seocloudlab.io/blog/ai-powered-seo-strategy-2025</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://seocloudlab.io/blog/core-web-vitals-optimization-complete-guide</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://seocloudlab.io/blog/schema-markup-complete-implementation-guide</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://seocloudlab.io/blog/local-seo-domination-strategy</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://seocloudlab.io/blog/technical-seo-audit-checklist-2025</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://seocloudlab.io/blog/content-strategy-topical-authority</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://seocloudlab.io/blog/ecommerce-seo-revenue-optimization</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://seocloudlab.io/blog/google-algorithm-updates-survival-guide</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
   <url><loc>https://seocloudlab.io/contact</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
 </urlset>

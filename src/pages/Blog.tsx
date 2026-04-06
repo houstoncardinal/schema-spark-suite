@@ -15,10 +15,10 @@ const Blog = () => {
   const blogListJsonLd = {
     "@context": "https://schema.org",
     "@type": "Blog",
-    name: "SEO Insights by Hunain Qureshi",
-    description: "Expert SEO guides, case studies, and strategies by Hunain Qureshi covering technical SEO, AI-powered optimization, schema markup, and organic growth.",
+    name: "SEO Cloud Lab Blog",
+    description: "Expert SEO guides, case studies, and strategies covering technical SEO, AI-powered optimization, schema markup, and organic growth.",
     url: "https://seocloudlab.io/blog",
-    author: { "@type": "Person", name: "Hunain Qureshi" },
+    publisher: { "@type": "Organization", name: "SEO Cloud Lab", url: "https://seocloudlab.io" },
     blogPost: blogPosts.map((p) => ({
       "@type": "BlogPosting",
       headline: p.title,
@@ -30,16 +30,29 @@ const Blog = () => {
     })),
   };
 
+  const breadcrumbJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Home", item: "https://seocloudlab.io/" },
+      { "@type": "ListItem", position: 2, name: "Blog", item: "https://seocloudlab.io/blog" },
+    ],
+  };
+
   return (
     <Layout>
       <Helmet>
-        <title>SEO Blog & Insights | Expert Guides by Hunain Qureshi</title>
+        <title>SEO Blog & Insights — Expert Guides | SEO Cloud Lab</title>
         <meta name="description" content="Expert SEO guides, case studies, and strategies by Hunain Qureshi. Learn technical SEO, AI optimization, schema markup, and organic growth strategies." />
         <link rel="canonical" href="https://seocloudlab.io/blog" />
-        <meta property="og:title" content="SEO Blog & Insights | Hunain Qureshi" />
+        <meta property="og:title" content="SEO Blog & Insights | SEO Cloud Lab" />
         <meta property="og:description" content="Expert SEO guides, case studies, and strategies." />
         <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://seocloudlab.io/blog" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="SEO Blog & Insights | SEO Cloud Lab" />
         <script type="application/ld+json">{JSON.stringify(blogListJsonLd)}</script>
+        <script type="application/ld+json">{JSON.stringify(breadcrumbJsonLd)}</script>
       </Helmet>
 
       {/* Editorial Hero */}

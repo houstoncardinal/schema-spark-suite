@@ -52,6 +52,19 @@ const Contact = () => {
         <meta property="og:url" content="https://seocloudlab.io/contact" />
         <meta name="twitter:card" content="summary_large_image" />
         <script type="application/ld+json">{JSON.stringify(breadcrumbJsonLd)}</script>
+        <script type="application/ld+json">{JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "ContactPage",
+          name: "Contact SEO Cloud Lab",
+          description: "Get a free SEO strategy consultation from SEO Cloud Lab.",
+          url: "https://seocloudlab.io/contact",
+          mainEntity: {
+            "@type": "Organization",
+            name: "SEO Cloud Lab",
+            url: "https://seocloudlab.io",
+            contactPoint: { "@type": "ContactPoint", contactType: "sales", url: "https://seocloudlab.io/contact" },
+          },
+        })}</script>
       </Helmet>
       <section className="section-padding">
         <div className="container-tight">
