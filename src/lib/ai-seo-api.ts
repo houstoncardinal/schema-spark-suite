@@ -29,21 +29,77 @@ export interface AISEOAuditResponse {
 }
 
 export interface AIKeywordResponse {
+  volume: number;
+  difficulty: number;
+  cpc: number;
+  intent: string;
   analysis: string;
   strategy: string;
   contentAngle: string;
   competitiveInsight: string;
-  relatedOpportunities: string[];
+  relatedKeywords: {
+    keyword: string;
+    volume: number;
+    difficulty: number;
+    cpc: number;
+    intent: string;
+    trend: "up" | "down" | "stable";
+  }[];
+  trendData: { month: string; volume: number }[];
   estimatedTimeToRank: string;
+  relatedOpportunities: string[];
 }
 
 export interface AIContentResponse {
+  nlpScore: number;
+  readability: number;
+  keywordRelevance: number;
+  semanticCoverage: number;
+  contentDepth: number;
+  wordCount: number;
+  avgSentenceLength: number;
+  fleschScore: number;
+  topicAuthority: number;
+  eeatSignals: number;
+  metrics: { label: string; value: number; maxValue: number }[];
+  keywordCloud: { word: string; relevance: number }[];
+  missingClusters: { cluster: string; gap: number }[];
+  competitorComparison: { metric: string; yours: number; competitor: number }[];
   analysis: string;
   strengths: string[];
   weaknesses: string[];
   optimizations: { action: string; impact: string; description: string }[];
   topicGaps: string[];
   competitorInsight: string;
+  insights: AIInsight[];
+}
+
+export interface AIBacklinkResponse {
+  domainAuthority: number;
+  totalBacklinks: number;
+  referringDomains: number;
+  followPercent: number;
+  nofollowPercent: number;
+  spamScore: number;
+  trustScore: number;
+  growth: { month: string; backlinks: number; domains: number }[];
+  topReferrers: { domain: string; authority: number; links: number; type: string }[];
+  linkTypes: { name: string; value: number }[];
+  anchorTexts: { label: string; value: number; maxValue: number }[];
+  insights: AIInsight[];
+}
+
+export interface AIMarketResponse {
+  marketDifficulty: number;
+  opportunityScore: number;
+  serpVolatility: number;
+  competitorDensity: number;
+  scatter: { keyword: string; difficulty: number; opportunity: number; volume: number }[];
+  marketShare: { name: string; value: number }[];
+  volatility: { week: string; score: number }[];
+  topCompetitors: { name: string; authority: number; traffic: string; keywords: number }[];
+  keywordGrowth: { month: string; volume: number }[];
+  insights: AIInsight[];
 }
 
 export interface AIDashboardInsight {
@@ -92,20 +148,24 @@ async function callSEOAnalyze<T>(type: string, payload: Record<string, unknown>)
 }
 
 export const aiSEOApi = {
-  async auditSite(url: string, scores: Record<string, number>, issues: Record<string, unknown>[]): Promise<AISEOAuditResponse> {
-    return callSEOAnalyze<AISEOAuditResponse>("seo-audit", { url, scores, issues });
-  },
-
   async auditSiteReal(url: string, html: string, markdown: string, links: string[]): Promise<AISEOAuditResponse> {
     return callSEOAnalyze<AISEOAuditResponse>("seo-audit", { url, html, markdown, links });
   },
 
-  async analyzeKeyword(keyword: string, data: Record<string, unknown>): Promise<AIKeywordResponse> {
-    return callSEOAnalyze<AIKeywordResponse>("keyword-analysis", { keyword, data });
+  async analyzeKeywordReal(keyword: string, html?: string, markdown?: string): Promise<AIKeywordResponse> {
+    return callSEOAnalyze<AIKeywordResponse>("keyword-analysis", { keyword, html, markdown });
   },
 
-  async analyzeContent(input: string, scores: Record<string, unknown>): Promise<AIContentResponse> {
-    return callSEOAnalyze<AIContentResponse>("content-analysis", { input, scores });
+  async analyzeContentReal(url: string, html: string, markdown: string, links: string[]): Promise<AIContentResponse> {
+    return callSEOAnalyze<AIContentResponse>("content-analysis", { url, html, markdown, links });
+  },
+
+  async analyzeBacklinksReal(url: string, html: string, markdown: string, links: string[]): Promise<AIBacklinkResponse> {
+    return callSEOAnalyze<AIBacklinkResponse>("backlink-analysis", { url, html, markdown, links });
+  },
+
+  async analyzeMarketReal(niche: string, searchResults?: unknown): Promise<AIMarketResponse> {
+    return callSEOAnalyze<AIMarketResponse>("market-analysis", { niche, searchResults });
   },
 
   async getDashboardInsights(domain: string, metrics: Record<string, unknown>): Promise<AIDashboardResponse> {

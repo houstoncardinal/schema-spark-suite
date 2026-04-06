@@ -111,10 +111,8 @@ export function AISEOAudit() {
       // Still try AI insights on fallback data
       try {
         setAiLoading(true);
-        const aiResponse = await aiSEOApi.auditSite(
-          url,
-          { overall: baseResults.overall, technical: baseResults.technical, content: baseResults.content, authority: baseResults.authority, ux: baseResults.ux, speed: baseResults.speed, schema: baseResults.schema },
-          baseResults.issuesBySeverity
+        const aiResponse = await aiSEOApi.auditSiteReal(
+          url, "", "", []
         );
         setAiData(aiResponse);
       } catch {
