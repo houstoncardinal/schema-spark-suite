@@ -143,11 +143,9 @@ export function HeroSection() {
   };
 
   return (
-    <section className="relative pt-36 pb-24 md:pt-48 md:pb-32 overflow-hidden noise-texture">
-      {/* Ambient orbs */}
-      <div className="ambient-orb bg-accent/10 w-[500px] h-[500px] -top-[200px] -right-[100px]" />
-      <div className="ambient-orb bg-accent-glow/8 w-[400px] h-[400px] top-[200px] -left-[150px]" />
-      <div className="absolute inset-0 grid-pattern opacity-30" />
+    <section className="relative pt-36 pb-24 md:pt-48 md:pb-32 overflow-hidden" style={{ background: 'hsl(var(--cyber-bg))' }}>
+      {/* Cybercore animated background */}
+      <CybercoreBackground beamCount={70} />
 
       <div className="container-wide relative">
         <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, ease: [0.23, 1, 0.32, 1] }}
