@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, ChevronDown, LogIn, Cloud } from "lucide-react";
+import { Menu, X, ChevronDown, LogIn } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 
 const navItems = [
@@ -30,11 +30,8 @@ export function Header() {
       <div className="mx-4 mt-3">
         <div className="container-wide bg-background/70 backdrop-blur-2xl border border-border/60 rounded-2xl shadow-sm">
           <div className="flex h-14 items-center justify-between px-5">
-            <Link to="/" className="flex items-center gap-2.5 group">
-              <div className="h-7 w-7 rounded-lg bg-gradient-to-br from-[hsl(var(--google-blue))] to-[hsl(var(--apple-purple))] flex items-center justify-center group-hover:scale-105 transition-transform duration-300">
-                <Cloud className="h-3.5 w-3.5 text-white" />
-              </div>
-              <span className="text-base font-bold text-foreground tracking-tight">SEO Cloud Lab</span>
+            <Link to="/" className="flex items-center gap-1 group">
+              <img src="/images/logo.png" alt="SEO Cloud Labs" className="h-8 group-hover:scale-105 transition-transform duration-300" />
             </Link>
 
             <nav className="hidden lg:flex items-center gap-0.5">
