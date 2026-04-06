@@ -31,7 +31,7 @@ export function Header() {
         <div className="container-wide bg-background/70 backdrop-blur-2xl border border-border/60 rounded-2xl shadow-sm">
           <div className="flex h-14 items-center justify-between px-5">
             <Link to="/" className="flex items-center gap-1 group">
-              <img src="/images/logo.png" alt="SEO Cloud Labs" className="h-10 group-hover:scale-105 transition-transform duration-300" />
+              <img src="/images/logo.png" alt="SEO Cloud Labs" className="h-14 group-hover:scale-105 transition-transform duration-300" />
             </Link>
 
             <nav className="hidden lg:flex items-center gap-0.5">
