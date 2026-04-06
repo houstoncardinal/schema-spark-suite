@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
+import { Link } from "react-router-dom";
 import { Link2, Loader2, ArrowRight, Globe, ExternalLink, Shield, TrendingUp, AlertTriangle, BarChart3, PieChart as PieIcon, Activity } from "lucide-react";
 import { ScoreRing } from "@/components/charts/ScoreRing";
 import { InsightList } from "@/components/charts/InsightCard";

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
+import { Link } from "react-router-dom";
 import { Globe, Loader2, ArrowRight, Sparkles, Target, Users, TrendingUp, ExternalLink, Shield, AlertTriangle, BarChart3, Layers, Brain, ArrowUpRight, ArrowDownRight, Minus } from "lucide-react";
 import { ScoreRing } from "@/components/charts/ScoreRing";
 import { InsightList } from "@/components/charts/InsightCard";

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
+import { Link } from "react-router-dom";
 import { Code, Loader2, ArrowRight, CheckCircle, Copy, Plus, Trash2, FileCode2 } from "lucide-react";
 
 type SchemaType = "Article" | "LocalBusiness" | "Product" | "FAQ" | "Organization" | "BreadcrumbList" | "WebSite" | "Service" | "Event" | "HowTo";
