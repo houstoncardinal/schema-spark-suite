@@ -153,14 +153,15 @@ export function HeroSection() {
           className="text-center max-w-4xl mx-auto mb-16">
           
           <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.1, duration: 0.5 }}
-            className="inline-flex items-center gap-2 rounded-full border border-[hsl(var(--cyber-light)/0.3)] bg-[hsl(var(--cyber-light)/0.05)] px-4 py-1.5 text-xs font-medium text-[hsl(var(--cyber-light))] mb-8">
-            <span className="h-1.5 w-1.5 rounded-full bg-[hsl(var(--cyber-light))] animate-pulse" />
+            className="inline-flex items-center gap-2 rounded-full border border-white/20 px-4 py-1.5 text-xs font-medium text-white/80 mb-8 animate-border-dance"
+            style={{ background: 'linear-gradient(135deg, hsl(var(--google-blue) / 0.1), hsl(var(--apple-purple) / 0.1))' }}>
+            <span className="h-1.5 w-1.5 rounded-full bg-[hsl(var(--google-blue))] animate-pulse" />
             AI-Powered SEO Intelligence
           </motion.div>
 
           <h1 className="headline-hero text-white mb-6">
             Search optimization,{" "}
-            <span className="font-serif italic bg-clip-text text-transparent bg-gradient-to-r from-[hsl(var(--cyber-light))] to-[hsl(var(--cyber-highlight))]">reimagined.</span>
+            <span className="font-serif italic bg-clip-text text-transparent" style={{ backgroundImage: 'var(--gradient-rainbow)', backgroundSize: '300% auto', animation: 'gradient-shift 4s linear infinite' }}>reimagined.</span>
           </h1>
 
           <p className="text-lg md:text-xl text-white/60 max-w-2xl mx-auto leading-relaxed mb-12">
@@ -184,8 +185,8 @@ export function HeroSection() {
                   />
                 </div>
                 <button onClick={handleAnalyze} disabled={analyzing}
-                  className="shrink-0 inline-flex items-center justify-center gap-2 rounded-2xl px-8 py-3.5 text-sm font-medium text-white transition-all duration-300"
-                  style={{ background: 'linear-gradient(135deg, hsl(var(--cyber-light)), hsl(var(--cyber-glow-2)))' }}>
+                  className="shrink-0 inline-flex items-center justify-center gap-2 rounded-2xl px-8 py-3.5 text-sm font-medium text-white transition-all duration-300 animate-gradient"
+                  style={{ backgroundImage: 'var(--gradient-rainbow)', backgroundSize: '300% auto' }}>
                   {analyzing ? <Loader2 className="h-4 w-4 animate-spin" /> : <><Search className="h-4 w-4" /> Analyze</>}
                 </button>
               </div>
