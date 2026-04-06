@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { Globe, Loader2, ArrowRight, Brain, CheckCircle, Shield, FileText, Link2, Gauge, Code, Eye, Sparkles, Smartphone, Image, Lock, Search, BarChart3 } from "lucide-react";
+import { Link } from "react-router-dom";
 import { ScoreRing } from "@/components/charts/ScoreRing";
 import { SEORadarChart } from "@/components/charts/SEORadarChart";
 import { InsightList } from "@/components/charts/InsightCard";
@@ -280,8 +281,8 @@ export function AISEOAudit() {
                   <h3 className="font-display text-xl font-bold text-foreground mb-2">Want us to fix these issues?</h3>
                   <p className="text-sm text-muted-foreground mb-6 max-w-lg mx-auto">Our expert team will implement all recommendations and continuously optimize your SEO performance.</p>
                   <div className="flex items-center justify-center gap-3">
-                    <a href="/contact" className="btn-primary-gradient gap-2">Book Strategy Call <ArrowRight className="h-4 w-4" /></a>
-                    <a href="/services" className="inline-flex items-center gap-2 rounded-xl border border-border px-6 py-3 text-sm font-medium text-foreground hover:bg-secondary transition-colors">View Services</a>
+                    <Link to="/contact" className="btn-rainbow gap-2">Book Strategy Call <ArrowRight className="h-4 w-4" /></Link>
+                    <Link to="/services" className="inline-flex items-center gap-2 rounded-xl border border-border px-6 py-3 text-sm font-medium text-foreground hover:bg-secondary transition-colors">View Services</Link>
                   </div>
                 </div>
               </div>
