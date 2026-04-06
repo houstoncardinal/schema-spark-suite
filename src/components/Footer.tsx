@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Sparkles } from "lucide-react";
+import { Cloud } from "lucide-react";
 
 const footerLinks = [
   {
@@ -43,10 +43,10 @@ export function Footer() {
           {/* Brand */}
           <div className="col-span-2 md:col-span-1">
             <Link to="/" className="flex items-center gap-2 mb-4 group">
-              <div className="h-7 w-7 rounded-lg bg-foreground flex items-center justify-center group-hover:scale-105 transition-transform duration-300">
-                <Sparkles className="h-3.5 w-3.5 text-background" />
+              <div className="h-7 w-7 rounded-lg bg-gradient-to-br from-[hsl(var(--google-blue))] to-[hsl(var(--apple-purple))] flex items-center justify-center group-hover:scale-105 transition-transform duration-300">
+                <Cloud className="h-3.5 w-3.5 text-white" />
               </div>
-              <span className="text-base font-bold text-foreground tracking-tight">SEOPulse</span>
+              <span className="text-base font-bold text-foreground tracking-tight">SEO Cloud Lab</span>
             </Link>
             <p className="text-sm text-muted-foreground leading-relaxed max-w-[200px]">
               AI-powered SEO intelligence for professionals who demand real data.
@@ -71,11 +71,11 @@ export function Footer() {
           ))}
         </div>
         
-        <div className="separator-gradient mb-8" />
+        <div className="separator-rainbow mb-8" />
         
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
           <p className="text-xs text-muted-foreground">
-            © {new Date().getFullYear()} SEOPulse. All rights reserved.
+            © {new Date().getFullYear()} SEO Cloud Lab. All rights reserved.
           </p>
           <p className="text-xs text-muted-foreground">
             AI-Powered SEO Intelligence Platform
