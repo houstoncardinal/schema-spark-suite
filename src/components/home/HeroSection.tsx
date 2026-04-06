@@ -148,22 +148,22 @@ export function HeroSection() {
       {/* Cybercore animated background */}
       <CybercoreBackground beamCount={70} />
 
-      <div className="container-wide relative">
+      <div className="container-wide relative z-10">
         <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, ease: [0.23, 1, 0.32, 1] }}
           className="text-center max-w-4xl mx-auto mb-16">
           
           <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.1, duration: 0.5 }}
-            className="inline-flex items-center gap-2 rounded-full border border-accent/20 bg-accent/5 px-4 py-1.5 text-xs font-medium text-accent mb-8">
-            <span className="h-1.5 w-1.5 rounded-full bg-accent animate-pulse" />
+            className="inline-flex items-center gap-2 rounded-full border border-[hsl(var(--cyber-light)/0.3)] bg-[hsl(var(--cyber-light)/0.05)] px-4 py-1.5 text-xs font-medium text-[hsl(var(--cyber-light))] mb-8">
+            <span className="h-1.5 w-1.5 rounded-full bg-[hsl(var(--cyber-light))] animate-pulse" />
             AI-Powered SEO Intelligence
           </motion.div>
 
-          <h1 className="headline-hero text-foreground mb-6">
+          <h1 className="headline-hero text-white mb-6">
             Search optimization,{" "}
-            <span className="font-serif italic gradient-text">reimagined.</span>
+            <span className="font-serif italic bg-clip-text text-transparent bg-gradient-to-r from-[hsl(var(--cyber-light))] to-[hsl(var(--cyber-highlight))]">reimagined.</span>
           </h1>
 
-          <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed mb-12">
+          <p className="text-lg md:text-xl text-white/60 max-w-2xl mx-auto leading-relaxed mb-12">
             Enter any URL. Get a detailed, interactive breakdown of every SEO factor — with exact fixes for every issue found.
           </p>
 
