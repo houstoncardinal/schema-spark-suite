@@ -28,6 +28,20 @@ export interface AISEOAuditResponse {
   metaAnalysis?: Record<string, unknown>;
 }
 
+export interface AIKeywordSERPFeature {
+  feature: string;
+  present: boolean;
+  opportunity: number;
+}
+
+export interface AIKeywordCluster {
+  name: string;
+  keywords: string[];
+  avgDifficulty: number;
+  totalVolume: number;
+  intent: string;
+}
+
 export interface AIKeywordResponse {
   volume: number;
   difficulty: number;
@@ -48,6 +62,26 @@ export interface AIKeywordResponse {
   trendData: { month: string; volume: number }[];
   estimatedTimeToRank: string;
   relatedOpportunities: string[];
+  serpFeatures: AIKeywordSERPFeature[];
+  clusters: AIKeywordCluster[];
+  difficultyBreakdown: { factor: string; score: number; weight: number }[];
+  seasonality: { month: string; index: number }[];
+  topRankingPages: { url: string; title: string; authority: number; wordCount: number; backlinks: number }[];
+  intentBreakdown: { intent: string; percentage: number }[];
+  longTailOpportunities: { keyword: string; volume: number; difficulty: number; parentKeyword: string }[];
+}
+
+export interface AIContentEEATSignal {
+  signal: string;
+  score: number;
+  description: string;
+}
+
+export interface AIContentHeading {
+  tag: string;
+  text: string;
+  wordCount: number;
+  keywordPresent: boolean;
 }
 
 export interface AIContentResponse {
@@ -68,10 +102,31 @@ export interface AIContentResponse {
   analysis: string;
   strengths: string[];
   weaknesses: string[];
-  optimizations: { action: string; impact: string; description: string }[];
+  optimizations: { action: string; impact: string; description: string; effort: string }[];
   topicGaps: string[];
   competitorInsight: string;
   insights: AIInsight[];
+  eeatAnalysis: AIContentEEATSignal[];
+  headingStructure: AIContentHeading[];
+  sentimentAnalysis: { positive: number; neutral: number; negative: number };
+  contentScoreHistory: { metric: string; current: number; optimal: number }[];
+  internalLinkSuggestions: { anchor: string; targetPage: string; reason: string }[];
+  schemaOpportunities: { type: string; description: string; impact: string }[];
+}
+
+export interface AIBacklinkToxicLink {
+  domain: string;
+  reason: string;
+  risk: "high" | "medium" | "low";
+  action: string;
+}
+
+export interface AIBacklinkCompetitor {
+  domain: string;
+  backlinks: number;
+  referringDomains: number;
+  commonLinks: number;
+  uniqueLinks: number;
 }
 
 export interface AIBacklinkResponse {
@@ -87,6 +142,27 @@ export interface AIBacklinkResponse {
   linkTypes: { name: string; value: number }[];
   anchorTexts: { label: string; value: number; maxValue: number }[];
   insights: AIInsight[];
+  toxicLinks: AIBacklinkToxicLink[];
+  competitorComparison: AIBacklinkCompetitor[];
+  linkVelocity: { month: string; gained: number; lost: number; net: number }[];
+  tldDistribution: { tld: string; count: number; percentage: number }[];
+  linkByPage: { page: string; backlinks: number; referringDomains: number; topAnchor: string }[];
+  freshness: { age: string; count: number; percentage: number }[];
+}
+
+export interface AIMarketSWOT {
+  strengths: string[];
+  weaknesses: string[];
+  opportunities: string[];
+  threats: string[];
+}
+
+export interface AIMarketCompetitorRadar {
+  metric: string;
+  you: number;
+  competitor1: number;
+  competitor2: number;
+  competitor3: number;
 }
 
 export interface AIMarketResponse {
@@ -97,9 +173,15 @@ export interface AIMarketResponse {
   scatter: { keyword: string; difficulty: number; opportunity: number; volume: number }[];
   marketShare: { name: string; value: number }[];
   volatility: { week: string; score: number }[];
-  topCompetitors: { name: string; authority: number; traffic: string; keywords: number }[];
+  topCompetitors: { name: string; authority: number; traffic: string; keywords: number; growth: string; weaknesses: string }[];
   keywordGrowth: { month: string; volume: number }[];
   insights: AIInsight[];
+  swot: AIMarketSWOT;
+  competitorRadar: AIMarketCompetitorRadar[];
+  trendForecast: { month: string; actual: number; predicted: number }[];
+  contentGaps: { topic: string; searchVolume: number; competition: string; yourCoverage: number }[];
+  marketTrends: { trend: string; direction: "rising" | "declining" | "stable"; impact: string; timeframe: string }[];
+  entryBarriers: { barrier: string; severity: number; description: string }[];
 }
 
 export interface AIDashboardInsight {
