@@ -42,7 +42,7 @@ export function Footer() {
           {/* Brand */}
           <div className="col-span-2 md:col-span-1">
             <Link to="/" className="flex items-center gap-1 mb-4 group">
-              <img src="/images/logo.png" alt="SEO Cloud Labs" <img src="/images/logo.png" alt="SEO Cloud Labs" className="h-14 group-hover:scale-105 transition-transform duration-300" /> transition-transform duration-300" />
+              <img src="/images/logo.png" alt="SEO Cloud Labs" className="h-14 group-hover:scale-105 transition-transform duration-300" /> src="/images/logo.png" alt="SEO Cloud Labs" className="h-14 group-hover:scale-105 transition-transform duration-300" /> transition-transform duration-300" />
             </Link>
             <p className="text-sm text-gray-500 leading-relaxed max-w-[200px]">
               AI-powered SEO intelligence for professionals who demand real data.
