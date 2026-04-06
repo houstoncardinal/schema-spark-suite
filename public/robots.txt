@@ -3,4 +3,16 @@ Allow: /
 Disallow: /dashboard
 Disallow: /auth
 
+User-agent: Googlebot
+Allow: /
+Disallow: /dashboard
+Disallow: /auth
+Crawl-delay: 1
+
+User-agent: Bingbot
+Allow: /
+Disallow: /dashboard
+Disallow: /auth
+Crawl-delay: 2
+
 Sitemap: https://seocloudlab.io/sitemap.xml

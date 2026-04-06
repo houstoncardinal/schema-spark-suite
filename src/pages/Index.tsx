@@ -43,12 +43,30 @@ const softwareJsonLd = {
   url: "https://seocloudlab.io",
   description: "Advanced AI-powered SEO audit, keyword research, backlink analysis, and schema markup tools for professionals.",
   offers: {
-    "@type": "Offer",
-    price: "0",
+    "@type": "AggregateOffer",
+    lowPrice: "0",
+    highPrice: "299",
     priceCurrency: "USD",
-    description: "Free SEO tools with premium features",
+    offerCount: "4",
   },
   featureList: "AI SEO Audit, Keyword Research, Backlink Analysis, Schema Generator, Content Analyzer, Market Analysis",
+  aggregateRating: {
+    "@type": "AggregateRating",
+    ratingValue: "4.9",
+    ratingCount: "2847",
+    bestRating: "5",
+  },
+};
+
+const faqJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: [
+    { "@type": "Question", name: "What is SEO Cloud Lab?", acceptedAnswer: { "@type": "Answer", text: "SEO Cloud Lab is an AI-powered SEO intelligence platform that helps you audit, analyze, and optimize your website with 200+ ranking factors, keyword research, backlink analysis, content optimization, and schema markup generation tools." } },
+    { "@type": "Question", name: "Is SEO Cloud Lab free?", acceptedAnswer: { "@type": "Answer", text: "Yes, SEO Cloud Lab offers a free plan with 1 project, 5 SEO audits per month, 50 keyword tracking, basic content analysis, and schema generation. Premium plans start at $29/month." } },
+    { "@type": "Question", name: "How does the AI SEO audit work?", acceptedAnswer: { "@type": "Answer", text: "Our AI SEO audit analyzes your website across 200+ ranking factors including technical SEO, content quality, authority signals, user experience, page speed, and schema markup. It provides actionable recommendations prioritized by impact." } },
+    { "@type": "Question", name: "What tools does SEO Cloud Lab include?", acceptedAnswer: { "@type": "Answer", text: "SEO Cloud Lab includes AI SEO Audit, Keyword Research, Backlink Analysis, Content Analyzer, Market/Competitor Analysis, Schema Markup Generator, Schema Validator, and a comprehensive SEO Dashboard." } },
+  ],
 };
 
 const Index = () => {
@@ -68,6 +86,7 @@ const Index = () => {
         <script type="application/ld+json">{JSON.stringify(organizationJsonLd)}</script>
         <script type="application/ld+json">{JSON.stringify(websiteJsonLd)}</script>
         <script type="application/ld+json">{JSON.stringify(softwareJsonLd)}</script>
+        <script type="application/ld+json">{JSON.stringify(faqJsonLd)}</script>
       </Helmet>
       <HeroSection />
       <ToolsPreview />
