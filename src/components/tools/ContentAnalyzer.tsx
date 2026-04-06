@@ -457,7 +457,7 @@ export function ContentAnalyzer() {
               <p className="text-sm text-muted-foreground mb-2">Your NLP score is <span className="font-bold text-foreground">{results.nlpScore}/100</span></p>
               <h3 className="font-display text-xl font-bold text-foreground mb-2">Need expert content optimization?</h3>
               <p className="text-sm text-muted-foreground mb-6">Our content strategists will optimize your pages for maximum search visibility.</p>
-              <a href="/contact" className="btn-primary-gradient gap-2">Get Content Strategy <ArrowRight className="h-4 w-4" /></a>
+              <Link to="/contact" className="btn-primary-gradient gap-2">Get Content Strategy <ArrowRight className="h-4 w-4" /></Link>
             </div>
           </div>
         </motion.div>
