@@ -40,8 +40,8 @@ Generate 6-8 insights and 6-8 recommendations.`,
     case "keyword-analysis": {
       const { keyword, html, markdown } = payload;
       return {
-        system: `You are an expert SEO keyword strategist. Provide realistic, data-driven keyword analysis. Return valid JSON only.`,
-        user: `Analyze keyword: "${keyword}"
+        system: `You are an expert SEO keyword strategist with access to search intelligence data. Provide realistic, data-driven keyword analysis with deep competitive intelligence, SERP feature analysis, keyword clustering, seasonality patterns, and difficulty breakdowns. Return valid JSON only.`,
+        user: `Perform deep keyword analysis for: "${keyword}"
 
 ${html ? `PAGE CONTENT (first 5000 chars): ${(html as string).substring(0, 5000)}` : ""}
 ${markdown ? `PAGE TEXT (first 3000 chars): ${(markdown as string).substring(0, 3000)}` : ""}
@@ -54,22 +54,29 @@ Return JSON:
   "relatedKeywords": [{ "keyword": "string", "volume": number, "difficulty": number, "cpc": number, "intent": "string", "trend": "up|down|stable" }],
   "trendData": [{ "month": "string", "volume": number }],
   "estimatedTimeToRank": "string",
-  "relatedOpportunities": ["string"]
+  "relatedOpportunities": ["string"],
+  "serpFeatures": [{ "feature": "Featured Snippet|People Also Ask|Image Pack|Video|Knowledge Panel|Local Pack|Shopping|Sitelinks", "present": boolean, "opportunity": number (0-100) }],
+  "clusters": [{ "name": "cluster name", "keywords": ["keyword1", "keyword2"], "avgDifficulty": number, "totalVolume": number, "intent": "string" }],
+  "difficultyBreakdown": [{ "factor": "Domain Authority|Content Quality|Backlink Profile|Page Speed|User Intent Match|Content Freshness|Schema Markup|Topical Authority", "score": number (0-100), "weight": number (0-1) }],
+  "seasonality": [{ "month": "Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec", "index": number (50-150, 100=baseline) }],
+  "topRankingPages": [{ "url": "string", "title": "string", "authority": number, "wordCount": number, "backlinks": number }],
+  "intentBreakdown": [{ "intent": "Informational|Commercial|Transactional|Navigational", "percentage": number }],
+  "longTailOpportunities": [{ "keyword": "string", "volume": number, "difficulty": number, "parentKeyword": "string" }]
 }
 
-Generate 12 related keywords and 12 months of trend data.`,
+Generate 15 related keywords, 12 months trend data, 6-8 SERP features, 4-5 keyword clusters, 8 difficulty factors, 12 seasonality months, 5 top ranking pages, 4 intent segments, and 8 long-tail opportunities.`,
       };
     }
 
     case "content-analysis": {
       const { url, html, markdown, links } = payload;
       return {
-        system: `You are an expert content strategist and NLP analyst specializing in SEO content optimization. Analyze REAL page content. Return valid JSON only.`,
-        user: `Analyze content for: ${url}
+        system: `You are an expert content strategist, NLP analyst, and E-E-A-T specialist. Analyze REAL page content with deep semantic understanding. Provide granular E-E-A-T analysis, heading structure audit, sentiment analysis, internal link suggestions, and schema opportunities. Return valid JSON only.`,
+        user: `Perform deep content analysis for: ${url}
 
-HTML (first 10000 chars): ${(html as string || "").substring(0, 10000)}
-TEXT (first 5000 chars): ${(markdown as string || "").substring(0, 5000)}
-LINKS: ${JSON.stringify((links as string[] || []).slice(0, 30))}
+HTML (first 12000 chars): ${(html as string || "").substring(0, 12000)}
+TEXT (first 6000 chars): ${(markdown as string || "").substring(0, 6000)}
+LINKS: ${JSON.stringify((links as string[] || []).slice(0, 40))}
 
 Return JSON:
 {
@@ -81,43 +88,57 @@ Return JSON:
   "missingClusters": [{ "cluster": "string", "gap": number }],
   "competitorComparison": [{ "metric": "string", "yours": number, "competitor": number }],
   "analysis": "string", "strengths": ["string"], "weaknesses": ["string"],
-  "optimizations": [{ "action": "string", "impact": "string", "description": "string" }],
+  "optimizations": [{ "action": "string", "impact": "High|Medium|Low", "description": "string", "effort": "Quick Win|Moderate|Significant" }],
   "topicGaps": ["string"], "competitorInsight": "string",
-  "insights": [{ "type": "critical|warning|opportunity|info", "title": "string", "description": "string", "impact": "string", "action": "string" }]
-}`,
+  "insights": [{ "type": "critical|warning|opportunity|info", "title": "string", "description": "string", "impact": "string", "action": "string" }],
+  "eeatAnalysis": [{ "signal": "Experience|Expertise|Authoritativeness|Trustworthiness|Author Bio|Citations|External References|Data Accuracy", "score": number (0-100), "description": "specific finding from the content" }],
+  "headingStructure": [{ "tag": "H1|H2|H3", "text": "actual heading text", "wordCount": number, "keywordPresent": boolean }],
+  "sentimentAnalysis": { "positive": number, "neutral": number, "negative": number },
+  "contentScoreHistory": [{ "metric": "Word Count|Readability|Keyword Density|Semantic Depth|Freshness|Engagement", "current": number, "optimal": number }],
+  "internalLinkSuggestions": [{ "anchor": "suggested anchor text", "targetPage": "/suggested-page", "reason": "why this link helps" }],
+  "schemaOpportunities": [{ "type": "Article|FAQ|HowTo|Product|Review|Breadcrumb|Organization", "description": "string", "impact": "High|Medium|Low" }]
+}
+
+Generate 8 metrics, 15 keyword cloud items, 6 missing clusters, 6 competitor comparison metrics, 4 strengths, 4 weaknesses, 6 optimizations, 5 topic gaps, 6 insights, 8 E-E-A-T signals, heading structure from actual HTML, sentiment analysis, 6 content score metrics, 4 internal link suggestions, 4 schema opportunities.`,
       };
     }
 
     case "backlink-analysis": {
       const { url, html, markdown, links } = payload;
       return {
-        system: `You are a backlink analysis expert. Analyze real website data and observable signals. Return valid JSON only.`,
-        user: `Analyze backlink profile for: ${url}
+        system: `You are a backlink analysis expert with deep knowledge of link graph analysis, toxic link detection, and competitive link intelligence. Analyze real website data and provide comprehensive link profile analysis. Return valid JSON only.`,
+        user: `Perform deep backlink profile analysis for: ${url}
 
-HTML (first 8000 chars): ${(html as string || "").substring(0, 8000)}
+HTML (first 10000 chars): ${(html as string || "").substring(0, 10000)}
 LINKS: ${JSON.stringify((links as string[] || []).slice(0, 100))}
-CONTENT (first 3000 chars): ${(markdown as string || "").substring(0, 3000)}
+CONTENT (first 4000 chars): ${(markdown as string || "").substring(0, 4000)}
 
 Return JSON:
 {
   "domainAuthority": number, "totalBacklinks": number, "referringDomains": number,
   "followPercent": number, "nofollowPercent": number, "spamScore": number, "trustScore": number,
   "growth": [{ "month": "string", "backlinks": number, "domains": number }],
-  "topReferrers": [{ "domain": "string", "authority": number, "links": number, "type": "string" }],
+  "topReferrers": [{ "domain": "string", "authority": number, "links": number, "type": "dofollow|nofollow" }],
   "linkTypes": [{ "name": "string", "value": number }],
   "anchorTexts": [{ "label": "string", "value": number, "maxValue": 100 }],
-  "insights": [{ "type": "critical|warning|opportunity|info", "title": "string", "description": "string", "impact": "string", "action": "string" }]
+  "insights": [{ "type": "critical|warning|opportunity|info", "title": "string", "description": "string", "impact": "string", "action": "string" }],
+  "toxicLinks": [{ "domain": "string", "reason": "string", "risk": "high|medium|low", "action": "Disavow|Monitor|Remove" }],
+  "competitorComparison": [{ "domain": "string", "backlinks": number, "referringDomains": number, "commonLinks": number, "uniqueLinks": number }],
+  "linkVelocity": [{ "month": "string", "gained": number, "lost": number, "net": number }],
+  "tldDistribution": [{ "tld": ".com|.org|.edu|.gov|.net|.io|other", "count": number, "percentage": number }],
+  "linkByPage": [{ "page": "/path", "backlinks": number, "referringDomains": number, "topAnchor": "string" }],
+  "freshness": [{ "age": "< 1 month|1-3 months|3-6 months|6-12 months|> 1 year", "count": number, "percentage": number }]
 }
 
-Generate 6 months growth, 6 top referrers, 5 link types, 5 anchor categories, 4-5 insights.`,
+Generate 12 months growth, 8 top referrers, 6 link types, 6 anchor categories, 6 insights, 4 toxic links, 4 competitors, 12 months velocity, 7 TLD categories, 5 top linked pages, 5 freshness brackets.`,
       };
     }
 
     case "market-analysis": {
       const { niche, searchResults } = payload;
       return {
-        system: `You are a competitive SEO market analyst. Return valid JSON only.`,
-        user: `Analyze competitive landscape for: "${niche}"
+        system: `You are a competitive SEO market analyst with deep expertise in SWOT analysis, market trend forecasting, and competitive intelligence. Provide comprehensive market analysis with actionable competitive strategy. Return valid JSON only.`,
+        user: `Perform deep competitive landscape analysis for: "${niche}"
 
 ${searchResults ? `SEARCH RESULTS: ${JSON.stringify(searchResults)}` : ""}
 
@@ -127,12 +148,23 @@ Return JSON:
   "scatter": [{ "keyword": "string", "difficulty": number, "opportunity": number, "volume": number }],
   "marketShare": [{ "name": "string", "value": number }],
   "volatility": [{ "week": "string", "score": number }],
-  "topCompetitors": [{ "name": "string", "authority": number, "traffic": "string", "keywords": number }],
+  "topCompetitors": [{ "name": "string", "authority": number, "traffic": "string", "keywords": number, "growth": "+X%|−X%", "weaknesses": "one sentence weakness" }],
   "keywordGrowth": [{ "month": "string", "volume": number }],
-  "insights": [{ "type": "critical|warning|opportunity|info", "title": "string", "description": "string", "impact": "string", "action": "string" }]
+  "insights": [{ "type": "critical|warning|opportunity|info", "title": "string", "description": "string", "impact": "string", "action": "string" }],
+  "swot": {
+    "strengths": ["3-4 market strengths for someone entering this niche"],
+    "weaknesses": ["3-4 challenges or weaknesses"],
+    "opportunities": ["3-4 growth opportunities"],
+    "threats": ["3-4 market threats"]
+  },
+  "competitorRadar": [{ "metric": "Content Quality|Domain Authority|Backlink Profile|Technical SEO|User Experience|Brand Strength", "you": number (estimated for new entrant), "competitor1": number, "competitor2": number, "competitor3": number }],
+  "trendForecast": [{ "month": "string", "actual": number, "predicted": number }],
+  "contentGaps": [{ "topic": "string", "searchVolume": number, "competition": "Low|Medium|High", "yourCoverage": number (0-100) }],
+  "marketTrends": [{ "trend": "string", "direction": "rising|declining|stable", "impact": "string", "timeframe": "string" }],
+  "entryBarriers": [{ "barrier": "string", "severity": number (0-100), "description": "string" }]
 }
 
-Generate 8-10 scatter keywords, 4 market segments, 12 weeks volatility, 5 real competitors, 12 months growth, 4-5 insights.`,
+Generate 10 scatter keywords, 5 market segments, 12 weeks volatility, 6 real competitors with growth and weaknesses, 12 months growth, 6 insights, complete SWOT, 6 radar metrics, 12 months trend forecast, 6 content gaps, 5 market trends, 5 entry barriers.`,
       };
     }
 
@@ -187,24 +219,16 @@ LINKS FOUND: ${JSON.stringify((links as string[] || []).slice(0, 80))}
 
 SITE PAGES DISCOVERED: ${JSON.stringify((pages as string[] || []).slice(0, 30))}
 
-Analyze the REAL site data and return a comprehensive dashboard. Estimate all metrics based on observable signals (content quality, technical implementation, link structure, schema presence, mobile-readiness, page speed indicators).
+Analyze the REAL site data and return a comprehensive dashboard. Estimate all metrics based on observable signals.
 
 Return JSON with this EXACT structure:
 {
   "project": {
-    "healthScore": number (0-100, based on technical analysis),
-    "domainAuthority": number (0-100, estimated from content quality and link signals),
-    "organicTraffic": number (estimated monthly sessions based on content breadth and quality),
-    "keywordsRanked": number (estimated based on content topics found),
-    "totalBacklinks": number (estimated from domain maturity signals),
-    "activeIssues": number (actual issues found in HTML)
+    "healthScore": number, "domainAuthority": number, "organicTraffic": number,
+    "keywordsRanked": number, "totalBacklinks": number, "activeIssues": number
   },
-  "trafficData": [
-    { "date": "Mon DD", "organic": number, "paid": number, "direct": number, "referral": number, "social": number }
-  ],
-  "keywords": [
-    { "keyword": "real topic from content", "position": number, "previousPosition": number, "change": number, "volume": number, "url": "/path", "difficulty": number, "cpc": number, "intent": "Informational|Commercial|Transactional|Navigational", "trend": [number, number, number, number, number, number, number] }
-  ],
+  "trafficData": [{ "date": "Mon DD", "organic": number, "paid": number, "direct": number, "referral": number, "social": number }],
+  "keywords": [{ "keyword": "string", "position": number, "previousPosition": number, "change": number, "volume": number, "url": "/path", "difficulty": number, "cpc": number, "intent": "string", "trend": [number] }],
   "backlinks": {
     "totalBacklinks": number, "referringDomains": number, "dofollow": number, "nofollow": number,
     "trustScore": number, "spamScore": number,
@@ -212,37 +236,23 @@ Return JSON with this EXACT structure:
     "growthData": [{ "month": "Mon", "links": number, "domains": number }],
     "topReferrers": [{ "domain": "domain.com", "authority": number, "links": number, "type": "dofollow|nofollow" }]
   },
-  "auditIssues": [
-    { "id": "issue-N", "severity": "critical|warning|notice", "category": "string", "title": "specific issue found in HTML", "description": "detailed explanation", "affectedPages": number, "fixPriority": number }
-  ],
-  "competitors": [
-    { "domain": "real-competitor.com", "authority": number, "traffic": number, "keywords": number, "backlinks": number, "commonKeywords": number, "gapKeywords": number }
-  ],
-  "contentPages": [
-    { "url": "/path", "title": "Page Title", "traffic": number, "keywords": number, "seoScore": number, "wordCount": number, "lastUpdated": "Nd ago", "bounceRate": number, "avgTimeOnPage": "M:SS" }
-  ],
-  "tasks": [
-    { "id": "task-N", "priority": "high|medium|low", "title": "specific action", "description": "detailed description", "impact": "projected impact", "category": "Technical|Content|Schema|Links|Performance|Accessibility", "completed": false, "effort": "X-Y hours" }
-  ],
-  "geoTraffic": [
-    { "country": "country name", "sessions": number, "percentage": number }
-  ],
-  "visibilityScore": number,
-  "estimatedClicks": number,
-  "estimatedImpressions": number,
-  "crawledPages": number,
-  "indexedPages": number,
-  "avgPosition": number
+  "auditIssues": [{ "id": "issue-N", "severity": "critical|warning|notice", "category": "string", "title": "string", "description": "string", "affectedPages": number, "fixPriority": number }],
+  "competitors": [{ "domain": "string", "authority": number, "traffic": number, "keywords": number, "backlinks": number, "commonKeywords": number, "gapKeywords": number }],
+  "contentPages": [{ "url": "/path", "title": "string", "traffic": number, "keywords": number, "seoScore": number, "wordCount": number, "lastUpdated": "string", "bounceRate": number, "avgTimeOnPage": "string" }],
+  "tasks": [{ "id": "task-N", "priority": "high|medium|low", "title": "string", "description": "string", "impact": "string", "category": "string", "completed": false, "effort": "string" }],
+  "geoTraffic": [{ "country": "string", "sessions": number, "percentage": number }],
+  "visibilityScore": number, "estimatedClicks": number, "estimatedImpressions": number,
+  "crawledPages": number, "indexedPages": number, "avgPosition": number
 }
 
-IMPORTANT: Generate 24 traffic data points (weekly for 6 months), 12-20 keywords extracted from actual page content/topics, 6-10 audit issues found in the actual HTML, 5 real competitors in the same niche, content pages based on actual discovered URLs, 6-8 actionable tasks, and 8 geo regions. All keywords must be real topics found in or relevant to the actual content.`,
+Generate 24 traffic data points, 12-20 keywords, 6-10 audit issues, 5 competitors, content pages, 6-8 tasks, 8 geo regions.`,
       };
     }
 
     case "predictive-full": {
       const { domain, html, markdown, links, healthScore, domainAuthority, organicTraffic } = payload;
       return {
-        system: `You are a predictive SEO intelligence engine. Given REAL website data and current metrics, generate predictive analysis including TrueRank scoring, topical authority mapping, SERP dominance analysis, content depth scoring, traffic forecasts, AI agent recommendations, and SERP simulation. All predictions must be grounded in the actual site data provided. Return valid JSON only.`,
+        system: `You are a predictive SEO intelligence engine. Given REAL website data and current metrics, generate predictive analysis. Return valid JSON only.`,
         user: `Generate predictive SEO intelligence for: ${domain}
 
 Current metrics: healthScore=${healthScore}, domainAuthority=${domainAuthority}, organicTraffic=${organicTraffic}
@@ -258,30 +268,24 @@ LINKS: ${JSON.stringify((links as string[] || []).slice(0, 50))}
 Return JSON with this EXACT structure:
 {
   "trueRank": {
-    "overall": number (0-100),
-    "factors": [{ "name": "factor name", "score": number, "weight": number, "description": "string" }],
-    "rankingProbability": number,
-    "projectedPosition": number,
-    "confidence": number
+    "overall": number, "factors": [{ "name": "string", "score": number, "weight": number, "description": "string" }],
+    "rankingProbability": number, "projectedPosition": number, "confidence": number
   },
   "topicalAuthority": {
-    "overall": number,
-    "clusters": [{ "id": "topic-N", "name": "topic from actual content", "authority": number, "keywords": number, "contentPieces": number, "coverage": number, "children": [{ "name": "subtopic", "authority": number }], "sentiment": "strong|moderate|weak|missing" }],
-    "coveragePercentage": number,
-    "missingTopics": ["topics not covered"],
+    "overall": number, "clusters": [{ "id": "topic-N", "name": "string", "authority": number, "keywords": number, "contentPieces": number, "coverage": number, "children": [{ "name": "string", "authority": number }], "sentiment": "strong|moderate|weak|missing" }],
+    "coveragePercentage": number, "missingTopics": ["string"],
     "authorityTrend": [{ "month": "Mon", "score": number }]
   },
   "serpDominance": {
-    "overall": number,
-    "featuredSnippetChance": number, "faqRichResultChance": number, "sitelinksChance": number,
+    "overall": number, "featuredSnippetChance": number, "faqRichResultChance": number, "sitelinksChance": number,
     "imagePackChance": number, "videoChance": number,
-    "serpFeatures": [{ "feature": "feature name", "current": boolean, "potential": number }],
+    "serpFeatures": [{ "feature": "string", "current": boolean, "potential": number }],
     "estimatedCTR": number
   },
   "contentDepth": {
     "overall": number, "semanticCoverage": number, "entityDensity": number,
     "readabilityGrade": number, "uniquenessScore": number, "freshness": number,
-    "eeatSignals": [{ "signal": "signal name", "score": number }]
+    "eeatSignals": [{ "signal": "string", "score": number }]
   },
   "predictiveModel": {
     "trafficForecast": [{ "month": "Mon", "current": number, "optimized": number, "aggressive": number }],
@@ -290,19 +294,16 @@ Return JSON with this EXACT structure:
     "growthTrajectory": number
   },
   "aiAgents": [
-    { "id": "agent-type", "name": "Agent Name", "type": "technical|content|linking|schema", "status": "active|idle|analyzing", "lastRun": "Xm ago", "issuesFound": number, "issuesFixed": number, "recommendations": [{ "title": "string", "description": "string", "impact": "high|medium|low", "autoFixable": boolean, "code": "string|null" }], "activity": [{ "time": "string", "action": "string", "impact": "string" }] }
+    { "id": "string", "name": "string", "type": "string", "status": "active|idle|analyzing", "lastRun": "string", "issuesFound": number, "issuesFixed": number, "recommendations": [{ "title": "string", "description": "string", "impact": "high|medium|low", "autoFixable": boolean, "code": "string|null" }], "activity": [{ "time": "string", "action": "string", "impact": "string" }] }
   ],
   "serpSimulation": {
-    "query": "primary keyword for domain",
-    "results": [{ "position": number, "title": "string", "url": "string", "description": "string", "isYou": boolean, "features": ["string"] }],
-    "yourPosition": number,
-    "featuredSnippet": { "shown": boolean, "owner": "string", "content": "string" },
-    "faqResults": [{ "question": "string", "answer": "string" }],
-    "relatedSearches": ["string"]
+    "query": "string", "results": [{ "position": number, "title": "string", "url": "string", "description": "string", "isYou": boolean, "features": ["string"] }],
+    "yourPosition": number, "featuredSnippet": { "shown": boolean, "owner": "string", "content": "string" },
+    "faqResults": [{ "question": "string", "answer": "string" }], "relatedSearches": ["string"]
   }
 }
 
-Generate 8 TrueRank factors, 8-10 topical clusters based on actual content topics, 7 SERP features, 5 E-E-A-T signals, 12 months traffic forecast, 12 weeks ranking forecast, 4 what-if scenarios, 4 AI agents with 3 recommendations each, and 10 SERP simulation results. All topics/keywords must come from the actual page content.`,
+Generate comprehensive data for all sections.`,
       };
     }
 
