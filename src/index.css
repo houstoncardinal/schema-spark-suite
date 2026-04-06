@@ -542,3 +542,149 @@
 ::-webkit-scrollbar-thumb:hover {
   background: hsl(var(--muted-foreground) / 0.3);
 }
+
+/* ──────── Cybercore Hero Background ──────── */
+:root {
+  --cyber-bg: 220 30% 2%;
+  --cyber-light: 187 100% 50%;
+  --cyber-highlight: 30 100% 71%;
+  --cyber-glow-1: 187 100% 50%;
+  --cyber-glow-2: 210 100% 50%;
+}
+
+@keyframes cyber-rise {
+  0% {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-5%);
+    opacity: 0;
+  }
+}
+
+@keyframes cyber-fade {
+  0%, 100% {
+    opacity: 0;
+  }
+  5%, 85% {
+    opacity: 0.8;
+  }
+}
+
+@keyframes cyber-floor-glow {
+  0%, 100% {
+    transform: scale(0.95);
+    opacity: 0.7;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 1;
+  }
+}
+
+@keyframes cyber-main-glow {
+  from {
+    opacity: 0.5;
+    filter: blur(30px);
+  }
+  to {
+    opacity: 0.7;
+    filter: blur(20px);
+  }
+}
+
+@keyframes cyber-move-grid {
+  from {
+    background-position: 0 0;
+  }
+  to {
+    background-position: -100px -50px;
+  }
+}
+
+.cybercore-bg {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.cybercore-main-glow {
+  position: absolute;
+  top: 20%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60%;
+  height: 40%;
+  background: radial-gradient(
+    ellipse at center,
+    hsl(var(--cyber-glow-1) / 0.15) 0%,
+    hsl(var(--cyber-glow-2) / 0.08) 40%,
+    transparent 70%
+  );
+  animation: cyber-main-glow 4s ease-in-out infinite alternate;
+  pointer-events: none;
+}
+
+.cybercore-grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(hsl(var(--cyber-light) / 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, hsl(var(--cyber-light) / 0.04) 1px, transparent 1px);
+  background-size: 50px 50px;
+  animation: cyber-move-grid 20s linear infinite;
+  pointer-events: none;
+}
+
+.cybercore-beams {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.cybercore-beam {
+  position: absolute;
+  bottom: 0;
+  height: 100%;
+  background: linear-gradient(
+    to top,
+    hsl(var(--cyber-glow-1) / 0.6),
+    hsl(var(--cyber-glow-1) / 0.1) 40%,
+    transparent 80%
+  );
+  animation: cyber-rise linear infinite, cyber-fade linear infinite;
+  opacity: 0;
+  border-radius: 2px;
+}
+
+.cybercore-beam--secondary {
+  background: linear-gradient(
+    to top,
+    hsl(var(--cyber-highlight) / 0.5),
+    hsl(var(--cyber-highlight) / 0.1) 40%,
+    transparent 80%
+  );
+}
+
+.cybercore-floor-glow {
+  position: absolute;
+  bottom: -10%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80%;
+  height: 30%;
+  background: radial-gradient(
+    ellipse at center bottom,
+    hsl(var(--cyber-glow-1) / 0.2) 0%,
+    hsl(var(--cyber-glow-2) / 0.08) 50%,
+    transparent 80%
+  );
+  animation: cyber-floor-glow 5s ease-in-out infinite;
+  pointer-events: none;
+}
