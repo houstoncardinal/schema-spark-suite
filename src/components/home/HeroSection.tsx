@@ -169,21 +169,23 @@ export function HeroSection() {
 
           {/* Premium Search Bar */}
           <div className="max-w-2xl mx-auto">
-            <div className="surface-glow">
-              <div className="relative flex items-center gap-2 rounded-3xl bg-card border border-border p-2">
+            <div className="relative rounded-3xl overflow-hidden" style={{ boxShadow: '0 0 40px hsl(var(--cyber-light) / 0.12), 0 0 80px hsl(var(--cyber-glow-2) / 0.06)' }}>
+              <div className="absolute -inset-px rounded-3xl pointer-events-none" style={{ background: 'linear-gradient(135deg, hsl(var(--cyber-light) / 0.25), hsl(var(--cyber-glow-2) / 0.15), transparent 60%)' }} />
+              <div className="relative flex items-center gap-2 rounded-3xl bg-white/[0.04] border border-white/10 p-2 backdrop-blur-sm">
                 <div className="flex items-center gap-3 flex-1 px-5">
-                  <Globe className="h-5 w-5 text-muted-foreground shrink-0" />
+                  <Globe className="h-5 w-5 text-white/40 shrink-0" />
                   <input
                     type="text"
                     placeholder="Enter any domain or URL to analyze..."
                     value={url}
                     onChange={(e) => setUrl(e.target.value)}
                     onKeyDown={(e) => e.key === "Enter" && handleAnalyze()}
-                    className="flex-1 bg-transparent text-base text-foreground placeholder:text-muted-foreground outline-none py-2"
+                    className="flex-1 bg-transparent text-base text-white placeholder:text-white/30 outline-none py-2"
                   />
                 </div>
                 <button onClick={handleAnalyze} disabled={analyzing}
-                  className="shrink-0 btn-primary-gradient gap-2 px-8 py-3.5 text-sm rounded-2xl">
+                  className="shrink-0 inline-flex items-center justify-center gap-2 rounded-2xl px-8 py-3.5 text-sm font-medium text-white transition-all duration-300"
+                  style={{ background: 'linear-gradient(135deg, hsl(var(--cyber-light)), hsl(var(--cyber-glow-2)))' }}>
                   {analyzing ? <Loader2 className="h-4 w-4 animate-spin" /> : <><Search className="h-4 w-4" /> Analyze</>}
                 </button>
               </div>
