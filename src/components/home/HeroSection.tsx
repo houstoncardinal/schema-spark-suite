@@ -8,6 +8,7 @@ import {
 import { analyzeSEO, type SEOAuditResult, type SEOInsight } from "@/lib/seo-engine";
 import { ScoreRing } from "@/components/charts/ScoreRing";
 import { Link } from "react-router-dom";
+import CybercoreBackground from "@/components/ui/cybercore-section-hero";
 
 const fixDatabase: Record<string, { fix: string; steps: string[]; impact: string; difficulty: "Easy" | "Medium" | "Hard" }> = {
   "orphan": { fix: "Create internal linking pathways to isolated pages", steps: ["Identify all orphan pages using a crawl tool or sitemap comparison", "Add contextual internal links from high-authority pages to orphaned ones", "Update your sitemap.xml to include all important pages", "Add breadcrumb navigation for hierarchical content"], impact: "Improves crawl coverage by 15-40% and distributes PageRank to previously invisible pages", difficulty: "Easy" },
@@ -143,48 +144,48 @@ export function HeroSection() {
   };
 
   return (
-    <section className="relative pt-36 pb-24 md:pt-48 md:pb-32 overflow-hidden noise-texture">
-      {/* Ambient orbs */}
-      <div className="ambient-orb bg-accent/10 w-[500px] h-[500px] -top-[200px] -right-[100px]" />
-      <div className="ambient-orb bg-accent-glow/8 w-[400px] h-[400px] top-[200px] -left-[150px]" />
-      <div className="absolute inset-0 grid-pattern opacity-30" />
+    <section className="relative pt-36 pb-24 md:pt-48 md:pb-32 overflow-hidden" style={{ background: 'hsl(var(--cyber-bg))' }}>
+      {/* Cybercore animated background */}
+      <CybercoreBackground beamCount={70} />
 
-      <div className="container-wide relative">
+      <div className="container-wide relative z-10">
         <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, ease: [0.23, 1, 0.32, 1] }}
           className="text-center max-w-4xl mx-auto mb-16">
           
           <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.1, duration: 0.5 }}
-            className="inline-flex items-center gap-2 rounded-full border border-accent/20 bg-accent/5 px-4 py-1.5 text-xs font-medium text-accent mb-8">
-            <span className="h-1.5 w-1.5 rounded-full bg-accent animate-pulse" />
+            className="inline-flex items-center gap-2 rounded-full border border-[hsl(var(--cyber-light)/0.3)] bg-[hsl(var(--cyber-light)/0.05)] px-4 py-1.5 text-xs font-medium text-[hsl(var(--cyber-light))] mb-8">
+            <span className="h-1.5 w-1.5 rounded-full bg-[hsl(var(--cyber-light))] animate-pulse" />
             AI-Powered SEO Intelligence
           </motion.div>
 
-          <h1 className="headline-hero text-foreground mb-6">
+          <h1 className="headline-hero text-white mb-6">
             Search optimization,{" "}
-            <span className="font-serif italic gradient-text">reimagined.</span>
+            <span className="font-serif italic bg-clip-text text-transparent bg-gradient-to-r from-[hsl(var(--cyber-light))] to-[hsl(var(--cyber-highlight))]">reimagined.</span>
           </h1>
 
-          <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed mb-12">
+          <p className="text-lg md:text-xl text-white/60 max-w-2xl mx-auto leading-relaxed mb-12">
             Enter any URL. Get a detailed, interactive breakdown of every SEO factor — with exact fixes for every issue found.
           </p>
 
           {/* Premium Search Bar */}
           <div className="max-w-2xl mx-auto">
-            <div className="surface-glow">
-              <div className="relative flex items-center gap-2 rounded-3xl bg-card border border-border p-2">
+            <div className="relative rounded-3xl overflow-hidden" style={{ boxShadow: '0 0 40px hsl(var(--cyber-light) / 0.12), 0 0 80px hsl(var(--cyber-glow-2) / 0.06)' }}>
+              <div className="absolute -inset-px rounded-3xl pointer-events-none" style={{ background: 'linear-gradient(135deg, hsl(var(--cyber-light) / 0.25), hsl(var(--cyber-glow-2) / 0.15), transparent 60%)' }} />
+              <div className="relative flex items-center gap-2 rounded-3xl bg-white/[0.04] border border-white/10 p-2 backdrop-blur-sm">
                 <div className="flex items-center gap-3 flex-1 px-5">
-                  <Globe className="h-5 w-5 text-muted-foreground shrink-0" />
+                  <Globe className="h-5 w-5 text-white/40 shrink-0" />
                   <input
                     type="text"
                     placeholder="Enter any domain or URL to analyze..."
                     value={url}
                     onChange={(e) => setUrl(e.target.value)}
                     onKeyDown={(e) => e.key === "Enter" && handleAnalyze()}
-                    className="flex-1 bg-transparent text-base text-foreground placeholder:text-muted-foreground outline-none py-2"
+                    className="flex-1 bg-transparent text-base text-white placeholder:text-white/30 outline-none py-2"
                   />
                 </div>
                 <button onClick={handleAnalyze} disabled={analyzing}
-                  className="shrink-0 btn-primary-gradient gap-2 px-8 py-3.5 text-sm rounded-2xl">
+                  className="shrink-0 inline-flex items-center justify-center gap-2 rounded-2xl px-8 py-3.5 text-sm font-medium text-white transition-all duration-300"
+                  style={{ background: 'linear-gradient(135deg, hsl(var(--cyber-light)), hsl(var(--cyber-glow-2)))' }}>
                   {analyzing ? <Loader2 className="h-4 w-4 animate-spin" /> : <><Search className="h-4 w-4" /> Analyze</>}
                 </button>
               </div>
@@ -335,10 +336,10 @@ export function HeroSection() {
             ].map((item, i) => (
               <motion.div key={item.label} initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.6 + i * 0.1, ease: [0.23, 1, 0.32, 1] }}
-                className="text-center p-5 rounded-2xl border border-border/50 bg-card/50 hover:bg-card hover:border-border transition-all duration-500">
-                <item.icon className="h-5 w-5 text-accent mx-auto mb-3" />
-                <p className="text-sm font-semibold text-foreground">{item.label}</p>
-                <p className="text-xs text-muted-foreground mt-1">{item.desc}</p>
+                className="text-center p-5 rounded-2xl border border-white/10 bg-white/[0.03] hover:bg-white/[0.06] hover:border-white/20 transition-all duration-500 backdrop-blur-sm">
+                <item.icon className="h-5 w-5 text-[hsl(var(--cyber-light))] mx-auto mb-3" />
+                <p className="text-sm font-semibold text-white">{item.label}</p>
+                <p className="text-xs text-white/50 mt-1">{item.desc}</p>
               </motion.div>
             ))}
           </motion.div>
