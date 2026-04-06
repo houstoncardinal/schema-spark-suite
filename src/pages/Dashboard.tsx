@@ -1,8 +1,9 @@
-import { useState, useMemo } from "react";
+import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Navigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { useProjects } from "@/hooks/useProjects";
+import { useDashboardData } from "@/hooks/useDashboardData";
 import { DashboardSidebar } from "@/components/dashboard/DashboardSidebar";
 import { DashboardHeader } from "@/components/dashboard/DashboardHeader";
 import { OverviewPanel } from "@/components/dashboard/OverviewPanel";
@@ -17,9 +18,7 @@ import { PredictiveModeling } from "@/components/dashboard/PredictiveModeling";
 import { AIAgentsPanel } from "@/components/dashboard/AIAgentsPanel";
 import { TopicalAuthorityPanel } from "@/components/dashboard/TopicalAuthorityPanel";
 import { SERPSimulatorPanel } from "@/components/dashboard/SERPSimulatorPanel";
-import { generateDashboardData } from "@/lib/dashboard-engine";
-import { generatePredictiveData } from "@/lib/predictive-engine";
-import { Loader2, Globe, ArrowRight } from "lucide-react";
+import { Loader2, Globe, ArrowRight, RefreshCw, AlertCircle } from "lucide-react";
 
 const sectionTitles: Record<string, { title: string; subtitle: string }> = {
   overview: { title: "Overview", subtitle: "Your SEO performance at a glance" },
@@ -47,10 +46,7 @@ const Dashboard = () => {
   const currentProject = projects.find(p => p.id === activeProject) || projects[0] || null;
   const effectiveActiveProject = activeProject || currentProject?.id || "";
 
-  const dashboardData = useMemo(() => currentProject ? generateDashboardData(currentProject.domain) : null, [currentProject?.domain]);
-  const predictiveData = useMemo(() => currentProject && dashboardData
-    ? generatePredictiveData(currentProject.domain, dashboardData.project.healthScore, dashboardData.project.domainAuthority, dashboardData.project.organicTraffic) : null,
-    [currentProject?.domain, dashboardData]);
+  const { dashboardData, predictiveData, loading: dataLoading, error: dataError, refresh } = useDashboardData(currentProject?.domain || null);
 
   if (!authLoading && !user) return <Navigate to="/auth" replace />;
 
@@ -95,11 +91,35 @@ const Dashboard = () => {
           <div className="p-6 lg:p-8 max-w-[1400px] mx-auto">
             {!currentProject ? (
               <OnboardingPanel onAddProject={addProject} />
+            ) : dataLoading ? (
+              <div className="flex items-center justify-center min-h-[60vh]">
+                <div className="text-center">
+                  <Loader2 className="h-8 w-8 animate-spin text-accent mx-auto mb-4" />
+                  <h3 className="text-lg font-semibold text-foreground mb-2">Analyzing {currentProject.domain}...</h3>
+                  <p className="text-sm text-muted-foreground max-w-md">Scraping your site and running AI-powered analysis. This typically takes 15-30 seconds.</p>
+                </div>
+              </div>
+            ) : dataError ? (
+              <div className="flex items-center justify-center min-h-[60vh]">
+                <div className="text-center max-w-md">
+                  <AlertCircle className="h-8 w-8 text-destructive mx-auto mb-4" />
+                  <h3 className="text-lg font-semibold text-foreground mb-2">Analysis Failed</h3>
+                  <p className="text-sm text-muted-foreground mb-4">{dataError}</p>
+                  <button onClick={refresh} className="btn-primary gap-2">
+                    <RefreshCw className="h-4 w-4" /> Retry Analysis
+                  </button>
+                </div>
+              </div>
             ) : (
               <>
-                <div className="mb-6">
-                  <h2 className="text-xl font-semibold text-foreground">{sectionInfo.title}</h2>
-                  <p className="text-sm text-muted-foreground">{sectionInfo.subtitle}</p>
+                <div className="mb-6 flex items-center justify-between">
+                  <div>
+                    <h2 className="text-xl font-semibold text-foreground">{sectionInfo.title}</h2>
+                    <p className="text-sm text-muted-foreground">{sectionInfo.subtitle}</p>
+                  </div>
+                  <button onClick={refresh} className="flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors rounded-lg px-3 py-1.5 bg-secondary/50 hover:bg-secondary">
+                    <RefreshCw className="h-3.5 w-3.5" /> Re-analyze
+                  </button>
                 </div>
                 <AnimatePresence mode="wait">
                   <motion.div key={activeSection} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -4 }} transition={{ duration: 0.2 }}>
