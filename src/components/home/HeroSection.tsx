@@ -336,10 +336,10 @@ export function HeroSection() {
             ].map((item, i) => (
               <motion.div key={item.label} initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.6 + i * 0.1, ease: [0.23, 1, 0.32, 1] }}
-                className="text-center p-5 rounded-2xl border border-border/50 bg-card/50 hover:bg-card hover:border-border transition-all duration-500">
-                <item.icon className="h-5 w-5 text-accent mx-auto mb-3" />
-                <p className="text-sm font-semibold text-foreground">{item.label}</p>
-                <p className="text-xs text-muted-foreground mt-1">{item.desc}</p>
+                className="text-center p-5 rounded-2xl border border-white/10 bg-white/[0.03] hover:bg-white/[0.06] hover:border-white/20 transition-all duration-500 backdrop-blur-sm">
+                <item.icon className="h-5 w-5 text-[hsl(var(--cyber-light))] mx-auto mb-3" />
+                <p className="text-sm font-semibold text-white">{item.label}</p>
+                <p className="text-xs text-white/50 mt-1">{item.desc}</p>
               </motion.div>
             ))}
           </motion.div>
