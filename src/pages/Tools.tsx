@@ -3,7 +3,7 @@ import { useParams, useNavigate, Link } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import { motion, AnimatePresence } from "framer-motion";
 import { 
-  BarChart3, Link2, FileCode2, FileText, Brain, Sparkles, 
+  BarChart3, Link2, FileCode2, FileText, Brain, Cloud, 
   ChevronLeft, ChevronRight, Search, Globe, Zap, Target,
   PanelLeftClose, PanelLeft
 } from "lucide-react";
@@ -86,8 +86,8 @@ const Tools = () => {
       }`}>
         <div className="h-16 flex items-center justify-between px-4 border-b border-border">
           <Link to="/" className="flex items-center gap-2.5 group">
-            <div className="h-8 w-8 rounded-lg bg-foreground flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
-              <Sparkles className="h-4 w-4 text-background" />
+            <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-[hsl(var(--google-blue))] to-[hsl(var(--apple-purple))] flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
+              <Cloud className="h-4 w-4 text-white" />
             </div>
             {!sidebarCollapsed && (
               <span className="text-sm font-bold text-foreground tracking-tight">SEO Cloud Lab</span>
