@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
+import { Link } from "react-router-dom";
 import { Link2, Loader2, ArrowRight, Globe, ExternalLink, Shield, TrendingUp, AlertTriangle, BarChart3, PieChart as PieIcon, Activity } from "lucide-react";
 import { ScoreRing } from "@/components/charts/ScoreRing";
 import { InsightList } from "@/components/charts/InsightCard";
@@ -358,7 +359,7 @@ export function BacklinkChecker() {
             <div className="relative">
               <h3 className="font-display text-xl font-bold text-foreground mb-2">Need professional link building?</h3>
               <p className="text-sm text-muted-foreground mb-6">Our outreach team builds high-authority backlinks that move rankings.</p>
-              <a href="/contact" className="btn-primary-gradient gap-2">Get Link Building Strategy <ArrowRight className="h-4 w-4" /></a>
+              <Link to="/contact" className="btn-rainbow gap-2">Get Link Building Strategy <ArrowRight className="h-4 w-4" /></Link>
             </div>
           </div>
         </motion.div>

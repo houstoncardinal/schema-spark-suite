@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
+import { Link } from "react-router-dom";
 import { Code, Loader2, ArrowRight, CheckCircle, Copy, Plus, Trash2, FileCode2 } from "lucide-react";
 
 type SchemaType = "Article" | "LocalBusiness" | "Product" | "FAQ" | "Organization" | "BreadcrumbList" | "WebSite" | "Service" | "Event" | "HowTo";
@@ -394,7 +395,7 @@ export function SchemaGenerator() {
             <div className="relative">
               <h3 className="font-display text-lg font-bold text-foreground mb-2">Need help implementing schema across your site?</h3>
               <p className="text-xs text-muted-foreground mb-4">Our team can audit your entire site and implement comprehensive structured data for maximum rich result coverage.</p>
-              <a href="/contact" className="btn-primary-gradient gap-2 text-sm">Get Schema Implementation <ArrowRight className="h-4 w-4" /></a>
+              <Link to="/contact" className="btn-rainbow gap-2 text-sm">Get Schema Implementation <ArrowRight className="h-4 w-4" /></Link>
             </div>
           </div>
         </motion.div>

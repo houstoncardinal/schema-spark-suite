@@ -314,7 +314,7 @@ export function HeroSection() {
 
               {/* CTA */}
               <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-6 border-t border-border">
-                <Link to="/tools/ai-audit" className="btn-primary-gradient gap-2 text-sm">
+                <Link to="/tools/ai-audit" className="btn-rainbow gap-2 text-sm">
                   <Brain className="h-3.5 w-3.5" /> Full AI Report <ArrowRight className="h-3.5 w-3.5" />
                 </Link>
                 <Link to="/contact" className="btn-secondary gap-2 text-sm">
