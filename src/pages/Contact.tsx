@@ -8,8 +8,8 @@ const breadcrumbJsonLd = {
   "@context": "https://schema.org",
   "@type": "BreadcrumbList",
   itemListElement: [
-    { "@type": "ListItem", position: 1, name: "Home", item: "https://seopulse.io/" },
-    { "@type": "ListItem", position: 2, name: "Contact", item: "https://seopulse.io/contact" },
+    { "@type": "ListItem", position: 1, name: "Home", item: "https://seocloudlab.io/" },
+    { "@type": "ListItem", position: 2, name: "Contact", item: "https://seocloudlab.io/contact" },
   ],
 };
 
@@ -24,7 +24,7 @@ const Contact = () => {
     return (
       <Layout>
         <Helmet>
-          <title>Request Received | SEOPulse</title>
+          <title>Request Received | SEO Cloud Lab</title>
           <meta name="robots" content="noindex" />
         </Helmet>
         <section className="section-padding">
@@ -43,13 +43,13 @@ const Contact = () => {
   return (
     <Layout>
       <Helmet>
-        <title>Get Your Free SEO Strategy — Contact SEOPulse</title>
-        <meta name="description" content="Get a free SEO strategy consultation from SEOPulse. Tell us about your business goals and receive a custom roadmap to improve your organic rankings." />
-        <link rel="canonical" href="https://seopulse.io/contact" />
-        <meta property="og:title" content="Get Your Free SEO Strategy | SEOPulse" />
+        <title>Get Your Free SEO Strategy — Contact SEO Cloud Lab</title>
+        <meta name="description" content="Get a free SEO strategy consultation from SEO Cloud Lab. Tell us about your business goals and receive a custom roadmap to improve your organic rankings." />
+        <link rel="canonical" href="https://seocloudlab.io/contact" />
+        <meta property="og:title" content="Get Your Free SEO Strategy | SEO Cloud Lab" />
         <meta property="og:description" content="Get a free SEO strategy consultation. Custom roadmap for your organic growth." />
         <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://seopulse.io/contact" />
+        <meta property="og:url" content="https://seocloudlab.io/contact" />
         <meta name="twitter:card" content="summary_large_image" />
         <script type="application/ld+json">{JSON.stringify(breadcrumbJsonLd)}</script>
       </Helmet>

@@ -73,9 +73,9 @@ const tierFeatures: Record<TierKey, { icon: typeof Zap; features: string[]; high
 const pricingJsonLd = {
   "@context": "https://schema.org",
   "@type": "WebPage",
-  name: "SEOPulse Pricing",
-  description: "Choose your SEOPulse plan. AI-powered SEO tools starting free.",
-  url: "https://seopulse.io/pricing",
+  name: "SEO Cloud Lab Pricing",
+  description: "Choose your SEO Cloud Lab plan. AI-powered SEO tools starting free.",
+  url: "https://seocloudlab.io/pricing",
   mainEntity: {
     "@type": "ItemList",
     numberOfItems: 4,
@@ -162,12 +162,12 @@ const Pricing = () => {
   return (
     <Layout>
       <Helmet>
-        <title>Pricing — AI-Powered SEO Plans | SEOPulse</title>
-        <meta name="description" content="Choose your SEOPulse plan. Start free, upgrade when ready. AI-powered SEO tools with annual billing discounts." />
-        <link rel="canonical" href="https://seopulse.io/pricing" />
-        <meta property="og:title" content="Pricing — SEOPulse" />
+        <title>Pricing — AI-Powered SEO Plans | SEO Cloud Lab</title>
+        <meta name="description" content="Choose your SEO Cloud Lab plan. Start free, upgrade when ready. AI-powered SEO tools with annual billing discounts." />
+        <link rel="canonical" href="https://seocloudlab.io/pricing" />
+        <meta property="og:title" content="Pricing — SEO Cloud Lab" />
         <meta property="og:description" content="AI-powered SEO tools. Start free, upgrade anytime." />
-        <meta property="og:url" content="https://seopulse.io/pricing" />
+        <meta property="og:url" content="https://seocloudlab.io/pricing" />
         <meta property="og:type" content="website" />
         <script type="application/ld+json">{JSON.stringify(pricingJsonLd)}</script>
       </Helmet>

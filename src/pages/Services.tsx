@@ -32,8 +32,8 @@ const servicesJsonLd = {
   "@context": "https://schema.org",
   "@type": "ItemList",
   name: "SEO Services",
-  description: "Professional SEO consulting and audit services by SEOPulse",
-  url: "https://seopulse.io/services",
+  description: "Professional SEO consulting and audit services by SEO Cloud Lab",
+  url: "https://seocloudlab.io/services",
   numberOfItems: services.length,
   itemListElement: services.map((s, i) => ({
     "@type": "ListItem",
@@ -42,7 +42,7 @@ const servicesJsonLd = {
       "@type": "Service",
       name: s.title,
       description: s.description,
-      provider: { "@type": "Organization", name: "SEOPulse" },
+      provider: { "@type": "Organization", name: "SEO Cloud Lab" },
       offers: { "@type": "Offer", description: s.price },
     },
   })),
@@ -52,23 +52,23 @@ const breadcrumbJsonLd = {
   "@context": "https://schema.org",
   "@type": "BreadcrumbList",
   itemListElement: [
-    { "@type": "ListItem", position: 1, name: "Home", item: "https://seopulse.io/" },
-    { "@type": "ListItem", position: 2, name: "Services", item: "https://seopulse.io/services" },
+    { "@type": "ListItem", position: 1, name: "Home", item: "https://seocloudlab.io/" },
+    { "@type": "ListItem", position: 2, name: "Services", item: "https://seocloudlab.io/services" },
   ],
 };
 
 const Services = () => (
   <Layout>
     <Helmet>
-      <title>Professional SEO Services — Consulting, Audits & Strategy | SEOPulse</title>
-      <meta name="description" content="Expert SEO consulting, technical audits, local SEO, and enterprise strategy services. Get measurable results with data-driven SEO from SEOPulse." />
-      <link rel="canonical" href="https://seopulse.io/services" />
-      <meta property="og:title" content="Professional SEO Services | SEOPulse" />
+      <title>Professional SEO Services — Consulting, Audits & Strategy | SEO Cloud Lab</title>
+      <meta name="description" content="Expert SEO consulting, technical audits, local SEO, and enterprise strategy services. Get measurable results with data-driven SEO from SEO Cloud Lab." />
+      <link rel="canonical" href="https://seocloudlab.io/services" />
+      <meta property="og:title" content="Professional SEO Services | SEO Cloud Lab" />
       <meta property="og:description" content="Expert SEO consulting, technical audits, and enterprise strategy services with measurable results." />
       <meta property="og:type" content="website" />
-      <meta property="og:url" content="https://seopulse.io/services" />
+      <meta property="og:url" content="https://seocloudlab.io/services" />
       <meta name="twitter:card" content="summary_large_image" />
-      <meta name="twitter:title" content="Professional SEO Services | SEOPulse" />
+      <meta name="twitter:title" content="Professional SEO Services | SEO Cloud Lab" />
       <script type="application/ld+json">{JSON.stringify(servicesJsonLd)}</script>
       <script type="application/ld+json">{JSON.stringify(breadcrumbJsonLd)}</script>
     </Helmet>

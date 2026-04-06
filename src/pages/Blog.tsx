@@ -17,7 +17,7 @@ const Blog = () => {
     "@type": "Blog",
     name: "SEO Insights by Hunain Qureshi",
     description: "Expert SEO guides, case studies, and strategies by Hunain Qureshi covering technical SEO, AI-powered optimization, schema markup, and organic growth.",
-    url: "https://seopulse.io/blog",
+    url: "https://seocloudlab.io/blog",
     author: { "@type": "Person", name: "Hunain Qureshi" },
     blogPost: blogPosts.map((p) => ({
       "@type": "BlogPosting",
@@ -26,7 +26,7 @@ const Blog = () => {
       datePublished: p.dateISO,
       author: { "@type": "Person", name: p.author.name },
       image: p.image,
-      url: `https://seopulse.io/blog/${p.slug}`,
+      url: `https://seocloudlab.io/blog/${p.slug}`,
     })),
   };
 
@@ -35,7 +35,7 @@ const Blog = () => {
       <Helmet>
         <title>SEO Blog & Insights | Expert Guides by Hunain Qureshi</title>
         <meta name="description" content="Expert SEO guides, case studies, and strategies by Hunain Qureshi. Learn technical SEO, AI optimization, schema markup, and organic growth strategies." />
-        <link rel="canonical" href="https://seopulse.io/blog" />
+        <link rel="canonical" href="https://seocloudlab.io/blog" />
         <meta property="og:title" content="SEO Blog & Insights | Hunain Qureshi" />
         <meta property="og:description" content="Expert SEO guides, case studies, and strategies." />
         <meta property="og:type" content="website" />

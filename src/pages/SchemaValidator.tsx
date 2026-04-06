@@ -173,8 +173,8 @@ const breadcrumbJsonLd = {
   "@context": "https://schema.org",
   "@type": "BreadcrumbList",
   itemListElement: [
-    { "@type": "ListItem", position: 1, name: "Home", item: "https://seopulse.io/" },
-    { "@type": "ListItem", position: 2, name: "Schema Validator", item: "https://seopulse.io/schema-validator" },
+    { "@type": "ListItem", position: 1, name: "Home", item: "https://seocloudlab.io/" },
+    { "@type": "ListItem", position: 2, name: "Schema Validator", item: "https://seocloudlab.io/schema-validator" },
   ],
 };
 
@@ -183,11 +183,11 @@ const toolJsonLd = {
   "@type": "WebApplication",
   name: "Schema Validator",
   description: "Validate, debug, and optimize your JSON-LD structured data against schema.org specifications. Check for errors, warnings, and rich result eligibility.",
-  url: "https://seopulse.io/schema-validator",
+  url: "https://seocloudlab.io/schema-validator",
   applicationCategory: "DeveloperApplication",
   operatingSystem: "Web",
   offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
-  provider: { "@type": "Organization", name: "SEOPulse", url: "https://seopulse.io" },
+  provider: { "@type": "Organization", name: "SEO Cloud Lab", url: "https://seocloudlab.io" },
 };
 
 const SchemaValidator = () => {
@@ -238,13 +238,13 @@ const SchemaValidator = () => {
   return (
     <Layout>
       <Helmet>
-        <title>Schema Validator — Validate JSON-LD Structured Data | SEOPulse</title>
+        <title>Schema Validator — Validate JSON-LD Structured Data | SEO Cloud Lab</title>
         <meta name="description" content="Free JSON-LD schema validator. Validate, debug, and optimize your structured data against schema.org specifications. Check rich result eligibility instantly." />
-        <link rel="canonical" href="https://seopulse.io/schema-validator" />
-        <meta property="og:title" content="Schema Validator — Validate JSON-LD Structured Data | SEOPulse" />
+        <link rel="canonical" href="https://seocloudlab.io/schema-validator" />
+        <meta property="og:title" content="Schema Validator — Validate JSON-LD Structured Data | SEO Cloud Lab" />
         <meta property="og:description" content="Free JSON-LD schema validator. Check rich result eligibility instantly." />
         <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://seopulse.io/schema-validator" />
+        <meta property="og:url" content="https://seocloudlab.io/schema-validator" />
         <meta name="twitter:card" content="summary_large_image" />
         <script type="application/ld+json">{JSON.stringify(breadcrumbJsonLd)}</script>
         <script type="application/ld+json">{JSON.stringify(toolJsonLd)}</script>
