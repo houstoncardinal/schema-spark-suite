@@ -8,28 +8,28 @@ import { CTASection } from "@/components/home/CTASection";
 const organizationJsonLd = {
   "@context": "https://schema.org",
   "@type": "Organization",
-  name: "SEOPulse",
-  url: "https://seopulse.io",
-  logo: "https://seopulse.io/favicon.ico",
+  name: "SEO Cloud Lab",
+  url: "https://seocloudlab.io",
+  logo: "https://seocloudlab.io/favicon.ico",
   description: "AI-powered SEO intelligence platform with advanced audit tools, keyword research, backlink analysis, and schema markup generation.",
   foundingDate: "2026",
   sameAs: [],
   contactPoint: {
     "@type": "ContactPoint",
     contactType: "customer support",
-    url: "https://seopulse.io/contact",
+    url: "https://seocloudlab.io/contact",
   },
 };
 
 const websiteJsonLd = {
   "@context": "https://schema.org",
   "@type": "WebSite",
-  name: "SEOPulse",
-  url: "https://seopulse.io",
+  name: "SEO Cloud Lab",
+  url: "https://seocloudlab.io",
   description: "AI-Powered SEO Intelligence Platform",
   potentialAction: {
     "@type": "SearchAction",
-    target: "https://seopulse.io/tools/ai-audit?q={search_term_string}",
+    target: "https://seocloudlab.io/tools/ai-audit?q={search_term_string}",
     "query-input": "required name=search_term_string",
   },
 };
@@ -37,10 +37,10 @@ const websiteJsonLd = {
 const softwareJsonLd = {
   "@context": "https://schema.org",
   "@type": "SoftwareApplication",
-  name: "SEOPulse",
+  name: "SEO Cloud Lab",
   applicationCategory: "BusinessApplication",
   operatingSystem: "Web",
-  url: "https://seopulse.io",
+  url: "https://seocloudlab.io",
   description: "Advanced AI-powered SEO audit, keyword research, backlink analysis, and schema markup tools for professionals.",
   offers: {
     "@type": "Offer",
@@ -55,15 +55,15 @@ const Index = () => {
   return (
     <Layout>
       <Helmet>
-        <title>SEOPulse — AI-Powered SEO Tools, Audit & Strategy Platform</title>
+        <title>SEO Cloud Lab — AI-Powered SEO Tools, Audit & Strategy</title>
         <meta name="description" content="Analyze, audit, and optimize your website with 200+ ranking factors. Free AI-powered SEO tools including site audits, keyword research, backlink analysis, and schema markup generation." />
-        <link rel="canonical" href="https://seopulse.io/" />
-        <meta property="og:title" content="SEOPulse — AI-Powered SEO Intelligence Platform" />
+        <link rel="canonical" href="https://seocloudlab.io/" />
+        <meta property="og:title" content="SEO Cloud Lab — AI-Powered SEO Intelligence Platform" />
         <meta property="og:description" content="Analyze, audit, and optimize your website with 200+ ranking factors. Free AI SEO tools for professionals." />
         <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://seopulse.io/" />
+        <meta property="og:url" content="https://seocloudlab.io/" />
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="SEOPulse — AI-Powered SEO Intelligence Platform" />
+        <meta name="twitter:title" content="SEO Cloud Lab — AI-Powered SEO Intelligence Platform" />
         <meta name="twitter:description" content="Free AI-powered SEO audit, keyword research, and optimization tools." />
         <script type="application/ld+json">{JSON.stringify(organizationJsonLd)}</script>
         <script type="application/ld+json">{JSON.stringify(websiteJsonLd)}</script>

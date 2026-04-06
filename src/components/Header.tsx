@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, ChevronDown, LogIn, Sparkles } from "lucide-react";
+import { Menu, X, ChevronDown, LogIn, Cloud } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 
 const navItems = [
@@ -31,10 +31,10 @@ export function Header() {
         <div className="container-wide bg-background/70 backdrop-blur-2xl border border-border/60 rounded-2xl shadow-sm">
           <div className="flex h-14 items-center justify-between px-5">
             <Link to="/" className="flex items-center gap-2.5 group">
-              <div className="h-7 w-7 rounded-lg bg-foreground flex items-center justify-center group-hover:scale-105 transition-transform duration-300">
-                <Sparkles className="h-3.5 w-3.5 text-background" />
+              <div className="h-7 w-7 rounded-lg bg-gradient-to-br from-[hsl(var(--google-blue))] to-[hsl(var(--apple-purple))] flex items-center justify-center group-hover:scale-105 transition-transform duration-300">
+                <Cloud className="h-3.5 w-3.5 text-white" />
               </div>
-              <span className="text-base font-bold text-foreground tracking-tight">SEOPulse</span>
+              <span className="text-base font-bold text-foreground tracking-tight">SEO Cloud Lab</span>
             </Link>
 
             <nav className="hidden lg:flex items-center gap-0.5">
@@ -90,7 +90,7 @@ export function Header() {
 
             <div className="flex items-center gap-2">
               {user ? (
-                <Link to="/dashboard" className="btn-primary text-[13px] px-5 py-2">
+                <Link to="/dashboard" className="btn-primary-gradient text-[13px] px-5 py-2">
                   Dashboard
                 </Link>
               ) : (
@@ -98,7 +98,7 @@ export function Header() {
                   <Link to="/auth" className="hidden sm:inline-flex items-center gap-1.5 text-[13px] font-medium text-muted-foreground hover:text-foreground transition-colors px-3 py-1.5">
                     <LogIn className="h-3.5 w-3.5" /> Sign In
                   </Link>
-                  <Link to="/auth" className="hidden sm:inline-flex btn-primary-gradient text-[13px] px-5 py-2">
+                  <Link to="/auth" className="hidden sm:inline-flex btn-rainbow text-[13px] px-5 py-2">
                     Get Started
                   </Link>
                 </>
@@ -147,8 +147,8 @@ export function Header() {
                   ))}
                 </div>
               ))}
-              <div className="separator-gradient my-2" />
-              <Link to="/auth" onClick={() => setMobileOpen(false)} className="btn-primary-gradient text-center text-sm mt-1">
+              <div className="separator-rainbow my-2" />
+              <Link to="/auth" onClick={() => setMobileOpen(false)} className="btn-rainbow text-center text-sm mt-1">
                 Get Started
               </Link>
             </div>

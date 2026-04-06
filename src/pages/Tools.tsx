@@ -3,7 +3,7 @@ import { useParams, useNavigate, Link } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import { motion, AnimatePresence } from "framer-motion";
 import { 
-  BarChart3, Link2, FileCode2, FileText, Brain, Sparkles, 
+  BarChart3, Link2, FileCode2, FileText, Brain, Cloud, 
   ChevronLeft, ChevronRight, Search, Globe, Zap, Target,
   PanelLeftClose, PanelLeft
 } from "lucide-react";
@@ -15,12 +15,12 @@ import { SchemaGenerator } from "@/components/tools/SchemaGenerator";
 import { BacklinkChecker } from "@/components/tools/BacklinkChecker";
 
 const toolsList = [
-  { id: "ai-audit", icon: Brain, title: "AI SEO Audit", desc: "200+ factor deep analysis", accent: "text-accent", metaTitle: "Free AI SEO Audit Tool — 200+ Factor Analysis | SEOPulse", metaDesc: "Run a comprehensive AI-powered SEO audit with 200+ ranking factors. Get detailed scores for technical SEO, content, authority, UX, speed, and schema markup." },
-  { id: "keywords", icon: Search, title: "Keyword Research", desc: "Volume, difficulty & trends", accent: "text-chart-5", metaTitle: "Keyword Research Tool — Volume, Difficulty & Trends | SEOPulse", metaDesc: "Discover high-impact keywords with search volume, difficulty scores, CPC data, and trend analysis. Find untapped keyword opportunities for organic growth." },
-  { id: "environment", icon: Target, title: "Market Analysis", desc: "Competitive landscape", accent: "text-chart-4", metaTitle: "Competitive Market Analysis — SEO Landscape Tool | SEOPulse", metaDesc: "Analyze your competitive SEO landscape. Understand market positioning, competitor strategies, and identify gaps to outrank your competition." },
-  { id: "content", icon: FileText, title: "Content Analyzer", desc: "NLP & readability scoring", accent: "text-success", metaTitle: "Content Analyzer — NLP & Readability Scoring | SEOPulse", metaDesc: "Analyze your content with NLP scoring, readability metrics, keyword density, and topical coverage analysis. Optimize content for maximum search visibility." },
-  { id: "backlinks", icon: Link2, title: "Backlink Checker", desc: "Link profile & toxicity", accent: "text-warning", metaTitle: "Backlink Checker — Link Profile & Toxicity Analysis | SEOPulse", metaDesc: "Analyze your backlink profile with toxicity scoring, anchor text distribution, referring domain quality, and link velocity tracking." },
-  { id: "schema", icon: FileCode2, title: "Schema Generator", desc: "JSON-LD structured data", accent: "text-info", metaTitle: "Schema Markup Generator — JSON-LD Builder | SEOPulse", metaDesc: "Generate valid JSON-LD schema markup for rich search results. Support for Article, Product, LocalBusiness, FAQ, Organization, and more schema types." },
+  { id: "ai-audit", icon: Brain, title: "AI SEO Audit", desc: "200+ factor deep analysis", accent: "text-accent", metaTitle: "Free AI SEO Audit Tool — 200+ Factor Analysis | SEO Cloud Lab", metaDesc: "Run a comprehensive AI-powered SEO audit with 200+ ranking factors. Get detailed scores for technical SEO, content, authority, UX, speed, and schema markup." },
+  { id: "keywords", icon: Search, title: "Keyword Research", desc: "Volume, difficulty & trends", accent: "text-chart-5", metaTitle: "Keyword Research Tool — Volume, Difficulty & Trends | SEO Cloud Lab", metaDesc: "Discover high-impact keywords with search volume, difficulty scores, CPC data, and trend analysis. Find untapped keyword opportunities for organic growth." },
+  { id: "environment", icon: Target, title: "Market Analysis", desc: "Competitive landscape", accent: "text-chart-4", metaTitle: "Competitive Market Analysis — SEO Landscape Tool | SEO Cloud Lab", metaDesc: "Analyze your competitive SEO landscape. Understand market positioning, competitor strategies, and identify gaps to outrank your competition." },
+  { id: "content", icon: FileText, title: "Content Analyzer", desc: "NLP & readability scoring", accent: "text-success", metaTitle: "Content Analyzer — NLP & Readability Scoring | SEO Cloud Lab", metaDesc: "Analyze your content with NLP scoring, readability metrics, keyword density, and topical coverage analysis. Optimize content for maximum search visibility." },
+  { id: "backlinks", icon: Link2, title: "Backlink Checker", desc: "Link profile & toxicity", accent: "text-warning", metaTitle: "Backlink Checker — Link Profile & Toxicity Analysis | SEO Cloud Lab", metaDesc: "Analyze your backlink profile with toxicity scoring, anchor text distribution, referring domain quality, and link velocity tracking." },
+  { id: "schema", icon: FileCode2, title: "Schema Generator", desc: "JSON-LD structured data", accent: "text-info", metaTitle: "Schema Markup Generator — JSON-LD Builder | SEO Cloud Lab", metaDesc: "Generate valid JSON-LD schema markup for rich search results. Support for Article, Product, LocalBusiness, FAQ, Organization, and more schema types." },
 ];
 
 const Tools = () => {
@@ -47,20 +47,20 @@ const Tools = () => {
     "@type": "WebApplication",
     name: activeToolData.title,
     description: activeToolData.metaDesc,
-    url: `https://seopulse.io/tools/${activeToolData.id}`,
+    url: `https://seocloudlab.io/tools/${activeToolData.id}`,
     applicationCategory: "BusinessApplication",
     operatingSystem: "Web",
     offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
-    provider: { "@type": "Organization", name: "SEOPulse", url: "https://seopulse.io" },
+    provider: { "@type": "Organization", name: "SEO Cloud Lab", url: "https://seocloudlab.io" },
   };
 
   const breadcrumbJsonLd = {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
     itemListElement: [
-      { "@type": "ListItem", position: 1, name: "Home", item: "https://seopulse.io/" },
-      { "@type": "ListItem", position: 2, name: "Tools", item: "https://seopulse.io/tools" },
-      { "@type": "ListItem", position: 3, name: activeToolData.title, item: `https://seopulse.io/tools/${activeToolData.id}` },
+      { "@type": "ListItem", position: 1, name: "Home", item: "https://seocloudlab.io/" },
+      { "@type": "ListItem", position: 2, name: "Tools", item: "https://seocloudlab.io/tools" },
+      { "@type": "ListItem", position: 3, name: activeToolData.title, item: `https://seocloudlab.io/tools/${activeToolData.id}` },
     ],
   };
 
@@ -69,11 +69,11 @@ const Tools = () => {
       <Helmet>
         <title>{activeToolData.metaTitle}</title>
         <meta name="description" content={activeToolData.metaDesc} />
-        <link rel="canonical" href={`https://seopulse.io/tools/${activeToolData.id}`} />
+        <link rel="canonical" href={`https://seocloudlab.io/tools/${activeToolData.id}`} />
         <meta property="og:title" content={activeToolData.metaTitle} />
         <meta property="og:description" content={activeToolData.metaDesc} />
         <meta property="og:type" content="website" />
-        <meta property="og:url" content={`https://seopulse.io/tools/${activeToolData.id}`} />
+        <meta property="og:url" content={`https://seocloudlab.io/tools/${activeToolData.id}`} />
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content={activeToolData.metaTitle} />
         <script type="application/ld+json">{JSON.stringify(toolsJsonLd)}</script>
@@ -86,11 +86,11 @@ const Tools = () => {
       }`}>
         <div className="h-16 flex items-center justify-between px-4 border-b border-border">
           <Link to="/" className="flex items-center gap-2.5 group">
-            <div className="h-8 w-8 rounded-lg bg-foreground flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
-              <Sparkles className="h-4 w-4 text-background" />
+            <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-[hsl(var(--google-blue))] to-[hsl(var(--apple-purple))] flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
+              <Cloud className="h-4 w-4 text-white" />
             </div>
             {!sidebarCollapsed && (
-              <span className="text-sm font-bold text-foreground tracking-tight">SEOPulse</span>
+              <span className="text-sm font-bold text-foreground tracking-tight">SEO Cloud Lab</span>
             )}
           </Link>
           <button onClick={() => setSidebarCollapsed(!sidebarCollapsed)}

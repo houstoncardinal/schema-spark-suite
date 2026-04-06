@@ -3,4 +3,4 @@ Allow: /
 Disallow: /dashboard
 Disallow: /auth
 
-Sitemap: https://seopulse.io/sitemap.xml
+Sitemap: https://seocloudlab.io/sitemap.xml

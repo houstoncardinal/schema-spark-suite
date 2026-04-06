@@ -94,8 +94,8 @@ const breadcrumbJsonLd = {
   "@context": "https://schema.org",
   "@type": "BreadcrumbList",
   itemListElement: [
-    { "@type": "ListItem", position: 1, name: "Home", item: "https://seopulse.io/" },
-    { "@type": "ListItem", position: 2, name: "Schema Library", item: "https://seopulse.io/schema-library" },
+    { "@type": "ListItem", position: 1, name: "Home", item: "https://seocloudlab.io/" },
+    { "@type": "ListItem", position: 2, name: "Schema Library", item: "https://seocloudlab.io/schema-library" },
   ],
 };
 
@@ -104,7 +104,7 @@ const collectionJsonLd = {
   "@type": "CollectionPage",
   name: "Schema Markup Library — JSON-LD Templates",
   description: "Ready-to-use JSON-LD schema markup templates for Article, Product, LocalBusiness, FAQ, Organization, and BreadcrumbList rich results.",
-  url: "https://seopulse.io/schema-library",
+  url: "https://seocloudlab.io/schema-library",
   mainEntity: {
     "@type": "ItemList",
     numberOfItems: schemas.length,
@@ -136,13 +136,13 @@ const SchemaLibrary = () => {
   return (
     <Layout>
       <Helmet>
-        <title>Schema Markup Library — Free JSON-LD Templates | SEOPulse</title>
+        <title>Schema Markup Library — Free JSON-LD Templates | SEO Cloud Lab</title>
         <meta name="description" content="Free JSON-LD schema markup templates for Article, Product, LocalBusiness, FAQ, Organization, and BreadcrumbList. Copy-paste ready structured data for rich search results." />
-        <link rel="canonical" href="https://seopulse.io/schema-library" />
-        <meta property="og:title" content="Schema Markup Library — Free JSON-LD Templates | SEOPulse" />
+        <link rel="canonical" href="https://seocloudlab.io/schema-library" />
+        <meta property="og:title" content="Schema Markup Library — Free JSON-LD Templates | SEO Cloud Lab" />
         <meta property="og:description" content="Copy-paste ready JSON-LD schema templates for rich search results." />
         <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://seopulse.io/schema-library" />
+        <meta property="og:url" content="https://seocloudlab.io/schema-library" />
         <meta name="twitter:card" content="summary_large_image" />
         <script type="application/ld+json">{JSON.stringify(breadcrumbJsonLd)}</script>
         <script type="application/ld+json">{JSON.stringify(collectionJsonLd)}</script>

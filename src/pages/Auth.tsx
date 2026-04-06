@@ -37,8 +37,8 @@ const Auth = () => {
   return (
     <Layout>
       <Helmet>
-        <title>{mode === "login" ? "Sign In" : "Create Account"} | SEOPulse</title>
-        <meta name="description" content="Sign in or create your free SEOPulse account to access the SEO dashboard, save projects, and track your rankings." />
+        <title>{mode === "login" ? "Sign In" : "Create Account"} | SEO Cloud Lab</title>
+        <meta name="description" content="Sign in or create your free SEO Cloud Lab account to access the SEO dashboard, save projects, and track your rankings." />
         <meta name="robots" content="noindex, nofollow" />
       </Helmet>
       <section className="min-h-[80vh] flex items-center justify-center py-20">
