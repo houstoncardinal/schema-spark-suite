@@ -51,9 +51,9 @@ const BlogPost = () => {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
     itemListElement: [
-      { "@type": "ListItem", position: 1, name: "Home", item: "https://seopulse.io/" },
-      { "@type": "ListItem", position: 2, name: "Blog", item: "https://seopulse.io/blog" },
-      { "@type": "ListItem", position: 3, name: post.title, item: `https://seopulse.io/blog/${post.slug}` },
+      { "@type": "ListItem", position: 1, name: "Home", item: "https://seocloudlab.io/" },
+      { "@type": "ListItem", position: 2, name: "Blog", item: "https://seocloudlab.io/blog" },
+      { "@type": "ListItem", position: 3, name: post.title, item: `https://seocloudlab.io/blog/${post.slug}` },
     ],
   };
 
@@ -68,7 +68,7 @@ const BlogPost = () => {
   return (
     <Layout>
       <Helmet>
-        <title>{post.title} | Hunain Qureshi</title>
+        <title>{post.title} | SEO Cloud Lab</title>
         <meta name="description" content={post.excerpt} />
         <meta name="author" content={post.author.name} />
         <meta name="keywords" content={post.tags.join(", ")} />
@@ -86,7 +86,7 @@ const BlogPost = () => {
         <meta name="twitter:title" content={post.title} />
         <meta name="twitter:description" content={post.excerpt} />
         <meta name="twitter:image" content={post.image} />
-        <link rel="canonical" href={`https://seopulse.io/blog/${post.slug}`} />
+        <link rel="canonical" href={`https://seocloudlab.io/blog/${post.slug}`} />
         <script type="application/ld+json">{JSON.stringify(jsonLd)}</script>
         <script type="application/ld+json">{JSON.stringify(breadcrumbJsonLd)}</script>
       </Helmet>
