@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { Logo } from "@/components/Logo";
 
 const footerLinks = [
   {
@@ -41,9 +42,9 @@ export function Footer() {
         <div className="grid grid-cols-2 md:grid-cols-5 gap-10 mb-14">
           {/* Brand */}
           <div className="col-span-2 md:col-span-1">
-            <Link to="/" className="flex items-center gap-1 mb-4 group">
-              <img src="/images/logo.png" alt="SEO Cloud Labs" className="h-14 group-hover:scale-105 transition-transform duration-300" />
-            </Link>
+            <div className="mb-4">
+              <Logo variant="light" />
+            </div>
             <p className="text-sm text-gray-500 leading-relaxed max-w-[200px]">
               AI-powered SEO intelligence for professionals who demand real data.
             </p>

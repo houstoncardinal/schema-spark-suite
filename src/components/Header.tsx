@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, ChevronDown, LogIn } from "lucide-react";
+import { Menu, X, ChevronDown, LogIn, Sparkles } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
-
+import { Logo } from "@/components/Logo";
 const navItems = [
   { label: "Tools", href: "/tools", children: [
     { label: "AI SEO Audit", href: "/tools/ai-audit", desc: "200+ factor analysis" },
@@ -33,10 +33,9 @@ export function Header() {
             <Link to="/" className="flex items-center gap-1 group">
               <img src="/images/logo.png" alt="SEO Cloud Labs" className="h-14 group-hover:scale-105 transition-transform duration-300" />
             </Link>
+          <div className="flex h-16 items-center justify-between px-5 md:px-6">
+            <Logo />
 
-            <nav className="hidden lg:flex items-center gap-0.5">
-              {navItems.map((item) => (
-                <div
                   key={item.label}
                   className="relative"
                   onMouseEnter={() => item.children && setHoveredNav(item.label)}
