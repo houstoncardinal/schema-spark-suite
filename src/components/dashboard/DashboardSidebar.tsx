@@ -29,8 +29,8 @@ export function DashboardSidebar({ activeSection, onSectionChange, collapsed, on
   return (
     <aside className={`hidden md:flex flex-col border-r border-border bg-card transition-all duration-200 ${collapsed ? "w-16" : "w-52"}`}>
       <div className="flex items-center justify-between h-14 px-3 border-b border-border">
-        {!collapsed && <img src="/images/logo.png" alt="SEO Cloud Labs" className="h-6" />}
         {!collapsed && <Logo variant="compact" />}
+        <button onClick={onToggleCollapse} className="h-7 w-7 flex items-center justify-center rounded-md text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors">
           {collapsed ? <ChevronRight className="h-4 w-4" /> : <ChevronLeft className="h-4 w-4" />}
         </button>
       </div>
