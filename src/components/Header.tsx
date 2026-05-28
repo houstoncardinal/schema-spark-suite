@@ -40,9 +40,6 @@ export function Header() {
                   onMouseEnter={() => item.children && setHoveredNav(item.label)}
                   onMouseLeave={() => setHoveredNav(null)}
                 >
-                  onMouseEnter={() => item.children && setHoveredNav(item.label)}
-                  onMouseLeave={() => setHoveredNav(null)}
-                >
                   <Link
                     to={item.href}
                     className={`flex items-center gap-1 rounded-lg px-3 py-1.5 text-[13px] font-medium transition-all duration-200 ${
