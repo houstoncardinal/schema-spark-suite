@@ -117,35 +117,52 @@ export function Header() {
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
             transition={{ duration: 0.3, ease: [0.23, 1, 0.32, 1] }}
-            className="lg:hidden mx-4 mt-2 border border-border bg-card/95 backdrop-blur-xl rounded-2xl overflow-hidden"
-            style={{ boxShadow: 'var(--shadow-heavy)' }}
+            className="lg:hidden mx-4 mt-2 border border-border bg-white rounded-2xl overflow-hidden"
+            style={{ boxShadow: '0 20px 50px -12px rgb(0 0 0 / 0.18), 0 8px 20px -8px rgb(0 0 0 / 0.08)' }}
           >
-            <div className="p-4 flex flex-col gap-1">
+            <div className="p-3 flex flex-col gap-0.5">
               {navItems.map((item) => (
                 <div key={item.label}>
                   <Link
                     to={item.href}
                     onClick={() => setMobileOpen(false)}
-                    className="block rounded-xl px-4 py-3 text-sm font-medium text-foreground hover:bg-secondary transition-colors"
+                    className={`flex items-center justify-between rounded-xl px-4 py-3 text-[15px] font-semibold transition-colors ${
+                      location.pathname === item.href
+                        ? "bg-neutral-100 text-neutral-900"
+                        : "text-neutral-900 hover:bg-neutral-50"
+                    }`}
                   >
-                    {item.label}
+                    <span>{item.label}</span>
+                    {item.children && <ChevronDown className="h-4 w-4 text-neutral-400" />}
                   </Link>
                   {item.children?.map((child) => (
                     <Link
                       key={child.href}
                       to={child.href}
                       onClick={() => setMobileOpen(false)}
-                      className="block rounded-xl px-8 py-2.5 text-sm text-muted-foreground hover:bg-secondary transition-colors"
+                      className="flex flex-col rounded-xl px-8 py-2.5 text-sm text-neutral-600 hover:bg-neutral-50 hover:text-neutral-900 transition-colors"
                     >
-                      {child.label}
+                      <span className="font-medium">{child.label}</span>
+                      {'desc' in child && <span className="text-[11px] text-neutral-400 mt-0.5">{child.desc}</span>}
                     </Link>
                   ))}
                 </div>
               ))}
-              <div className="separator-rainbow my-2" />
-              <Link to="/auth" onClick={() => setMobileOpen(false)} className="btn-rainbow text-center text-sm mt-1">
-                Get Started
-              </Link>
+              <div className="h-px bg-neutral-200 my-3" />
+              {user ? (
+                <Link to="/dashboard" onClick={() => setMobileOpen(false)} className="btn-rainbow text-center text-sm py-3 rounded-xl">
+                  Open Dashboard
+                </Link>
+              ) : (
+                <div className="flex flex-col gap-2">
+                  <Link to="/auth" onClick={() => setMobileOpen(false)} className="flex items-center justify-center gap-2 rounded-xl border border-neutral-200 px-4 py-3 text-sm font-semibold text-neutral-900 hover:bg-neutral-50 transition-colors">
+                    <LogIn className="h-4 w-4" /> Sign In
+                  </Link>
+                  <Link to="/auth" onClick={() => setMobileOpen(false)} className="btn-rainbow text-center text-sm py-3 rounded-xl">
+                    Get Started Free
+                  </Link>
+                </div>
+              )}
             </div>
           </motion.div>
         )}
