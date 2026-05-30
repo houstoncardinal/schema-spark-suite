@@ -144,7 +144,7 @@ export function HeroSection() {
   };
 
   return (
-    <section className="relative pt-36 pb-24 md:pt-48 md:pb-32 overflow-hidden" style={{ background: 'hsl(var(--cyber-bg))' }}>
+    <section className="relative pt-28 pb-20 sm:pt-36 sm:pb-24 md:pt-48 md:pb-32 overflow-hidden" style={{ background: 'hsl(var(--cyber-bg))' }}>
       {/* Cybercore animated background */}
       <CybercoreBackground beamCount={70} />
 
