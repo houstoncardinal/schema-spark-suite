@@ -61,7 +61,10 @@ export default {
         sm: "calc(var(--radius) - 4px)",
       },
       fontFamily: {
+        sans: ["'DM Sans'", "-apple-system", "BlinkMacSystemFont", "system-ui", "sans-serif"],
+        display: ["'Space Grotesk'", "-apple-system", "BlinkMacSystemFont", "system-ui", "sans-serif"],
         serif: ["'Instrument Serif'", "Georgia", "serif"],
+        mono: ["'JetBrains Mono'", "ui-monospace", "monospace"],
       },
       keyframes: {
         "accordion-down": { from: { height: "0" }, to: { height: "var(--radix-accordion-content-height)" } },
