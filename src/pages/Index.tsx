@@ -91,8 +91,10 @@ const Index = () => {
       </Helmet>
       <HeroSection />
       <ToolsPreview />
+      <AlgorithmShowcase />
       <SocialProof />
       <CTASection />
+
     </Layout>
   );
 };
