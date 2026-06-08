@@ -608,6 +608,98 @@
   .feature-card-green { border-left: 3px solid hsl(var(--google-green)); }
   .feature-card-purple { border-left: 3px solid hsl(var(--apple-purple)); }
   .feature-card-teal { border-left: 3px solid hsl(var(--apple-teal)); }
+
+  /* ──────── Luxury Enterprise Utilities ──────── */
+  .luxe-card {
+    @apply relative overflow-hidden rounded-3xl border bg-card transition-all duration-700 ease-out;
+    border-color: hsl(var(--border));
+    box-shadow: 0 1px 2px hsl(var(--ink) / 0.04), 0 8px 28px hsl(var(--ink) / 0.05);
+  }
+  .luxe-card::before {
+    content: '';
+    @apply absolute inset-0 opacity-0 transition-opacity duration-700 pointer-events-none;
+    background: radial-gradient(600px circle at var(--mx, 50%) var(--my, 0%),
+                hsl(var(--gold-bright) / 0.10),
+                transparent 40%);
+  }
+  .luxe-card::after {
+    content: '';
+    @apply absolute -inset-px rounded-3xl opacity-0 transition-opacity duration-700 pointer-events-none;
+    background: linear-gradient(135deg,
+      hsl(var(--emerald-rich) / 0.4),
+      hsl(var(--gold-bright) / 0.35),
+      transparent 60%);
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+            mask-composite: exclude;
+    padding: 1px;
+  }
+  .luxe-card:hover {
+    transform: translateY(-4px);
+    border-color: hsl(var(--gold-bright) / 0.4);
+    box-shadow: 0 4px 8px hsl(var(--ink) / 0.05), 0 24px 60px hsl(var(--emerald-rich) / 0.12), 0 0 30px hsl(var(--gold-bright) / 0.08);
+  }
+  .luxe-card:hover::before, .luxe-card:hover::after {
+    opacity: 1;
+  }
+
+  .luxe-sheen {
+    position: relative;
+    overflow: hidden;
+  }
+  .luxe-sheen::after {
+    content: '';
+    position: absolute;
+    top: 0; left: -120%;
+    width: 60%; height: 100%;
+    background: linear-gradient(120deg, transparent 0%, hsl(var(--gold-bright) / 0.18) 50%, transparent 100%);
+    transform: skewX(-20deg);
+    transition: left 0.9s cubic-bezier(0.23, 1, 0.32, 1);
+    pointer-events: none;
+  }
+  .luxe-sheen:hover::after { left: 130%; }
+
+  .gold-text {
+    @apply bg-clip-text text-transparent;
+    background-image: var(--gradient-gold);
+  }
+
+  .emerald-text {
+    @apply bg-clip-text text-transparent;
+    background-image: linear-gradient(135deg, hsl(var(--emerald-deep)), hsl(var(--emerald-bright)));
+  }
+
+  .gold-divider {
+    @apply h-px w-full;
+    background: linear-gradient(90deg, transparent, hsl(var(--gold-bright) / 0.6), transparent);
+  }
+
+  .pill-luxe {
+    @apply inline-flex items-center gap-2 rounded-full px-3.5 py-1.5 text-[11px] font-semibold uppercase tracking-[0.14em];
+    background: linear-gradient(135deg, hsl(var(--emerald-rich) / 0.08), hsl(var(--gold-bright) / 0.08));
+    border: 1px solid hsl(var(--gold-bright) / 0.25);
+    color: hsl(var(--emerald-deep));
+  }
+
+  .btn-gold {
+    @apply inline-flex items-center justify-center rounded-full px-7 py-3 text-sm font-semibold transition-all duration-300;
+    background: var(--gradient-gold);
+    color: hsl(var(--ink));
+    box-shadow: var(--shadow-gold);
+  }
+  .btn-gold:hover { transform: translateY(-1px); box-shadow: 0 6px 32px hsl(var(--gold-bright) / 0.35); }
+
+  @keyframes luxe-pulse {
+    0%, 100% { box-shadow: 0 0 0 0 hsl(var(--gold-bright) / 0.35); }
+    50% { box-shadow: 0 0 0 14px hsl(var(--gold-bright) / 0); }
+  }
+  .animate-luxe-pulse { animation: luxe-pulse 2.6s ease-in-out infinite; }
+
+  @keyframes orbit-slow {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+  .animate-orbit { animation: orbit-slow 30s linear infinite; }
 }
 
 /* ──────── Animations ──────── */
