@@ -2,6 +2,7 @@ import { Helmet } from "react-helmet-async";
 import { Layout } from "@/components/Layout";
 import { HeroSection } from "@/components/home/HeroSection";
 import { ToolsPreview } from "@/components/home/ToolsPreview";
+import { AlgorithmShowcase } from "@/components/home/AlgorithmShowcase";
 import { SocialProof } from "@/components/home/SocialProof";
 import { CTASection } from "@/components/home/CTASection";
 
