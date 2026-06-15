@@ -1,107 +1,177 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, ChevronDown, LogIn, Sparkles } from "lucide-react";
+import { Menu, X, ChevronDown, LogIn, Phone, Mail, ShieldCheck, Globe2, ArrowRight } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { Logo } from "@/components/Logo";
+
 const navItems = [
-  { label: "Tools", href: "/tools", children: [
-    { label: "AI SEO Audit", href: "/tools/ai-audit", desc: "200+ factor analysis" },
-    { label: "Keyword Research", href: "/tools/keywords", desc: "Intent-driven discovery" },
-    { label: "Backlink Checker", href: "/tools/backlinks", desc: "Authority mapping" },
-    { label: "Schema Generator", href: "/tools/schema", desc: "JSON-LD builder" },
-  ]},
-  { label: "Schema Library", href: "/schema-library" },
-  { label: "Schema Validator", href: "/schema-validator" },
+  {
+    label: "Platform",
+    href: "/tools",
+    children: [
+      { label: "AI SEO Audit", href: "/tools/ai-audit", desc: "200+ factor analysis" },
+      { label: "Keyword Research", href: "/tools/keywords", desc: "Intent-driven discovery" },
+      { label: "Backlink Checker", href: "/tools/backlinks", desc: "Authority mapping" },
+      { label: "Schema Generator", href: "/tools/schema", desc: "JSON-LD builder" },
+    ],
+  },
+  {
+    label: "Solutions",
+    href: "/services",
+    children: [
+      { label: "Schema Library", href: "/schema-library", desc: "1000+ JSON-LD templates" },
+      { label: "Schema Validator", href: "/schema-validator", desc: "Live structured data testing" },
+      { label: "Managed Services", href: "/services", desc: "Done-for-you SEO programs" },
+    ],
+  },
   { label: "Learning Hub", href: "/blog" },
   { label: "Pricing", href: "/pricing" },
-  { label: "Services", href: "/services" },
   { label: "Dashboard", href: "/dashboard" },
 ];
 
 export function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [hoveredNav, setHoveredNav] = useState<string | null>(null);
+  const [scrolled, setScrolled] = useState(false);
   const location = useLocation();
   const { user } = useAuth();
 
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 8);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
   return (
     <header className="fixed top-0 left-0 right-0 z-50">
-      <div className="mx-4 mt-3">
-        <div className="container-wide bg-background/70 backdrop-blur-2xl border border-border/60 rounded-2xl shadow-sm">
-          <div className="flex h-16 items-center justify-between px-5 md:px-6">
-            <Logo />
+      {/* Top utility bar */}
+      <div className="hidden md:block bg-neutral-950 text-neutral-300 text-[12px]">
+        <div className="mx-auto max-w-[1400px] px-6 flex h-9 items-center justify-between">
+          <div className="flex items-center gap-5">
+            <span className="inline-flex items-center gap-1.5 text-neutral-400">
+              <ShieldCheck className="h-3.5 w-3.5 text-emerald-400" />
+              SOC 2 · GDPR · Enterprise-grade
+            </span>
+            <span className="hidden lg:inline-flex items-center gap-1.5 text-neutral-400">
+              <Globe2 className="h-3.5 w-3.5 text-sky-400" />
+              Trusted by teams in 40+ countries
+            </span>
+          </div>
+          <div className="flex items-center gap-5">
+            <a href="tel:+18005550100" className="inline-flex items-center gap-1.5 hover:text-white transition-colors">
+              <Phone className="h-3.5 w-3.5" /> +1 (800) 555-0100
+            </a>
+            <a href="mailto:sales@seocloudlab.io" className="inline-flex items-center gap-1.5 hover:text-white transition-colors">
+              <Mail className="h-3.5 w-3.5" /> sales@seocloudlab.io
+            </a>
+            <Link to="/contact" className="text-white/90 hover:text-white font-medium inline-flex items-center gap-1">
+              Contact Sales <ArrowRight className="h-3 w-3" />
+            </Link>
+          </div>
+        </div>
+      </div>
 
-            <nav className="hidden lg:flex items-center gap-0.5">
-              {navItems.map((item) => (
-                <div
-                  key={item.label}
-                  className="relative"
-                  onMouseEnter={() => item.children && setHoveredNav(item.label)}
-                  onMouseLeave={() => setHoveredNav(null)}
-                >
-                  <Link
-                    to={item.href}
-                    className={`flex items-center gap-1 rounded-lg px-3 py-1.5 text-[13px] font-medium transition-all duration-200 ${
-                      location.pathname.startsWith(item.href) 
-                        ? "text-foreground bg-secondary/80" 
-                        : "text-muted-foreground hover:text-foreground hover:bg-secondary/50"
-                    }`}
+      {/* Main header bar — solid white, full width */}
+      <div
+        className={`bg-white border-b transition-shadow duration-300 ${
+          scrolled ? "border-neutral-200 shadow-[0_4px_20px_-8px_rgba(15,23,42,0.12)]" : "border-neutral-100"
+        }`}
+      >
+        <div className="mx-auto max-w-[1400px] px-4 md:px-6">
+          <div className="flex h-[68px] items-center justify-between">
+            <Logo variant="light" />
+
+            <nav className="hidden lg:flex items-center gap-1">
+              {navItems.map((item) => {
+                const active = location.pathname === item.href || location.pathname.startsWith(item.href + "/");
+                return (
+                  <div
+                    key={item.label}
+                    className="relative"
+                    onMouseEnter={() => item.children && setHoveredNav(item.label)}
+                    onMouseLeave={() => setHoveredNav(null)}
                   >
-                    {item.label}
-                    {item.children && <ChevronDown className="h-3 w-3 opacity-50" />}
-                  </Link>
-
-                  <AnimatePresence>
-                    {item.children && hoveredNav === item.label && (
-                      <motion.div
-                        initial={{ opacity: 0, y: 6, scale: 0.98 }}
-                        animate={{ opacity: 1, y: 0, scale: 1 }}
-                        exit={{ opacity: 0, y: 6, scale: 0.98 }}
-                        transition={{ duration: 0.2, ease: [0.23, 1, 0.32, 1] }}
-                        className="absolute top-full left-0 mt-2 w-56 rounded-2xl border border-border bg-card/95 backdrop-blur-xl p-2 overflow-hidden"
-                        style={{ boxShadow: 'var(--shadow-heavy)' }}
-                      >
-                        {item.children.map((child) => (
-                          <Link
-                            key={child.href}
-                            to={child.href}
-                            className="block rounded-xl px-3 py-2.5 transition-colors hover:bg-secondary group/item"
-                          >
-                            <span className="block text-[13px] font-medium text-foreground group-hover/item:text-accent transition-colors">
-                              {child.label}
-                            </span>
-                            {'desc' in child && (
-                              <span className="block text-[11px] text-muted-foreground mt-0.5">{child.desc}</span>
-                            )}
-                          </Link>
-                        ))}
-                      </motion.div>
+                    <Link
+                      to={item.href}
+                      className={`flex items-center gap-1 rounded-lg px-3.5 py-2 text-[13.5px] font-semibold tracking-tight transition-colors ${
+                        active
+                          ? "text-neutral-900"
+                          : "text-neutral-600 hover:text-neutral-900"
+                      }`}
+                    >
+                      {item.label}
+                      {item.children && <ChevronDown className="h-3.5 w-3.5 opacity-60" />}
+                    </Link>
+                    {active && (
+                      <span className="absolute left-3.5 right-3.5 -bottom-[1px] h-[2px] rounded-full bg-gradient-to-r from-[#4285F4] via-[#34A853] to-[#EA4335]" />
                     )}
-                  </AnimatePresence>
-                </div>
-              ))}
+
+                    <AnimatePresence>
+                      {item.children && hoveredNav === item.label && (
+                        <motion.div
+                          initial={{ opacity: 0, y: 6 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0, y: 6 }}
+                          transition={{ duration: 0.18, ease: [0.23, 1, 0.32, 1] }}
+                          className="absolute top-full left-0 mt-2 w-72 rounded-2xl border border-neutral-200 bg-white p-2 shadow-[0_20px_50px_-12px_rgba(15,23,42,0.18)]"
+                        >
+                          {item.children.map((child) => (
+                            <Link
+                              key={child.href}
+                              to={child.href}
+                              className="block rounded-xl px-3 py-2.5 transition-colors hover:bg-neutral-50 group/item"
+                            >
+                              <span className="block text-[13.5px] font-semibold text-neutral-900 group-hover/item:text-[#4285F4] transition-colors">
+                                {child.label}
+                              </span>
+                              <span className="block text-[11.5px] text-neutral-500 mt-0.5">{child.desc}</span>
+                            </Link>
+                          ))}
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </div>
+                );
+              })}
             </nav>
 
             <div className="flex items-center gap-2">
               {user ? (
-                <Link to="/dashboard" className="btn-primary-gradient text-[13px] px-5 py-2">
-                  Dashboard
+                <Link
+                  to="/dashboard"
+                  className="hidden sm:inline-flex items-center gap-1.5 rounded-xl bg-neutral-900 px-4 py-2 text-[13px] font-semibold text-white hover:bg-neutral-800 transition-colors"
+                >
+                  Open Dashboard <ArrowRight className="h-3.5 w-3.5" />
                 </Link>
               ) : (
                 <>
-                  <Link to="/auth" className="hidden sm:inline-flex items-center gap-1.5 text-[13px] font-medium text-muted-foreground hover:text-foreground transition-colors px-3 py-1.5">
+                  <Link
+                    to="/auth"
+                    className="hidden sm:inline-flex items-center gap-1.5 px-3 py-2 text-[13px] font-semibold text-neutral-700 hover:text-neutral-900 transition-colors"
+                  >
                     <LogIn className="h-3.5 w-3.5" /> Sign In
                   </Link>
-                  <Link to="/auth" className="hidden sm:inline-flex btn-rainbow text-[13px] px-5 py-2">
-                    Get Started
+                  <Link
+                    to="/contact"
+                    className="hidden md:inline-flex items-center rounded-xl border border-neutral-200 px-4 py-2 text-[13px] font-semibold text-neutral-900 hover:bg-neutral-50 transition-colors"
+                  >
+                    Book a Demo
+                  </Link>
+                  <Link
+                    to="/auth"
+                    className="hidden sm:inline-flex items-center gap-1.5 rounded-xl bg-neutral-900 px-4 py-2 text-[13px] font-semibold text-white hover:bg-neutral-800 transition-colors"
+                  >
+                    Start Free <ArrowRight className="h-3.5 w-3.5" />
                   </Link>
                 </>
               )}
 
               <button
                 onClick={() => setMobileOpen(!mobileOpen)}
-                className="flex lg:hidden h-9 w-9 items-center justify-center rounded-xl text-muted-foreground hover:text-foreground hover:bg-secondary transition-all"
+                aria-label="Toggle menu"
+                className="flex lg:hidden h-10 w-10 items-center justify-center rounded-xl text-neutral-700 hover:bg-neutral-100 transition-colors"
               >
                 {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
               </button>
@@ -116,11 +186,10 @@ export function Header() {
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.3, ease: [0.23, 1, 0.32, 1] }}
-            className="lg:hidden mx-4 mt-2 border border-border bg-white rounded-2xl overflow-hidden"
-            style={{ boxShadow: '0 20px 50px -12px rgb(0 0 0 / 0.18), 0 8px 20px -8px rgb(0 0 0 / 0.08)' }}
+            transition={{ duration: 0.28, ease: [0.23, 1, 0.32, 1] }}
+            className="lg:hidden bg-white border-b border-neutral-200 overflow-hidden shadow-[0_20px_40px_-12px_rgba(15,23,42,0.15)]"
           >
-            <div className="p-3 flex flex-col gap-0.5">
+            <div className="px-4 py-4 flex flex-col gap-0.5 max-h-[80vh] overflow-y-auto">
               {navItems.map((item) => (
                 <div key={item.label}>
                   <Link
@@ -143,26 +212,49 @@ export function Header() {
                       className="flex flex-col rounded-xl px-8 py-2.5 text-sm text-neutral-600 hover:bg-neutral-50 hover:text-neutral-900 transition-colors"
                     >
                       <span className="font-medium">{child.label}</span>
-                      {'desc' in child && <span className="text-[11px] text-neutral-400 mt-0.5">{child.desc}</span>}
+                      <span className="text-[11px] text-neutral-400 mt-0.5">{child.desc}</span>
                     </Link>
                   ))}
                 </div>
               ))}
               <div className="h-px bg-neutral-200 my-3" />
               {user ? (
-                <Link to="/dashboard" onClick={() => setMobileOpen(false)} className="btn-rainbow text-center text-sm py-3 rounded-xl">
+                <Link
+                  to="/dashboard"
+                  onClick={() => setMobileOpen(false)}
+                  className="rounded-xl bg-neutral-900 px-4 py-3 text-center text-sm font-semibold text-white"
+                >
                   Open Dashboard
                 </Link>
               ) : (
                 <div className="flex flex-col gap-2">
-                  <Link to="/auth" onClick={() => setMobileOpen(false)} className="flex items-center justify-center gap-2 rounded-xl border border-neutral-200 px-4 py-3 text-sm font-semibold text-neutral-900 hover:bg-neutral-50 transition-colors">
+                  <Link
+                    to="/auth"
+                    onClick={() => setMobileOpen(false)}
+                    className="flex items-center justify-center gap-2 rounded-xl border border-neutral-200 px-4 py-3 text-sm font-semibold text-neutral-900 hover:bg-neutral-50 transition-colors"
+                  >
                     <LogIn className="h-4 w-4" /> Sign In
                   </Link>
-                  <Link to="/auth" onClick={() => setMobileOpen(false)} className="btn-rainbow text-center text-sm py-3 rounded-xl">
-                    Get Started Free
+                  <Link
+                    to="/contact"
+                    onClick={() => setMobileOpen(false)}
+                    className="rounded-xl border border-neutral-200 px-4 py-3 text-center text-sm font-semibold text-neutral-900 hover:bg-neutral-50 transition-colors"
+                  >
+                    Book a Demo
+                  </Link>
+                  <Link
+                    to="/auth"
+                    onClick={() => setMobileOpen(false)}
+                    className="rounded-xl bg-neutral-900 px-4 py-3 text-center text-sm font-semibold text-white"
+                  >
+                    Start Free
                   </Link>
                 </div>
               )}
+              <div className="mt-4 pt-4 border-t border-neutral-100 flex flex-col gap-2 text-[12px] text-neutral-500">
+                <a href="tel:+18005550100" className="inline-flex items-center gap-2"><Phone className="h-3.5 w-3.5" /> +1 (800) 555-0100</a>
+                <a href="mailto:sales@seocloudlab.io" className="inline-flex items-center gap-2"><Mail className="h-3.5 w-3.5" /> sales@seocloudlab.io</a>
+              </div>
             </div>
           </motion.div>
         )}
