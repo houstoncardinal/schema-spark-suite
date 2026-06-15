@@ -33,12 +33,31 @@ async function scrapeWithFirecrawl(domain: string) {
 
   const html = scrapeData?.data?.html || scrapeData?.html || "";
   const markdown = scrapeData?.data?.markdown || scrapeData?.markdown || "";
-  const links = scrapeData?.data?.links || scrapeData?.links || [];
-  const pages = mapData?.data?.links || mapData?.links || links.filter((l: string) =>
-    l.startsWith(formattedUrl) || l.startsWith("/")
-  );
+  const links: string[] = scrapeData?.data?.links || scrapeData?.links || [];
+  const allLinks: string[] = mapData?.data?.links || mapData?.links || links;
+  const host = (() => { try { return new URL(formattedUrl).hostname.replace(/^www\./, ""); } catch { return ""; } })();
+  const internalPages = Array.from(new Set(allLinks.filter((l: string) =>
+    l && (l.startsWith("/") || (host && l.includes(host)))
+  ))).slice(0, 50);
 
-  return { html, markdown, links, pages };
+  // Crawl top 4 additional internal pages in parallel for multi-page grounding
+  const samplePages = internalPages
+    .filter(p => p !== formattedUrl && p !== `${formattedUrl}/`)
+    .slice(0, 4);
+  const extraScrapes = await Promise.allSettled(
+    samplePages.map(p =>
+      supabase.functions.invoke("firecrawl-scrape", {
+        body: { url: p, options: { formats: ["markdown"], onlyMainContent: true } },
+      })
+    )
+  );
+  const extraMarkdown = extraScrapes
+    .map((r, i) => r.status === "fulfilled"
+      ? `\n\n--- ${samplePages[i]} ---\n${(r.value.data?.data?.markdown || r.value.data?.markdown || "").substring(0, 1500)}`
+      : "")
+    .join("");
+
+  return { html, markdown: markdown + extraMarkdown, links, pages: internalPages };
 }
 
 async function callSEOAnalyze<T>(type: string, payload: Record<string, unknown>): Promise<T> {
