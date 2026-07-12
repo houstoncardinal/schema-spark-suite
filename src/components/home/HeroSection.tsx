@@ -6,6 +6,10 @@ import {
   Zap, BarChart3, Eye, Link2
 } from "lucide-react";
 import { analyzeSEO, type SEOAuditResult, type SEOInsight } from "@/lib/seo-engine";
+import { aiSEOApi } from "@/lib/ai-seo-api";
+import { firecrawlApi } from "@/lib/firecrawl-api";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 import { ScoreRing } from "@/components/charts/ScoreRing";
 import { Link } from "react-router-dom";
 import CybercoreBackground from "@/components/ui/cybercore-section-hero";
@@ -127,20 +131,69 @@ export function HeroSection() {
   const [analyzing, setAnalyzing] = useState(false);
   const [loadingStep, setLoadingStep] = useState(0);
   const [results, setResults] = useState<SEOAuditResult | null>(null);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
   const handleAnalyze = async () => {
     if (!url.trim()) return;
     setAnalyzing(true);
     setResults(null);
+    setErrorMsg(null);
     setLoadingStep(0);
     const interval = setInterval(() => {
       setLoadingStep(prev => { if (prev >= loadingSteps.length - 1) { clearInterval(interval); return prev; } return prev + 1; });
-    }, 400);
-    const data = analyzeSEO(url);
-    await new Promise(resolve => setTimeout(resolve, 3000));
-    clearInterval(interval);
-    setAnalyzing(false);
-    setResults(data);
+    }, 500);
+
+    try {
+      // Real crawl — no fake fallback
+      const scrapeResponse = await firecrawlApi.scrape(url);
+      const html = scrapeResponse.data?.html || scrapeResponse.data?.data?.html || "";
+      const markdown = scrapeResponse.data?.markdown || scrapeResponse.data?.data?.markdown || "";
+      const links = scrapeResponse.data?.links || scrapeResponse.data?.data?.links || [];
+
+      if (!html && !markdown) {
+        throw new Error("Could not reach that site. Check the URL and try again.");
+      }
+
+      const [ai, psiResult] = await Promise.all([
+        aiSEOApi.auditSiteReal(url, html, markdown, links),
+        supabase.functions.invoke("pagespeed-insights", { body: { url, strategy: "mobile" } })
+          .catch(() => ({ data: null })),
+      ]);
+
+      const scaffold = analyzeSEO(url);
+      if (ai.scores) {
+        scaffold.overall = ai.scores.overall;
+        scaffold.technical = ai.scores.technical;
+        scaffold.content = ai.scores.content;
+        scaffold.authority = ai.scores.authority;
+        scaffold.ux = ai.scores.ux;
+        scaffold.speed = ai.scores.speed;
+        scaffold.schema = ai.scores.schema;
+      }
+      if (ai.insights?.length) scaffold.insights = ai.insights as SEOInsight[];
+      if (ai.recommendations?.length) scaffold.recommendations = ai.recommendations;
+
+      const psi = (psiResult as { data?: { success?: boolean; data?: { coreWebVitals?: typeof scaffold.coreWebVitals; scores?: { performance?: number | null } } } })?.data;
+      if (psi?.success && psi.data?.coreWebVitals?.length) {
+        scaffold.coreWebVitals = psi.data.coreWebVitals;
+        if (typeof psi.data.scores?.performance === "number") {
+          scaffold.speed = psi.data.scores.performance;
+        }
+      }
+
+      clearInterval(interval);
+      setAnalyzing(false);
+      setResults(scaffold);
+      toast.success("Live audit complete", {
+        description: psi?.success ? "Real crawl + AI + Google PageSpeed" : "Real crawl + AI analysis",
+      });
+    } catch (err) {
+      clearInterval(interval);
+      setAnalyzing(false);
+      const msg = err instanceof Error ? err.message : "Audit failed";
+      setErrorMsg(msg);
+      toast.error("Audit failed", { description: msg });
+    }
   };
 
   return (
