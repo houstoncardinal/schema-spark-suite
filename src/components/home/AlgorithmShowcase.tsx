@@ -2,12 +2,12 @@ import { motion } from "framer-motion";
 import { Cpu, Database, GitBranch, Layers, Sparkles, Radar, LineChart, Lock } from "lucide-react";
 
 const algorithms = [
-  { icon: Cpu, name: "ASTRA-Rank™", description: "Adaptive Semantic Topical Ranking Algorithm — evaluates entity coverage, semantic depth and topical authority across 47 dimensions.", metric: "47 dim", metricLabel: "Vectors" },
-  { icon: Radar, name: "VITALS-Pulse™", description: "Continuous Core Web Vitals modeling with synthetic + RUM blended scoring against your live ranking cohort.", metric: "<200ms", metricLabel: "Latency" },
-  { icon: GitBranch, name: "LinkGraph-Δ™", description: "Differential backlink graph that detects toxicity, link velocity anomalies, and authority flow in real time.", metric: "12B", metricLabel: "Edges" },
-  { icon: Layers, name: "SERP-Mirror™", description: "Proprietary SERP fingerprinting models intent, feature mix, and competitive saturation before you publish.", metric: "94.2%", metricLabel: "Accuracy" },
-  { icon: Database, name: "Corpus-IQ™", description: "Trained on 2.4M ranking pages with continual re-indexing — surfaces what actually moves positions, not what blogs say.", metric: "2.4M", metricLabel: "Pages" },
-  { icon: LineChart, name: "Forecast-Edge™", description: "Predictive ranking modeling forecasts position shifts 14–90 days out based on your roadmap and competitor velocity.", metric: "±1.4", metricLabel: "Position MAE" },
+  { icon: Cpu, name: "ASTRA-Rank™", description: "Adaptive Semantic Topical Ranking — scores entity coverage, semantic depth and topical authority from your live HTML.", metric: "Live", metricLabel: "On-page" },
+  { icon: Radar, name: "VITALS-Pulse™", description: "Core Web Vitals sourced directly from Google PageSpeed Insights — real LCP, CLS, TBT and INP for every audit.", metric: "PSI", metricLabel: "Google" },
+  { icon: GitBranch, name: "LinkGraph-Δ™", description: "On-page link graph analysis — internal vs external, dofollow/nofollow ratios, and anchor distribution from the real crawl.", metric: "Real", metricLabel: "Crawl" },
+  { icon: Layers, name: "SERP-Mirror™", description: "Live SERP grounding via Firecrawl search — pulls actual ranking competitors and difficulty signals per query.", metric: "SERP", metricLabel: "Live" },
+  { icon: Database, name: "Corpus-IQ™", description: "Multi-page crawl feeds a large-context LLM so scoring reflects the whole site, not just the homepage.", metric: "Multi", metricLabel: "Page" },
+  { icon: LineChart, name: "Forecast-Edge™", description: "Weighted scoring model turns measured signals into prioritized fixes ranked by projected impact and effort.", metric: "AI", metricLabel: "Ranked" },
 ];
 
 function trackMouse(e: React.MouseEvent<HTMLDivElement>) {
@@ -101,10 +101,10 @@ export function AlgorithmShowcase() {
         <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}
           className="mt-20 grid grid-cols-2 md:grid-cols-4 gap-6 pt-12 border-t border-[hsl(var(--gold-bright)/0.2)]">
           {[
-            { v: "2.4M+", l: "Pages analyzed" },
-            { v: "47", l: "Ranking dimensions" },
-            { v: "94.2%", l: "Forecast accuracy" },
-            { v: "<200ms", l: "Avg query latency" },
+            { v: "Live", l: "Real-time crawl" },
+            { v: "PSI", l: "Google Core Web Vitals" },
+            { v: "SERP", l: "Live search grounding" },
+            { v: "Multi", l: "Page-aware AI scoring" },
           ].map(s => (
             <div key={s.l} className="text-center">
               <div className="text-3xl md:text-4xl font-bold gold-text font-display tabular-nums">{s.v}</div>

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, ChevronDown, LogIn, Phone, Mail, ShieldCheck, Globe2, ArrowRight } from "lucide-react";
+import { Menu, X, ChevronDown, LogIn, Mail, ShieldCheck, Globe2, ArrowRight } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { Logo } from "@/components/Logo";
 
@@ -52,17 +52,14 @@ export function Header() {
           <div className="flex items-center gap-5">
             <span className="inline-flex items-center gap-1.5 text-neutral-400">
               <ShieldCheck className="h-3.5 w-3.5 text-emerald-400" />
-              SOC 2 · GDPR · Enterprise-grade
+              Real-time crawl · Live SERP grounding
             </span>
             <span className="hidden lg:inline-flex items-center gap-1.5 text-neutral-400">
               <Globe2 className="h-3.5 w-3.5 text-sky-400" />
-              Trusted by teams in 40+ countries
+              Powered by Google PageSpeed & proprietary scoring
             </span>
           </div>
           <div className="flex items-center gap-5">
-            <a href="tel:+18005550100" className="inline-flex items-center gap-1.5 hover:text-white transition-colors">
-              <Phone className="h-3.5 w-3.5" /> +1 (800) 555-0100
-            </a>
             <a href="mailto:sales@seocloudlab.io" className="inline-flex items-center gap-1.5 hover:text-white transition-colors">
               <Mail className="h-3.5 w-3.5" /> sales@seocloudlab.io
             </a>
