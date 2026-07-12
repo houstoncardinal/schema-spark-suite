@@ -36,9 +36,12 @@ async function scrapeWithFirecrawl(domain: string) {
   const links: string[] = scrapeData?.data?.links || scrapeData?.links || [];
   const allLinks: string[] = mapData?.data?.links || mapData?.links || links;
   const host = (() => { try { return new URL(formattedUrl).hostname.replace(/^www\./, ""); } catch { return ""; } })();
-  const internalPages = Array.from(new Set(allLinks.filter((l: string) =>
-    l && (l.startsWith("/") || (host && l.includes(host)))
-  ))).slice(0, 50);
+  const internalPages = Array.from(new Set(allLinks.filter((l: string) => {
+    if (!l) return false;
+    if (l.startsWith("/")) return true;
+    if (!/^https?:\/\//i.test(l)) return false; // exclude mailto:, tel:, javascript:, #anchors
+    return host && l.includes(host);
+  }))).slice(0, 50);
 
   // Crawl top 4 additional internal pages in parallel for multi-page grounding
   const samplePages = internalPages
