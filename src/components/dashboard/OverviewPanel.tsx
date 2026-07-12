@@ -62,21 +62,26 @@ export function OverviewPanel({ data }: { data: DashboardData }) {
     impact: si.estimatedImpact,
   })) || null;
 
-  const alerts = [
-    { type: "success", text: `'${keywords[0]?.keyword}' at position #${keywords[0]?.position}`, time: "2h ago" },
-    { type: "success", text: `${keywords.filter(k => k.change > 0).length} keywords improved this week`, time: "5h ago" },
-    { type: "warning", text: `${data.auditIssues.filter(i => i.severity === "critical").length} critical issues detected`, time: "1d ago" },
-    { type: "info", text: `${backlinks.growthData[backlinks.growthData.length - 1]?.links} total backlinks acquired`, time: "2d ago" },
-  ];
+  const criticalIssues = data.auditIssues.filter(i => i.severity === "critical").length;
+  const warningIssues = data.auditIssues.filter(i => i.severity === "warning").length;
+  const improvingKeywords = keywords.filter(k => k.change > 0).length;
+  const decliningKeywords = keywords.filter(k => k.change < 0).length;
+
+  const alerts: { type: "success" | "warning" | "info"; text: string }[] = [];
+  if (criticalIssues > 0) alerts.push({ type: "warning", text: `${criticalIssues} critical technical issues detected during crawl` });
+  if (warningIssues > 0) alerts.push({ type: "info", text: `${warningIssues} warnings across ${data.crawledPages} crawled pages` });
+  if (improvingKeywords > 0) alerts.push({ type: "success", text: `${improvingKeywords} tracked keywords trending up` });
+  if (decliningKeywords > 0) alerts.push({ type: "warning", text: `${decliningKeywords} keywords declining — review content freshness` });
+  if (backlinks.referringDomains > 0) alerts.push({ type: "info", text: `${backlinks.referringDomains} referring domains identified in link graph` });
 
   return (
     <div className="space-y-6">
-      {/* KPI row */}
+      {/* KPI row — measured signals only, no fabricated deltas */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <MetricCard icon={Activity} label="SEO Health Score" value={`${project.healthScore}/100`} change="+5 pts" changePositive subtitle="vs last month" />
-        <MetricCard icon={TrendingUp} label="Organic Traffic" value={project.organicTraffic.toLocaleString()} change="+18.4%" changePositive subtitle="monthly sessions" />
-        <MetricCard icon={Search} label="Keywords Ranked" value={project.keywordsRanked.toLocaleString()} change={`+${Math.round(project.keywordsRanked * 0.08)} new`} changePositive subtitle="in top 100" />
-        <MetricCard icon={AlertTriangle} label="Active Issues" value={project.activeIssues} change={`-${Math.round(project.activeIssues * 0.2)}`} changePositive={false} subtitle="need attention" />
+        <MetricCard icon={Activity} label="SEO Health Score" value={`${project.healthScore}/100`} subtitle="from PageSpeed + headers + crawlability" />
+        <MetricCard icon={Globe} label="Pages Crawled" value={data.crawledPages.toLocaleString()} subtitle={`${data.indexedPages.toLocaleString()} in sitemap`} />
+        <MetricCard icon={Search} label="Keywords Analyzed" value={keywords.length.toLocaleString()} subtitle="grounded from on-page content" />
+        <MetricCard icon={AlertTriangle} label="Active Issues" value={project.activeIssues} subtitle={`${criticalIssues} critical · ${warningIssues} warnings`} />
       </div>
 
       {/* Traffic chart + radar */}
@@ -84,30 +89,35 @@ export function OverviewPanel({ data }: { data: DashboardData }) {
         <div className="lg:col-span-2 glass-card-float p-6">
           <div className="flex items-center justify-between mb-4">
             <h3 className="font-display text-sm font-semibold text-foreground">Traffic Overview</h3>
-            <div className="flex items-center gap-4 text-xs text-muted-foreground">
-              <span className="flex items-center gap-1.5"><span className="h-2 w-2 rounded-full bg-accent" />Organic</span>
-              <span className="flex items-center gap-1.5"><span className="h-2 w-2 rounded-full bg-success" />Direct</span>
-              <span className="flex items-center gap-1.5"><span className="h-2 w-2 rounded-full bg-warning" />Referral</span>
-            </div>
+            <span className="text-[10px] text-muted-foreground">Connect Google Search Console for live traffic</span>
           </div>
-          <ResponsiveContainer width="100%" height={280}>
-            <AreaChart data={trafficData}>
-              <defs>
-                <linearGradient id="orgGrad" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor="hsl(var(--accent))" stopOpacity={0.3} />
-                  <stop offset="100%" stopColor="hsl(var(--accent))" stopOpacity={0} />
-                </linearGradient>
-              </defs>
-              <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" strokeOpacity={0.5} />
-              <XAxis dataKey="date" tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 10 }} interval="preserveStartEnd" />
-              <YAxis tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 11 }} />
-              <Tooltip {...chartTooltipStyle} />
-              <Area type="monotone" dataKey="organic" stroke="hsl(var(--accent))" strokeWidth={2.5} fill="url(#orgGrad)" />
-              <Area type="monotone" dataKey="direct" stroke="hsl(var(--success))" strokeWidth={1.5} fillOpacity={0} />
-              <Area type="monotone" dataKey="referral" stroke="hsl(var(--warning))" strokeWidth={1.5} fillOpacity={0} />
-            </AreaChart>
-          </ResponsiveContainer>
+          {trafficData.length > 0 ? (
+            <ResponsiveContainer width="100%" height={280}>
+              <AreaChart data={trafficData}>
+                <defs>
+                  <linearGradient id="orgGrad" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor="hsl(var(--accent))" stopOpacity={0.3} />
+                    <stop offset="100%" stopColor="hsl(var(--accent))" stopOpacity={0} />
+                  </linearGradient>
+                </defs>
+                <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" strokeOpacity={0.5} />
+                <XAxis dataKey="date" tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 10 }} interval="preserveStartEnd" />
+                <YAxis tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 11 }} />
+                <Tooltip {...chartTooltipStyle} />
+                <Area type="monotone" dataKey="organic" stroke="hsl(var(--accent))" strokeWidth={2.5} fill="url(#orgGrad)" />
+                <Area type="monotone" dataKey="direct" stroke="hsl(var(--success))" strokeWidth={1.5} fillOpacity={0} />
+                <Area type="monotone" dataKey="referral" stroke="hsl(var(--warning))" strokeWidth={1.5} fillOpacity={0} />
+              </AreaChart>
+            </ResponsiveContainer>
+          ) : (
+            <div className="h-[280px] flex flex-col items-center justify-center text-center text-muted-foreground">
+              <Eye className="h-6 w-6 mb-2 opacity-40" />
+              <p className="text-sm">Traffic data requires a Google Search Console connection.</p>
+              <p className="text-xs mt-1 opacity-70">We never fabricate traffic numbers.</p>
+            </div>
+          )}
         </div>
+
 
         <div className="glass-card-float p-6 flex flex-col">
           <h3 className="font-display text-sm font-semibold text-foreground mb-2">SEO Health Radar</h3>
@@ -162,6 +172,7 @@ export function OverviewPanel({ data }: { data: DashboardData }) {
               <Bell className="h-4 w-4 text-accent" /> Recent Alerts
             </h3>
             <div className="space-y-2.5">
+              {alerts.length === 0 && <p className="text-xs text-muted-foreground">No signals to report — clean crawl.</p>}
               {alerts.map((alert, i) => (
                 <div key={i} className="flex items-start gap-2.5 rounded-lg bg-background/80 p-2.5">
                   {alert.type === "success" && <CheckCircle className="h-3.5 w-3.5 text-success mt-0.5 shrink-0" />}
@@ -169,13 +180,13 @@ export function OverviewPanel({ data }: { data: DashboardData }) {
                   {alert.type === "info" && <Zap className="h-3.5 w-3.5 text-info mt-0.5 shrink-0" />}
                   <div className="flex-1 min-w-0">
                     <span className="text-xs text-foreground">{alert.text}</span>
-                    <p className="text-[10px] text-muted-foreground mt-0.5">{alert.time}</p>
                   </div>
                 </div>
               ))}
             </div>
           </div>
         </div>
+
       </div>
 
       {/* AI Insights + Backlink growth */}
@@ -200,17 +211,25 @@ export function OverviewPanel({ data }: { data: DashboardData }) {
 
         <div className="glass-card-float p-6">
           <h3 className="font-display text-sm font-semibold text-foreground mb-4">Backlink Growth</h3>
-          <ResponsiveContainer width="100%" height={220}>
-            <BarChart data={backlinks.growthData}>
-              <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" strokeOpacity={0.5} />
-              <XAxis dataKey="month" tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 11 }} />
-              <YAxis tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 11 }} />
-              <Tooltip {...chartTooltipStyle} />
-              <Bar dataKey="links" fill="hsl(var(--accent))" radius={[4, 4, 0, 0]} name="Total Links" />
-              <Bar dataKey="domains" fill="hsl(var(--info))" radius={[4, 4, 0, 0]} name="Ref. Domains" />
-            </BarChart>
-          </ResponsiveContainer>
+          {backlinks.growthData.length > 0 ? (
+            <ResponsiveContainer width="100%" height={220}>
+              <BarChart data={backlinks.growthData}>
+                <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" strokeOpacity={0.5} />
+                <XAxis dataKey="month" tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 11 }} />
+                <YAxis tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 11 }} />
+                <Tooltip {...chartTooltipStyle} />
+                <Bar dataKey="links" fill="hsl(var(--accent))" radius={[4, 4, 0, 0]} name="Total Links" />
+                <Bar dataKey="domains" fill="hsl(var(--info))" radius={[4, 4, 0, 0]} name="Ref. Domains" />
+              </BarChart>
+            </ResponsiveContainer>
+          ) : (
+            <div className="h-[220px] flex flex-col items-center justify-center text-center text-muted-foreground">
+              <p className="text-sm">Backlink graph requires an Ahrefs / Moz / OpenLinkProfiler integration.</p>
+              <p className="text-xs mt-1 opacity-70">On-page outbound links: {data.crawledPages} pages crawled.</p>
+            </div>
+          )}
         </div>
+
       </div>
 
       {/* Recommended actions */}
