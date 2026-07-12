@@ -13,6 +13,16 @@ import { firecrawlApi } from "@/lib/firecrawl-api";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
+interface SiteIntelligence {
+  target: { url: string; host: string; root: string };
+  whois: { available: boolean; createdAt?: string | null; expiresAt?: string | null; ageYears?: number | null; daysUntilExpiry?: number | null; registrar?: string | null; nameservers?: string[] };
+  observatory: { available: boolean; grade?: string | null; score?: number | null; testsPassed?: number | null; testsFailed?: number | null };
+  robots: { found: boolean; disallowAll?: boolean; declaresSitemap?: boolean; crawlDelay?: number | null };
+  sitemap: { url?: string; found: boolean; urlCount?: number; isIndex?: boolean };
+  headers: { available: boolean; isHttps?: boolean; server?: string | null; checks?: { key: string; present: boolean; value: string | null }[]; score?: number };
+  archive: { available: boolean; firstSeen?: string; ageDays?: number; snapshotUrl?: string };
+}
+
 const loadingSteps = [
   "Crawling website structure...",
   "Analyzing technical SEO...",
