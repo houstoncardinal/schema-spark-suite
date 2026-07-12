@@ -168,6 +168,7 @@ export function OverviewPanel({ data }: { data: DashboardData }) {
               <Bell className="h-4 w-4 text-accent" /> Recent Alerts
             </h3>
             <div className="space-y-2.5">
+              {alerts.length === 0 && <p className="text-xs text-muted-foreground">No signals to report — clean crawl.</p>}
               {alerts.map((alert, i) => (
                 <div key={i} className="flex items-start gap-2.5 rounded-lg bg-background/80 p-2.5">
                   {alert.type === "success" && <CheckCircle className="h-3.5 w-3.5 text-success mt-0.5 shrink-0" />}
@@ -175,13 +176,13 @@ export function OverviewPanel({ data }: { data: DashboardData }) {
                   {alert.type === "info" && <Zap className="h-3.5 w-3.5 text-info mt-0.5 shrink-0" />}
                   <div className="flex-1 min-w-0">
                     <span className="text-xs text-foreground">{alert.text}</span>
-                    <p className="text-[10px] text-muted-foreground mt-0.5">{alert.time}</p>
                   </div>
                 </div>
               ))}
             </div>
           </div>
         </div>
+
       </div>
 
       {/* AI Insights + Backlink growth */}
