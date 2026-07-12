@@ -272,6 +272,17 @@ export function HeroSection() {
           </motion.div>
         )}
 
+        {/* Error state */}
+        {errorMsg && !analyzing && !results && (
+          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="max-w-lg mx-auto">
+            <div className="rounded-2xl border border-destructive/30 bg-destructive/5 p-6 text-center">
+              <XCircle className="h-6 w-6 text-destructive mx-auto mb-3" />
+              <p className="text-sm font-semibold text-foreground mb-1">Audit failed</p>
+              <p className="text-xs text-muted-foreground">{errorMsg}</p>
+            </div>
+          </motion.div>
+        )}
+
         {/* Results */}
         {results && !analyzing && (
           <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} className="max-w-4xl mx-auto">
