@@ -220,53 +220,59 @@ export function useDashboardData(domain: string | null): UseDashboardDataReturn 
 
     (async () => {
       try {
-        toast.info("Scraping site data...", { id: "dashboard-load" });
+        toast.info("Crawling site & measuring signals...", { id: "dashboard-load" });
 
-        // Step 1: Scrape the real site
-        const { html, markdown, links, pages } = await scrapeWithFirecrawl(domain);
+        // Step 1: Scrape site + fetch real PageSpeed + site intelligence in parallel
+        const clean = domain.replace(/^https?:\/\//, "").replace(/^www\./, "").split("/")[0];
+        const targetUrl = clean.startsWith("http") ? clean : `https://${clean}`;
+
+        const [scrapeR, psR, siR] = await Promise.allSettled([
+          scrapeWithFirecrawl(domain),
+          supabase.functions.invoke("pagespeed-insights", { body: { url: targetUrl, strategy: "mobile" } }),
+          supabase.functions.invoke("site-intelligence", { body: { url: targetUrl } }),
+        ]);
 
         if (cancelled) return;
 
-        if (!html && !markdown) {
-          throw new Error("Could not scrape site. Check that the domain is accessible.");
-        }
+        if (scrapeR.status !== "fulfilled") throw new Error("Site crawl failed.");
+        const { html, markdown, links, pages } = scrapeR.value;
+        if (!html && !markdown) throw new Error("Could not scrape site. Check that the domain is accessible.");
 
-        toast.info("Analyzing with AI... This may take a moment.", { id: "dashboard-load" });
+        const psData = psR.status === "fulfilled" ? (psR.value.data as { success?: boolean; data?: { performanceScore?: number } } | null) : null;
+        const siData = siR.status === "fulfilled" ? (siR.value.data as { success?: boolean; data?: { headers?: { score?: number; isHttps?: boolean }; robots?: { found?: boolean }; sitemap?: { found?: boolean; urlCount?: number }; whois?: { ageYears?: number | null } } } | null) : null;
 
-        // Step 2: Call AI for both dashboard and predictive data in parallel
+        const real: RealSignals = {
+          performanceScore: psData?.success && typeof psData.data?.performanceScore === "number" ? psData.data.performanceScore : null,
+          headerScore: siData?.success && typeof siData.data?.headers?.score === "number" ? siData.data.headers.score : null,
+          robotsFound: !!siData?.data?.robots?.found,
+          sitemapFound: !!siData?.data?.sitemap?.found,
+          sitemapUrlCount: siData?.data?.sitemap?.urlCount ?? 0,
+          isHttps: siData?.data?.headers?.isHttps ?? targetUrl.startsWith("https://"),
+          domainAgeYears: siData?.data?.whois?.ageYears ?? null,
+          crawledPages: (pages?.length ?? 0) + 1,
+          onPageIssues: 0,
+        };
+
+        toast.info("Analyzing content with AI...", { id: "dashboard-load" });
+
         const [dashRaw, predRaw] = await Promise.all([
-          callSEOAnalyze<Partial<DashboardData>>("dashboard-full", { domain, html, markdown, links, pages }),
+          callSEOAnalyze<Partial<DashboardData>>("dashboard-full", { domain, html, markdown, links, pages, realSignals: real }),
           callSEOAnalyze<Partial<PredictiveData>>("predictive-full", {
             domain, html, markdown, links,
-            healthScore: 50, domainAuthority: 30, organicTraffic: 1000,
+            healthScore: real.performanceScore ?? 50,
+            domainAuthority: real.domainAgeYears ? Math.min(80, Math.round(real.domainAgeYears * 5)) : 30,
+            organicTraffic: 0,
           }),
         ]);
 
         if (cancelled) return;
 
-        const dashboard = fillDashboardDefaults(dashRaw, domain);
+        const dashboard = fillDashboardDefaults(dashRaw, domain, real);
         const predictive = fillPredictiveDefaults(predRaw);
-
-        // Re-call predictive with actual dashboard metrics for better accuracy
-        if (dashboard.project.healthScore && dashboard.project.domainAuthority) {
-          try {
-            const refinedPred = await callSEOAnalyze<Partial<PredictiveData>>("predictive-full", {
-              domain, html, markdown, links,
-              healthScore: dashboard.project.healthScore,
-              domainAuthority: dashboard.project.domainAuthority,
-              organicTraffic: dashboard.project.organicTraffic,
-            });
-            if (!cancelled) {
-              setPredictiveData(fillPredictiveDefaults(refinedPred));
-            }
-          } catch {
-            // Use initial predictive data if refinement fails
-          }
-        }
 
         setDashboardData(dashboard);
         setPredictiveData(predictive);
-        toast.success("Dashboard loaded with real AI analysis", { id: "dashboard-load" });
+        toast.success(`Loaded real signals: ${real.crawledPages} pages, PSI ${real.performanceScore ?? "n/a"}, headers ${real.headerScore ?? "n/a"}`, { id: "dashboard-load" });
       } catch (err) {
         if (cancelled) return;
         const msg = err instanceof Error ? err.message : "Analysis failed";
@@ -277,6 +283,7 @@ export function useDashboardData(domain: string | null): UseDashboardDataReturn 
         if (!cancelled) setLoading(false);
       }
     })();
+
 
     return () => { cancelled = true; };
   }, [domain, refreshKey]);
