@@ -84,36 +84,40 @@ export function OverviewPanel({ data }: { data: DashboardData }) {
         <MetricCard icon={AlertTriangle} label="Active Issues" value={project.activeIssues} subtitle={`${criticalIssues} critical · ${warningIssues} warnings`} />
       </div>
 
-
       {/* Traffic chart + radar */}
       <div className="grid lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2 glass-card-float p-6">
           <div className="flex items-center justify-between mb-4">
             <h3 className="font-display text-sm font-semibold text-foreground">Traffic Overview</h3>
-            <div className="flex items-center gap-4 text-xs text-muted-foreground">
-              <span className="flex items-center gap-1.5"><span className="h-2 w-2 rounded-full bg-accent" />Organic</span>
-              <span className="flex items-center gap-1.5"><span className="h-2 w-2 rounded-full bg-success" />Direct</span>
-              <span className="flex items-center gap-1.5"><span className="h-2 w-2 rounded-full bg-warning" />Referral</span>
-            </div>
+            <span className="text-[10px] text-muted-foreground">Connect Google Search Console for live traffic</span>
           </div>
-          <ResponsiveContainer width="100%" height={280}>
-            <AreaChart data={trafficData}>
-              <defs>
-                <linearGradient id="orgGrad" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor="hsl(var(--accent))" stopOpacity={0.3} />
-                  <stop offset="100%" stopColor="hsl(var(--accent))" stopOpacity={0} />
-                </linearGradient>
-              </defs>
-              <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" strokeOpacity={0.5} />
-              <XAxis dataKey="date" tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 10 }} interval="preserveStartEnd" />
-              <YAxis tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 11 }} />
-              <Tooltip {...chartTooltipStyle} />
-              <Area type="monotone" dataKey="organic" stroke="hsl(var(--accent))" strokeWidth={2.5} fill="url(#orgGrad)" />
-              <Area type="monotone" dataKey="direct" stroke="hsl(var(--success))" strokeWidth={1.5} fillOpacity={0} />
-              <Area type="monotone" dataKey="referral" stroke="hsl(var(--warning))" strokeWidth={1.5} fillOpacity={0} />
-            </AreaChart>
-          </ResponsiveContainer>
+          {trafficData.length > 0 ? (
+            <ResponsiveContainer width="100%" height={280}>
+              <AreaChart data={trafficData}>
+                <defs>
+                  <linearGradient id="orgGrad" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor="hsl(var(--accent))" stopOpacity={0.3} />
+                    <stop offset="100%" stopColor="hsl(var(--accent))" stopOpacity={0} />
+                  </linearGradient>
+                </defs>
+                <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" strokeOpacity={0.5} />
+                <XAxis dataKey="date" tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 10 }} interval="preserveStartEnd" />
+                <YAxis tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 11 }} />
+                <Tooltip {...chartTooltipStyle} />
+                <Area type="monotone" dataKey="organic" stroke="hsl(var(--accent))" strokeWidth={2.5} fill="url(#orgGrad)" />
+                <Area type="monotone" dataKey="direct" stroke="hsl(var(--success))" strokeWidth={1.5} fillOpacity={0} />
+                <Area type="monotone" dataKey="referral" stroke="hsl(var(--warning))" strokeWidth={1.5} fillOpacity={0} />
+              </AreaChart>
+            </ResponsiveContainer>
+          ) : (
+            <div className="h-[280px] flex flex-col items-center justify-center text-center text-muted-foreground">
+              <Eye className="h-6 w-6 mb-2 opacity-40" />
+              <p className="text-sm">Traffic data requires a Google Search Console connection.</p>
+              <p className="text-xs mt-1 opacity-70">We never fabricate traffic numbers.</p>
+            </div>
+          )}
         </div>
+
 
         <div className="glass-card-float p-6 flex flex-col">
           <h3 className="font-display text-sm font-semibold text-foreground mb-2">SEO Health Radar</h3>
