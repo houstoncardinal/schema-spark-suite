@@ -479,6 +479,91 @@ export function AISEOAudit() {
                 </div>
               </div>
 
+              {intel && (
+                <div className="lg:col-span-2 glass-card-float p-6">
+                  <div className="flex items-center gap-2 mb-2">
+                    <Shield className="h-4 w-4 text-accent" />
+                    <h3 className="font-display text-sm font-semibold text-foreground">Trust & Infrastructure — Live Free Intel</h3>
+                  </div>
+                  <p className="text-xs text-muted-foreground mb-5">Real data pulled from RDAP (WHOIS), Mozilla Observatory, HTTP response headers, and the Internet Archive.</p>
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    {intel.whois.available && (
+                      <div className="rounded-xl bg-secondary/40 p-4">
+                        <p className="text-[10px] uppercase tracking-wider text-muted-foreground">Domain Age</p>
+                        <p className="text-lg font-bold text-foreground tabular-nums mt-1">{intel.whois.ageYears ?? "—"}<span className="text-xs text-muted-foreground ml-1">yrs</span></p>
+                        {intel.whois.registrar && <p className="text-[10px] text-muted-foreground mt-1 truncate" title={intel.whois.registrar}>{intel.whois.registrar}</p>}
+                        {typeof intel.whois.daysUntilExpiry === "number" && (
+                          <p className={`text-[10px] mt-0.5 ${intel.whois.daysUntilExpiry < 60 ? "text-destructive" : "text-muted-foreground"}`}>Expires in {intel.whois.daysUntilExpiry}d</p>
+                        )}
+                      </div>
+                    )}
+                    {intel.archive.available && (
+                      <div className="rounded-xl bg-secondary/40 p-4">
+                        <p className="text-[10px] uppercase tracking-wider text-muted-foreground">First Archived</p>
+                        <p className="text-lg font-bold text-foreground tabular-nums mt-1">{intel.archive.firstSeen?.slice(0, 4)}</p>
+                        <p className="text-[10px] text-muted-foreground mt-1">Wayback Machine</p>
+                        {intel.archive.snapshotUrl && (
+                          <a href={intel.archive.snapshotUrl} target="_blank" rel="noopener" className="text-[10px] text-accent hover:underline mt-0.5 inline-block">View snapshot →</a>
+                        )}
+                      </div>
+                    )}
+                    {intel.observatory.available && intel.observatory.grade && (
+                      <div className="rounded-xl bg-secondary/40 p-4">
+                        <p className="text-[10px] uppercase tracking-wider text-muted-foreground">Security Grade</p>
+                        <p className="text-lg font-bold text-foreground mt-1">{intel.observatory.grade} <span className="text-xs text-muted-foreground">({intel.observatory.score ?? 0})</span></p>
+                        <p className="text-[10px] text-muted-foreground mt-1">Mozilla Observatory</p>
+                        {typeof intel.observatory.testsPassed === "number" && (
+                          <p className="text-[10px] text-muted-foreground mt-0.5">{intel.observatory.testsPassed}/{(intel.observatory.testsPassed ?? 0) + (intel.observatory.testsFailed ?? 0)} tests passed</p>
+                        )}
+                      </div>
+                    )}
+                    {intel.headers.available && (
+                      <div className="rounded-xl bg-secondary/40 p-4">
+                        <p className="text-[10px] uppercase tracking-wider text-muted-foreground">Security Headers</p>
+                        <p className="text-lg font-bold text-foreground tabular-nums mt-1">{intel.headers.score ?? 0}<span className="text-xs text-muted-foreground">/100</span></p>
+                        {intel.headers.server && <p className="text-[10px] text-muted-foreground mt-1 truncate" title={intel.headers.server}>{intel.headers.server}</p>}
+                        <p className={`text-[10px] mt-0.5 ${intel.headers.isHttps ? "text-success" : "text-destructive"}`}>{intel.headers.isHttps ? "HTTPS ✓" : "HTTP only ⚠"}</p>
+                      </div>
+                    )}
+                  </div>
+
+                  {intel.headers.available && intel.headers.checks && (
+                    <div className="mt-5 grid grid-cols-2 md:grid-cols-3 gap-2">
+                      {intel.headers.checks.map(c => (
+                        <div key={c.key} className={`flex items-center gap-2 rounded-lg p-2.5 text-xs ${c.present ? "bg-success/5 border border-success/20" : "bg-destructive/5 border border-destructive/20"}`}>
+                          <span className={`h-1.5 w-1.5 rounded-full ${c.present ? "bg-success" : "bg-destructive"}`} />
+                          <span className="text-foreground font-medium truncate" title={c.key}>{c.key}</span>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+
+                  <div className="mt-5 grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <div className={`rounded-xl p-4 border ${intel.robots.found ? "border-success/20 bg-success/5" : "border-warning/20 bg-warning/5"}`}>
+                      <div className="flex items-center justify-between">
+                        <p className="text-xs font-semibold text-foreground">robots.txt</p>
+                        <span className={`text-[10px] font-bold ${intel.robots.found ? "text-success" : "text-warning"}`}>{intel.robots.found ? "FOUND" : "MISSING"}</span>
+                      </div>
+                      {intel.robots.found && (
+                        <p className="text-[11px] text-muted-foreground mt-1">
+                          Sitemap declared: {intel.robots.declaresSitemap ? "yes" : "no"}
+                          {intel.robots.disallowAll && <span className="text-destructive"> · disallows all crawlers ⚠</span>}
+                        </p>
+                      )}
+                    </div>
+                    <div className={`rounded-xl p-4 border ${intel.sitemap.found ? "border-success/20 bg-success/5" : "border-warning/20 bg-warning/5"}`}>
+                      <div className="flex items-center justify-between">
+                        <p className="text-xs font-semibold text-foreground">sitemap.xml</p>
+                        <span className={`text-[10px] font-bold ${intel.sitemap.found ? "text-success" : "text-warning"}`}>{intel.sitemap.found ? `${intel.sitemap.urlCount ?? 0} URLs` : "MISSING"}</span>
+                      </div>
+                      {intel.sitemap.found && (
+                        <p className="text-[11px] text-muted-foreground mt-1">{intel.sitemap.isIndex ? "Sitemap index" : "URL set"}</p>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              )}
+
               <div className="lg:col-span-2 glass-card-float p-6">
                 <div className="flex items-center gap-2 mb-6">
                   <Link2 className="h-4 w-4 text-accent" />
