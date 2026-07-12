@@ -4,7 +4,10 @@ import { Search, Loader2, ArrowRight, TrendingUp, TrendingDown, Minus, Sparkles,
 import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, RadarChart, PolarGrid, PolarAngleAxis, Radar, BarChart, Bar, PieChart, Pie, Cell, Legend, ComposedChart, Line } from "recharts";
 import { ScoreRing } from "@/components/charts/ScoreRing";
 import { aiSEOApi, type AIKeywordResponse } from "@/lib/ai-seo-api";
+import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+
+type ExpandedKeyword = { keyword: string; intent: string; difficulty: number; wordCount: number; isQuestion: boolean; isLongTail: boolean };
 
 const chartTooltipStyle = {
   contentStyle: { background: "hsl(var(--card))", border: "1px solid hsl(var(--border))", borderRadius: "12px", fontSize: 12, fontFamily: "Inter", boxShadow: "0 20px 40px -12px rgba(0,0,0,0.3)" },
