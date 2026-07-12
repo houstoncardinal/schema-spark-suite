@@ -23,15 +23,25 @@ export function KeywordResearchTool() {
   const [activeTab, setActiveTab] = useState("overview");
   const [expandedCluster, setExpandedCluster] = useState<string | null>(null);
 
+  const [expanded, setExpanded] = useState<ExpandedKeyword[] | null>(null);
+
   const search = async () => {
     if (!keyword.trim()) return;
     setLoading(true);
     setResults(null);
+    setExpanded(null);
     setActiveTab("overview");
 
     try {
-      const aiResponse = await aiSEOApi.analyzeKeywordReal(keyword);
+      const [aiResponse, expandRes] = await Promise.all([
+        aiSEOApi.analyzeKeywordReal(keyword),
+        supabase.functions.invoke("keyword-expand", { body: { seed: keyword, depth: 2 } }),
+      ]);
       setResults(aiResponse);
+      const expData = expandRes.data as { success?: boolean; data?: { keywords?: ExpandedKeyword[] } } | null;
+      if (expData?.success && expData.data?.keywords) {
+        setExpanded(expData.data.keywords);
+      }
       toast.success("AI keyword intelligence ready");
     } catch (err) {
       console.error("Keyword analysis failed:", err);
