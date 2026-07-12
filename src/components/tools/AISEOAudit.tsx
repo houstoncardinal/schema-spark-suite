@@ -42,6 +42,7 @@ export function AISEOAudit() {
   const [results, setResults] = useState<SEOAuditResult | null>(null);
   const [aiData, setAiData] = useState<AISEOAuditResponse | null>(null);
   const [aiLoading, setAiLoading] = useState(false);
+  const [intel, setIntel] = useState<SiteIntelligence | null>(null);
   const [activeTab, setActiveTab] = useState("overview");
 
   const analyze = async () => {
@@ -49,6 +50,7 @@ export function AISEOAudit() {
     setLoading(true);
     setResults(null);
     setAiData(null);
+    setIntel(null);
     setLoadingStep(0);
 
     const interval = setInterval(() => {
@@ -72,14 +74,15 @@ export function AISEOAudit() {
         throw new Error("Could not reach that site. Check the URL and try again.");
       }
 
-      // Step 2: AI analysis on real scraped data + real PageSpeed metrics in parallel
-      const [aiResponse, psiResult] = await Promise.all([
+      // Step 2: AI + PageSpeed + free site intelligence in parallel
+      const [aiResponse, psiResult, intelResult] = await Promise.all([
         aiSEOApi.auditSiteReal(url, scrapedHtml, scrapedMarkdown, scrapedLinks),
         supabase.functions.invoke("pagespeed-insights", { body: { url, strategy: "mobile" } })
           .catch(() => ({ data: null, error: true })),
+        supabase.functions.invoke("site-intelligence", { body: { url } })
+          .catch(() => ({ data: null, error: true })),
       ]);
 
-      // Structural scaffold — populated with AI-derived scores below
       const baseResults = analyzeSEO(url);
 
       if (aiResponse.scores) {
@@ -92,7 +95,6 @@ export function AISEOAudit() {
         baseResults.schema = aiResponse.scores.schema;
       }
 
-      // Overwrite Core Web Vitals with REAL Google PageSpeed data when available
       const psi = (psiResult as { data?: { success?: boolean; data?: { coreWebVitals?: typeof baseResults.coreWebVitals; scores?: { performance?: number | null } } } })?.data;
       if (psi?.success && psi.data?.coreWebVitals?.length) {
         baseResults.coreWebVitals = psi.data.coreWebVitals;
@@ -101,13 +103,18 @@ export function AISEOAudit() {
         }
       }
 
+      const intelData = (intelResult as { data?: { success?: boolean; data?: SiteIntelligence } })?.data;
+      const intelPayload = intelData?.success ? intelData.data ?? null : null;
+
       clearInterval(interval);
       setLoading(false);
       setResults(baseResults);
       setAiData(aiResponse);
-      toast.success("Live analysis complete", {
-        description: psi?.success ? "Real crawl + AI + Google PageSpeed" : "Real crawl + AI analysis",
-      });
+      setIntel(intelPayload);
+      const bits = ["Real crawl", "AI analysis"];
+      if (psi?.success) bits.push("Google PageSpeed");
+      if (intelPayload) bits.push("Free intel (WHOIS, headers, archive)");
+      toast.success("Live analysis complete", { description: bits.join(" · ") });
     } catch (err) {
       console.error("Analysis failed:", err);
       clearInterval(interval);
