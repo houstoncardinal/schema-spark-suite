@@ -159,7 +159,7 @@ function fillDashboardDefaults(raw: Partial<DashboardData>, domain: string, real
     estimatedClicks: raw.estimatedClicks ?? 0,
     estimatedImpressions: raw.estimatedImpressions ?? 0,
     crawledPages: real.crawledPages,
-    indexedPages: raw.indexedPages ?? real.sitemapUrlCount || real.crawledPages,
+    indexedPages: raw.indexedPages ?? (real.sitemapUrlCount || real.crawledPages),
     avgPosition: raw.avgPosition ?? 0,
   };
 }
