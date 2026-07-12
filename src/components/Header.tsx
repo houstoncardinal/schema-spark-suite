@@ -249,7 +249,6 @@ export function Header() {
                 </div>
               )}
               <div className="mt-4 pt-4 border-t border-neutral-100 flex flex-col gap-2 text-[12px] text-neutral-500">
-                <a href="tel:+18005550100" className="inline-flex items-center gap-2"><Phone className="h-3.5 w-3.5" /> +1 (800) 555-0100</a>
                 <a href="mailto:sales@seocloudlab.io" className="inline-flex items-center gap-2"><Mail className="h-3.5 w-3.5" /> sales@seocloudlab.io</a>
               </div>
             </div>
