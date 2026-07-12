@@ -33,11 +33,20 @@ Deno.serve(async (req) => {
     const psiJson = await psiRes.json();
 
     if (!psiRes.ok) {
+      const errMsg = psiJson?.error?.message || `PageSpeed API failed (${psiRes.status})`;
+      const quotaExceeded = psiRes.status === 429 || /quota/i.test(errMsg);
+      // Return 200 with success:false so callers can gracefully degrade
+      // instead of blank-screening on a 429/5xx from Google.
       return new Response(JSON.stringify({
         success: false,
-        error: psiJson?.error?.message || `PageSpeed API failed (${psiRes.status})`,
+        quotaExceeded,
+        needsApiKey: quotaExceeded && !apiKey,
+        error: quotaExceeded
+          ? 'Google PageSpeed daily quota exceeded. Add a GOOGLE_PAGESPEED_API_KEY secret to raise limits (25,000/day free).'
+          : errMsg,
+        upstreamStatus: psiRes.status,
       }), {
-        status: psiRes.status,
+        status: 200,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
     }
