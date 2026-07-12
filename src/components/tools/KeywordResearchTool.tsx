@@ -4,7 +4,10 @@ import { Search, Loader2, ArrowRight, TrendingUp, TrendingDown, Minus, Sparkles,
 import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, RadarChart, PolarGrid, PolarAngleAxis, Radar, BarChart, Bar, PieChart, Pie, Cell, Legend, ComposedChart, Line } from "recharts";
 import { ScoreRing } from "@/components/charts/ScoreRing";
 import { aiSEOApi, type AIKeywordResponse } from "@/lib/ai-seo-api";
+import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+
+type ExpandedKeyword = { keyword: string; intent: string; difficulty: number; wordCount: number; isQuestion: boolean; isLongTail: boolean };
 
 const chartTooltipStyle = {
   contentStyle: { background: "hsl(var(--card))", border: "1px solid hsl(var(--border))", borderRadius: "12px", fontSize: 12, fontFamily: "Inter", boxShadow: "0 20px 40px -12px rgba(0,0,0,0.3)" },
@@ -20,15 +23,25 @@ export function KeywordResearchTool() {
   const [activeTab, setActiveTab] = useState("overview");
   const [expandedCluster, setExpandedCluster] = useState<string | null>(null);
 
+  const [expanded, setExpanded] = useState<ExpandedKeyword[] | null>(null);
+
   const search = async () => {
     if (!keyword.trim()) return;
     setLoading(true);
     setResults(null);
+    setExpanded(null);
     setActiveTab("overview");
 
     try {
-      const aiResponse = await aiSEOApi.analyzeKeywordReal(keyword);
+      const [aiResponse, expandRes] = await Promise.all([
+        aiSEOApi.analyzeKeywordReal(keyword),
+        supabase.functions.invoke("keyword-expand", { body: { seed: keyword, depth: 2 } }),
+      ]);
       setResults(aiResponse);
+      const expData = expandRes.data as { success?: boolean; data?: { keywords?: ExpandedKeyword[] } } | null;
+      if (expData?.success && expData.data?.keywords) {
+        setExpanded(expData.data.keywords);
+      }
       toast.success("AI keyword intelligence ready");
     } catch (err) {
       console.error("Keyword analysis failed:", err);
@@ -391,37 +404,97 @@ export function KeywordResearchTool() {
           )}
 
           {/* LONG-TAIL TAB */}
-          {activeTab === "longtail" && results.longTailOpportunities?.length > 0 && (
-            <div className="glass-card-float p-6">
-              <h3 className="font-display text-sm font-semibold text-foreground mb-1">Long-Tail Opportunities</h3>
-              <p className="text-xs text-muted-foreground mb-4">Low-competition keywords with strong ranking potential</p>
-              <div className="overflow-x-auto">
-                <table className="w-full text-sm">
-                  <thead>
-                    <tr className="border-b border-border">
-                      <th className="text-left py-3 text-muted-foreground font-medium text-xs">Keyword</th>
-                      <th className="text-right py-3 text-muted-foreground font-medium text-xs">Volume</th>
-                      <th className="text-right py-3 text-muted-foreground font-medium text-xs">KD</th>
-                      <th className="text-left py-3 text-muted-foreground font-medium text-xs pl-4">Parent Keyword</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {results.longTailOpportunities.map((lt, i) => (
-                      <motion.tr key={lt.keyword} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: i * 0.04 }}
-                        className="border-b border-border/50 hover:bg-secondary/50 transition-colors">
-                        <td className="py-3 font-medium text-foreground">{lt.keyword}</td>
-                        <td className="py-3 text-right data-cell text-foreground">{lt.volume?.toLocaleString()}</td>
-                        <td className="py-3 text-right">
-                          <span className={`inline-flex rounded-full px-2 py-0.5 text-xs font-semibold ${diffColor(lt.difficulty)}`}>{lt.difficulty}</span>
-                        </td>
-                        <td className="py-3 text-left pl-4 text-xs text-muted-foreground">{lt.parentKeyword}</td>
-                      </motion.tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
+          {activeTab === "longtail" && (
+            <div className="space-y-6">
+              {results.longTailOpportunities?.length > 0 && (
+                <div className="glass-card-float p-6">
+                  <h3 className="font-display text-sm font-semibold text-foreground mb-1">AI Long-Tail Opportunities</h3>
+                  <p className="text-xs text-muted-foreground mb-4">Low-competition keywords with strong ranking potential</p>
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-sm">
+                      <thead>
+                        <tr className="border-b border-border">
+                          <th className="text-left py-3 text-muted-foreground font-medium text-xs">Keyword</th>
+                          <th className="text-right py-3 text-muted-foreground font-medium text-xs">Volume</th>
+                          <th className="text-right py-3 text-muted-foreground font-medium text-xs">KD</th>
+                          <th className="text-left py-3 text-muted-foreground font-medium text-xs pl-4">Parent Keyword</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {results.longTailOpportunities.map((lt, i) => (
+                          <motion.tr key={lt.keyword} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: i * 0.04 }}
+                            className="border-b border-border/50 hover:bg-secondary/50 transition-colors">
+                            <td className="py-3 font-medium text-foreground">{lt.keyword}</td>
+                            <td className="py-3 text-right data-cell text-foreground">{lt.volume?.toLocaleString()}</td>
+                            <td className="py-3 text-right">
+                              <span className={`inline-flex rounded-full px-2 py-0.5 text-xs font-semibold ${diffColor(lt.difficulty)}`}>{lt.difficulty}</span>
+                            </td>
+                            <td className="py-3 text-left pl-4 text-xs text-muted-foreground">{lt.parentKeyword}</td>
+                          </motion.tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              )}
+
+              {expanded && expanded.length > 0 && (
+                <div className="glass-card-float p-6">
+                  <div className="flex items-center gap-2 mb-1">
+                    <h3 className="font-display text-sm font-semibold text-foreground">Live Google Autocomplete Expansion</h3>
+                    <span className="text-[10px] bg-success/10 text-success px-2 py-0.5 rounded-full font-semibold">{expanded.length} keywords</span>
+                  </div>
+                  <p className="text-xs text-muted-foreground mb-4">Real suggestions pulled from Google Suggest (alphabet + modifier expansion). Difficulty is heuristic.</p>
+                  <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-4">
+                    <div className="rounded-lg bg-secondary/50 p-3 text-center">
+                      <p className="font-display text-lg font-bold text-foreground">{expanded.filter(k => k.isQuestion).length}</p>
+                      <p className="text-[10px] text-muted-foreground uppercase tracking-wider">Questions</p>
+                    </div>
+                    <div className="rounded-lg bg-secondary/50 p-3 text-center">
+                      <p className="font-display text-lg font-bold text-foreground">{expanded.filter(k => k.isLongTail).length}</p>
+                      <p className="text-[10px] text-muted-foreground uppercase tracking-wider">Long-tail (4+ words)</p>
+                    </div>
+                    <div className="rounded-lg bg-secondary/50 p-3 text-center">
+                      <p className="font-display text-lg font-bold text-success">{expanded.filter(k => k.difficulty < 40).length}</p>
+                      <p className="text-[10px] text-muted-foreground uppercase tracking-wider">Low Difficulty</p>
+                    </div>
+                  </div>
+                  <div className="overflow-x-auto max-h-[520px] overflow-y-auto">
+                    <table className="w-full text-sm">
+                      <thead className="sticky top-0 bg-card">
+                        <tr className="border-b border-border">
+                          <th className="text-left py-3 text-muted-foreground font-medium text-xs">Keyword</th>
+                          <th className="text-right py-3 text-muted-foreground font-medium text-xs">Words</th>
+                          <th className="text-right py-3 text-muted-foreground font-medium text-xs">KD (est.)</th>
+                          <th className="text-right py-3 text-muted-foreground font-medium text-xs pr-2">Intent</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {expanded.slice(0, 100).map((k, i) => (
+                          <tr key={`${k.keyword}-${i}`} className="border-b border-border/50 hover:bg-secondary/50 transition-colors">
+                            <td className="py-2.5 font-medium text-foreground">
+                              {k.keyword}
+                              {k.isQuestion && <span className="ml-2 text-[10px] bg-info/10 text-info px-1.5 py-0.5 rounded font-semibold">Q</span>}
+                            </td>
+                            <td className="py-2.5 text-right data-cell text-muted-foreground">{k.wordCount}</td>
+                            <td className="py-2.5 text-right">
+                              <span className={`inline-flex rounded-full px-2 py-0.5 text-xs font-semibold ${diffColor(k.difficulty)}`}>{k.difficulty}</span>
+                            </td>
+                            <td className="py-2.5 text-right text-xs text-muted-foreground pr-2">{k.intent}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              )}
+
+              {(!results.longTailOpportunities?.length && (!expanded || expanded.length === 0)) && (
+                <div className="glass-card-float p-12 text-center text-muted-foreground text-sm">No long-tail data available for this seed.</div>
+              )}
             </div>
           )}
+
 
           {/* AI INTELLIGENCE TAB */}
           {activeTab === "intelligence" && (
