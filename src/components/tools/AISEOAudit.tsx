@@ -10,6 +10,7 @@ import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid, Toolti
 import { analyzeSEO, type SEOAuditResult } from "@/lib/seo-engine";
 import { aiSEOApi, type AISEOAuditResponse } from "@/lib/ai-seo-api";
 import { firecrawlApi } from "@/lib/firecrawl-api";
+import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
 const loadingSteps = [
