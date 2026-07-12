@@ -62,22 +62,28 @@ export function OverviewPanel({ data }: { data: DashboardData }) {
     impact: si.estimatedImpact,
   })) || null;
 
-  const alerts = [
-    { type: "success", text: `'${keywords[0]?.keyword}' at position #${keywords[0]?.position}`, time: "2h ago" },
-    { type: "success", text: `${keywords.filter(k => k.change > 0).length} keywords improved this week`, time: "5h ago" },
-    { type: "warning", text: `${data.auditIssues.filter(i => i.severity === "critical").length} critical issues detected`, time: "1d ago" },
-    { type: "info", text: `${backlinks.growthData[backlinks.growthData.length - 1]?.links} total backlinks acquired`, time: "2d ago" },
-  ];
+  const criticalIssues = data.auditIssues.filter(i => i.severity === "critical").length;
+  const warningIssues = data.auditIssues.filter(i => i.severity === "warning").length;
+  const improvingKeywords = keywords.filter(k => k.change > 0).length;
+  const decliningKeywords = keywords.filter(k => k.change < 0).length;
+
+  const alerts: { type: "success" | "warning" | "info"; text: string }[] = [];
+  if (criticalIssues > 0) alerts.push({ type: "warning", text: `${criticalIssues} critical technical issues detected during crawl` });
+  if (warningIssues > 0) alerts.push({ type: "info", text: `${warningIssues} warnings across ${data.crawledPages} crawled pages` });
+  if (improvingKeywords > 0) alerts.push({ type: "success", text: `${improvingKeywords} tracked keywords trending up` });
+  if (decliningKeywords > 0) alerts.push({ type: "warning", text: `${decliningKeywords} keywords declining — review content freshness` });
+  if (backlinks.referringDomains > 0) alerts.push({ type: "info", text: `${backlinks.referringDomains} referring domains identified in link graph` });
 
   return (
     <div className="space-y-6">
-      {/* KPI row */}
+      {/* KPI row — measured signals only, no fabricated deltas */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <MetricCard icon={Activity} label="SEO Health Score" value={`${project.healthScore}/100`} change="+5 pts" changePositive subtitle="vs last month" />
-        <MetricCard icon={TrendingUp} label="Organic Traffic" value={project.organicTraffic.toLocaleString()} change="+18.4%" changePositive subtitle="monthly sessions" />
-        <MetricCard icon={Search} label="Keywords Ranked" value={project.keywordsRanked.toLocaleString()} change={`+${Math.round(project.keywordsRanked * 0.08)} new`} changePositive subtitle="in top 100" />
-        <MetricCard icon={AlertTriangle} label="Active Issues" value={project.activeIssues} change={`-${Math.round(project.activeIssues * 0.2)}`} changePositive={false} subtitle="need attention" />
+        <MetricCard icon={Activity} label="SEO Health Score" value={`${project.healthScore}/100`} subtitle="from PageSpeed + headers + crawlability" />
+        <MetricCard icon={Globe} label="Pages Crawled" value={data.crawledPages.toLocaleString()} subtitle={`${data.indexedPages.toLocaleString()} in sitemap`} />
+        <MetricCard icon={Search} label="Keywords Analyzed" value={keywords.length.toLocaleString()} subtitle="grounded from on-page content" />
+        <MetricCard icon={AlertTriangle} label="Active Issues" value={project.activeIssues} subtitle={`${criticalIssues} critical · ${warningIssues} warnings`} />
       </div>
+
 
       {/* Traffic chart + radar */}
       <div className="grid lg:grid-cols-3 gap-6">
