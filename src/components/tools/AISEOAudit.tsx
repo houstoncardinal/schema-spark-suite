@@ -10,6 +10,7 @@ import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid, Toolti
 import { analyzeSEO, type SEOAuditResult } from "@/lib/seo-engine";
 import { aiSEOApi, type AISEOAuditResponse } from "@/lib/ai-seo-api";
 import { firecrawlApi } from "@/lib/firecrawl-api";
+import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
 const loadingSteps = [
@@ -61,28 +62,26 @@ export function AISEOAudit() {
     }, 800);
 
     try {
-      // Step 1: Scrape the real website with Firecrawl
+      // Step 1: Real crawl via Firecrawl — no fake fallback
       const scrapeResponse = await firecrawlApi.scrape(url);
       const scrapedHtml = scrapeResponse.data?.html || scrapeResponse.data?.data?.html || "";
       const scrapedMarkdown = scrapeResponse.data?.markdown || scrapeResponse.data?.data?.markdown || "";
       const scrapedLinks = scrapeResponse.data?.links || scrapeResponse.data?.data?.links || [];
 
       if (!scrapedHtml && !scrapedMarkdown) {
-        toast.warning("Could not scrape site", { description: "Using algorithmic analysis as fallback." });
+        throw new Error("Could not reach that site. Check the URL and try again.");
       }
 
-      // Step 2: Generate fallback structure from deterministic engine (for chart compatibility)
+      // Step 2: AI analysis on real scraped data + real PageSpeed metrics in parallel
+      const [aiResponse, psiResult] = await Promise.all([
+        aiSEOApi.auditSiteReal(url, scrapedHtml, scrapedMarkdown, scrapedLinks),
+        supabase.functions.invoke("pagespeed-insights", { body: { url, strategy: "mobile" } })
+          .catch(() => ({ data: null, error: true })),
+      ]);
+
+      // Structural scaffold — populated with AI-derived scores below
       const baseResults = analyzeSEO(url);
 
-      // Step 3: Get AI analysis from REAL scraped data
-      const aiResponse = await aiSEOApi.auditSiteReal(
-        url,
-        scrapedHtml,
-        scrapedMarkdown,
-        scrapedLinks
-      );
-
-      // Override base scores with AI-derived real scores if available
       if (aiResponse.scores) {
         baseResults.overall = aiResponse.scores.overall;
         baseResults.technical = aiResponse.scores.technical;
@@ -93,34 +92,30 @@ export function AISEOAudit() {
         baseResults.schema = aiResponse.scores.schema;
       }
 
+      // Overwrite Core Web Vitals with REAL Google PageSpeed data when available
+      const psi = (psiResult as { data?: { success?: boolean; data?: { coreWebVitals?: typeof baseResults.coreWebVitals; scores?: { performance?: number | null } } } })?.data;
+      if (psi?.success && psi.data?.coreWebVitals?.length) {
+        baseResults.coreWebVitals = psi.data.coreWebVitals;
+        if (typeof psi.data.scores?.performance === "number") {
+          baseResults.speed = psi.data.scores.performance;
+        }
+      }
+
       clearInterval(interval);
       setLoading(false);
       setResults(baseResults);
       setAiData(aiResponse);
-      toast.success("Real site analysis complete", { description: "All data sourced from live website crawl + AI analysis" });
+      toast.success("Live analysis complete", {
+        description: psi?.success ? "Real crawl + AI + Google PageSpeed" : "Real crawl + AI analysis",
+      });
     } catch (err) {
       console.error("Analysis failed:", err);
       clearInterval(interval);
-
-      // Fallback to deterministic engine + AI
-      const baseResults = analyzeSEO(url);
-      setResults(baseResults);
       setLoading(false);
-
-      toast.error("Live crawl failed", { description: "Showing estimated analysis. Check the URL and try again." });
-
-      // Still try AI insights on fallback data
-      try {
-        setAiLoading(true);
-        const aiResponse = await aiSEOApi.auditSiteReal(
-          url, "", "", []
-        );
-        setAiData(aiResponse);
-      } catch {
-        // Silent fail for AI fallback
-      } finally {
-        setAiLoading(false);
-      }
+      setResults(null);
+      setAiData(null);
+      const msg = err instanceof Error ? err.message : "Analysis failed";
+      toast.error("Audit failed", { description: msg });
     }
   };
 
