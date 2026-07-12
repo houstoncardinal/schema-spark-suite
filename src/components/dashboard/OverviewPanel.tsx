@@ -211,17 +211,25 @@ export function OverviewPanel({ data }: { data: DashboardData }) {
 
         <div className="glass-card-float p-6">
           <h3 className="font-display text-sm font-semibold text-foreground mb-4">Backlink Growth</h3>
-          <ResponsiveContainer width="100%" height={220}>
-            <BarChart data={backlinks.growthData}>
-              <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" strokeOpacity={0.5} />
-              <XAxis dataKey="month" tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 11 }} />
-              <YAxis tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 11 }} />
-              <Tooltip {...chartTooltipStyle} />
-              <Bar dataKey="links" fill="hsl(var(--accent))" radius={[4, 4, 0, 0]} name="Total Links" />
-              <Bar dataKey="domains" fill="hsl(var(--info))" radius={[4, 4, 0, 0]} name="Ref. Domains" />
-            </BarChart>
-          </ResponsiveContainer>
+          {backlinks.growthData.length > 0 ? (
+            <ResponsiveContainer width="100%" height={220}>
+              <BarChart data={backlinks.growthData}>
+                <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" strokeOpacity={0.5} />
+                <XAxis dataKey="month" tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 11 }} />
+                <YAxis tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 11 }} />
+                <Tooltip {...chartTooltipStyle} />
+                <Bar dataKey="links" fill="hsl(var(--accent))" radius={[4, 4, 0, 0]} name="Total Links" />
+                <Bar dataKey="domains" fill="hsl(var(--info))" radius={[4, 4, 0, 0]} name="Ref. Domains" />
+              </BarChart>
+            </ResponsiveContainer>
+          ) : (
+            <div className="h-[220px] flex flex-col items-center justify-center text-center text-muted-foreground">
+              <p className="text-sm">Backlink graph requires an Ahrefs / Moz / OpenLinkProfiler integration.</p>
+              <p className="text-xs mt-1 opacity-70">On-page outbound links: {data.crawledPages} pages crawled.</p>
+            </div>
+          )}
         </div>
+
       </div>
 
       {/* Recommended actions */}
