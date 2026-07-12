@@ -73,21 +73,49 @@ async function callSEOAnalyze<T>(type: string, payload: Record<string, unknown>)
   return data.data as T;
 }
 
-function fillDashboardDefaults(raw: Partial<DashboardData>, domain: string): DashboardData {
+interface RealSignals {
+  performanceScore: number | null;      // 0-100 from PageSpeed
+  headerScore: number | null;           // 0-100 from site-intelligence
+  robotsFound: boolean;
+  sitemapFound: boolean;
+  sitemapUrlCount: number;
+  isHttps: boolean;
+  domainAgeYears: number | null;
+  crawledPages: number;
+  onPageIssues: number;
+}
+
+function fillDashboardDefaults(raw: Partial<DashboardData>, domain: string, real: RealSignals): DashboardData {
   const clean = domain.replace(/^https?:\/\//, "").replace(/^www\./, "").split("/")[0].toLowerCase();
   const domainName = clean.split(".")[0].charAt(0).toUpperCase() + clean.split(".")[0].slice(1);
+
+  // Real health score: weighted from measurable signals only
+  const healthComponents: number[] = [];
+  if (real.performanceScore !== null) healthComponents.push(real.performanceScore);
+  if (real.headerScore !== null) healthComponents.push(real.headerScore);
+  healthComponents.push(real.isHttps ? 100 : 0);
+  healthComponents.push(real.robotsFound ? 100 : 40);
+  healthComponents.push(real.sitemapFound ? 100 : 40);
+  const measuredHealth = healthComponents.length
+    ? Math.round(healthComponents.reduce((a, b) => a + b, 0) / healthComponents.length)
+    : 0;
+
+  // Domain authority proxy from real signals: age + backlink graph from AI (nullable)
+  const aiDA = raw.project?.domainAuthority;
+  const ageBoost = real.domainAgeYears ? Math.min(40, Math.round(real.domainAgeYears * 3)) : 0;
+  const derivedDA = aiDA ?? (ageBoost + (real.headerScore ? Math.round(real.headerScore * 0.3) : 0));
 
   const project = {
     id: clean.replace(/\./g, "-"),
     domain: clean,
     name: domainName,
-    healthScore: 50,
-    domainAuthority: 30,
-    organicTraffic: 1000,
-    keywordsRanked: 50,
-    totalBacklinks: 100,
-    activeIssues: 5,
-    ...raw.project,
+    healthScore: raw.project?.healthScore ?? measuredHealth,
+    domainAuthority: Math.min(100, derivedDA),
+    // Real signals only — we do not have GSC/Ahrefs, so we don't fabricate traffic
+    organicTraffic: raw.project?.organicTraffic ?? 0,
+    keywordsRanked: raw.project?.keywordsRanked ?? 0,
+    totalBacklinks: raw.project?.totalBacklinks ?? 0,
+    activeIssues: raw.project?.activeIssues ?? real.onPageIssues,
   };
 
   return {
@@ -98,8 +126,8 @@ function fillDashboardDefaults(raw: Partial<DashboardData>, domain: string): Das
       trend: k.trend || [k.position, k.position, k.position, k.position, k.position, k.position, k.position],
     })),
     backlinks: {
-      totalBacklinks: 100, referringDomains: 20, dofollow: 70, nofollow: 30,
-      trustScore: 50, spamScore: 10,
+      totalBacklinks: 0, referringDomains: 0, dofollow: 0, nofollow: 0,
+      trustScore: 0, spamScore: 0,
       anchorDistribution: [], growthData: [], topReferrers: [],
       ...raw.backlinks,
     },
@@ -127,14 +155,15 @@ function fillDashboardDefaults(raw: Partial<DashboardData>, domain: string): Das
       ...t,
     })),
     geoTraffic: raw.geoTraffic || [],
-    visibilityScore: raw.visibilityScore || 50,
-    estimatedClicks: raw.estimatedClicks || 500,
-    estimatedImpressions: raw.estimatedImpressions || 5000,
-    crawledPages: raw.crawledPages || 50,
-    indexedPages: raw.indexedPages || 40,
-    avgPosition: raw.avgPosition || 25,
+    visibilityScore: raw.visibilityScore ?? measuredHealth,
+    estimatedClicks: raw.estimatedClicks ?? 0,
+    estimatedImpressions: raw.estimatedImpressions ?? 0,
+    crawledPages: real.crawledPages,
+    indexedPages: raw.indexedPages ?? real.sitemapUrlCount || real.crawledPages,
+    avgPosition: raw.avgPosition ?? 0,
   };
 }
+
 
 function fillPredictiveDefaults(raw: Partial<PredictiveData>): PredictiveData {
   return {
